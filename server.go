@@ -25,6 +25,7 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
 	"os/exec"
 	pb "tiflash-auto-scaling/rpc"
 )
@@ -39,7 +40,18 @@ type server struct {
 
 func (s *server) AssignTenant(ctx context.Context, in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
-	StartTiFlash(in.GetTenantConfig())
+	configFile := fmt.Sprintf("tiflash-%s.toml", in.GetTenantID())
+	f, err := os.Create(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	_, err2 := f.WriteString(in.GetTenantConfig())
+
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	StartTiFlash(configFile)
 	return &pb.Result{HasErr: false, ErrInfo: ""}, nil
 }
 
@@ -48,8 +60,8 @@ func (s *server) UnassignTenant(ctx context.Context, in *pb.UnassignRequest) (*p
 	return &pb.Result{HasErr: false, ErrInfo: ""}, nil
 }
 
-func StartTiFlash(config string) {
-	cmd := exec.Command("tiflash", "server", "--config-file", config)
+func StartTiFlash(configFile string) {
+	cmd := exec.Command("./tiflash", "server", "--config-file", configFile)
 	if err := cmd.Start(); err != nil {
 		log.Fatal(err)
 	}

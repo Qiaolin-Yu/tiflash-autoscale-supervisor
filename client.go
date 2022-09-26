@@ -22,6 +22,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"os"
 	"time"
 
 	"google.golang.org/grpc"
@@ -30,18 +31,23 @@ import (
 )
 
 const (
-	defaultTenantID     = "weu823u"
-	defaultTenantConfig = "tiflash.toml"
+	defaultTenantID         = "weu823u"
+	defaultTenantConfigFile = "tiflash.toml"
 )
 
 var (
-	addr         = flag.String("addr", "localhost:7000", "the address to connect to")
-	tenantID     = flag.String("tenantID", defaultTenantID, "the id of tenant")
-	tenantConfig = flag.String("tenantConfig", defaultTenantConfig, "the config of tenant")
+	addr             = flag.String("addr", "localhost:7000", "the address to connect to")
+	tenantID         = flag.String("tenantID", defaultTenantID, "the id of tenant")
+	tenantConfigFile = flag.String("tenantConfig", defaultTenantConfigFile, "the config of tenant")
 )
 
 func main() {
 	flag.Parse()
+	b, err := os.ReadFile(*tenantConfigFile)
+	if err != nil {
+		log.Fatalf("could not read config file: %v", err)
+	}
+	tenantConfig := string(b)
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -53,7 +59,7 @@ func main() {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: *tenantID, TenantConfig: *tenantConfig})
+	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: *tenantID, TenantConfig: tenantConfig})
 	if err != nil {
 		log.Fatalf("could not assign: %v", err)
 	}
