@@ -1,1 +1,1 @@
-## TiFlash Auto-scaling
+## TiFlash Auto-scaling Demo

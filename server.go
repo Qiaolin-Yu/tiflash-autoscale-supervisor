@@ -27,6 +27,8 @@ import (
 	"net"
 	"os"
 	"os/exec"
+	"sync"
+	"sync/atomic"
 	pb "tiflash-auto-scaling/rpc"
 )
 
@@ -38,21 +40,24 @@ type server struct {
 	pb.UnimplementedAssignServer
 }
 
+var assignTenantID atomic.Value
+var mu sync.Mutex
+var ch = make(chan *pb.AssignRequest)
+
 func (s *server) AssignTenant(ctx context.Context, in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
-	configFile := fmt.Sprintf("tiflash-%s.toml", in.GetTenantID())
-	f, err := os.Create(configFile)
-	if err != nil {
-		log.Fatal(err)
+	if assignTenantID.Load().(string) == "" {
+		mu.Lock()
+		defer mu.Unlock()
+		if assignTenantID.Load().(string) == "" {
+			assignTenantID.Store(in.GetTenantID())
+			ch <- in
+			return &pb.Result{HasErr: false, ErrInfo: ""}, nil
+		}
+	} else if assignTenantID.Load().(string) == in.GetTenantID() {
+		return &pb.Result{HasErr: false, ErrInfo: ""}, nil
 	}
-	defer f.Close()
-	_, err2 := f.WriteString(in.GetTenantConfig())
-
-	if err2 != nil {
-		log.Fatal(err2)
-	}
-	StartTiFlash(configFile)
-	return &pb.Result{HasErr: false, ErrInfo: ""}, nil
+	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant"}, nil
 }
 
 func (s *server) UnassignTenant(ctx context.Context, in *pb.UnassignRequest) (*pb.Result, error) {
@@ -60,15 +65,36 @@ func (s *server) UnassignTenant(ctx context.Context, in *pb.UnassignRequest) (*p
 	return &pb.Result{HasErr: false, ErrInfo: ""}, nil
 }
 
-func StartTiFlash(configFile string) {
-	cmd := exec.Command("./tiflash", "server", "--config-file", configFile)
-	if err := cmd.Start(); err != nil {
-		log.Fatal(err)
+func consumer() {
+	for true {
+		in := <-ch
+		configFile := fmt.Sprintf("tiflash-%s.toml", in.GetTenantID())
+		f, err := os.Create(configFile)
+		if err != nil {
+			log.Fatalf("create config file failed: %v", err)
+		}
+		defer f.Close()
+		_, err = f.WriteString(in.GetTenantConfig())
+
+		if err != nil {
+			log.Fatalf("write config file failed: %v", err)
+		}
+
+		for assignTenantID.Load().(string) == in.GetTenantID() {
+			cmd := exec.Command("./tiflash", "server", "--config-file", configFile)
+			err = cmd.Start()
+			if err != nil {
+				log.Fatal(err)
+			}
+			err = cmd.Wait()
+		}
 	}
 }
 
 func main() {
 	flag.Parse()
+	assignTenantID.Store("")
+	go consumer()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
