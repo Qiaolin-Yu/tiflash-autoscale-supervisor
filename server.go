@@ -84,9 +84,10 @@ func consumer() {
 			cmd := exec.Command("./tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()
 			if err != nil {
-				log.Fatal(err)
+				log.Printf("start tiflash failed: %v", err)
 			}
 			err = cmd.Wait()
+			log.Printf("tiflash exited: %v", err)
 		}
 	}
 }
