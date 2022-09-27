@@ -31,7 +31,7 @@ import (
 )
 
 const (
-	defaultTenantID         = "weu823u"
+	defaultTenantID         = "demo123821"
 	defaultTenantConfigFile = "tiflash.toml"
 )
 
