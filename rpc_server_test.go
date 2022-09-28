@@ -23,33 +23,29 @@ import (
 	"flag"
 	"log"
 	"os"
+	"testing"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	pb "tiflash-auto-scaling/rpc"
-)
-
-const (
-	defaultTenantID         = "demo123821"
-	defaultTenantConfigFile = "tiflash.toml"
+	pb "tiflash-auto-scaling/supervisor_proto"
 )
 
 var (
-	addr             = flag.String("addr", "localhost:7000", "the address to connect to")
-	tenantID         = flag.String("tenantID", defaultTenantID, "the id of tenant")
-	tenantConfigFile = flag.String("tenantConfig", defaultTenantConfigFile, "the config of tenant")
+	addr             = "localhost:7000"
+	tenantID         = "demo123821"
+	tenantConfigFile = "tiflash.toml"
 )
 
-func main() {
+func TestAssignTenant(t *testing.T) {
 	flag.Parse()
-	b, err := os.ReadFile(*tenantConfigFile)
+	b, err := os.ReadFile(tenantConfigFile)
 	if err != nil {
 		log.Fatalf("could not read config file: %v", err)
 	}
 	tenantConfig := string(b)
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -59,7 +55,7 @@ func main() {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: *tenantID, TenantConfig: tenantConfig})
+	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TenantConfig: tenantConfig})
 	if err != nil {
 		log.Fatalf("could not assign: %v", err)
 	}
@@ -69,13 +65,29 @@ func main() {
 		log.Printf("assign succeeded")
 	}
 
-	//r, err = c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: *tenantID})
-	//if err != nil {
-	//	log.Fatalf("could not unassign: %v", err)
-	//}
-	//if r.HasErr {
-	//	log.Fatalf("unassign failed: %v", r.ErrInfo)
-	//} else {
-	//	log.Printf("unassign succeeded")
-	//}
+}
+
+func TestUnassignTenant(t *testing.T) {
+	flag.Parse()
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewAssignClient(conn)
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	r, err := c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
+	if err != nil {
+		log.Fatalf("could not unassign: %v", err)
+	}
+	if r.HasErr {
+		log.Fatalf("unassign failed: %v", r.ErrInfo)
+	} else {
+		log.Printf("unassign succeeded")
+	}
 }

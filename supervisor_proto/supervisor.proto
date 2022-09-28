@@ -14,12 +14,12 @@
 
 syntax = "proto3";
 
-option go_package = "google.golang.org/grpc/examples/rpc/rpc";
+option go_package = "google.golang.org/grpc/examples/supervisor/supervisor";
 option java_multiple_files = true;
-option java_package = "io.grpc.examples.rpc";
-option java_outer_classname = "RPCProto";
+option java_package = "io.grpc.examples.supervisor";
+option java_outer_classname = "SupervisorProto";
 
-package rpc;
+package supervisor;
 
 
 message Result{

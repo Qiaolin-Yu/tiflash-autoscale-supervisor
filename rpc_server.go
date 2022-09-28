@@ -29,7 +29,7 @@ import (
 	"os/exec"
 	"sync"
 	"sync/atomic"
-	pb "tiflash-auto-scaling/rpc"
+	pb "tiflash-auto-scaling/supervisor_proto"
 )
 
 var (

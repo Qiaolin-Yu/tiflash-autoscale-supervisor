@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.19.4
-// source: rpc/rpc.proto
+// source: supervisor_proto/supervisor.proto
 
-package rpc
+package supervisor
 
 import (
 	context "context"
@@ -36,7 +36,7 @@ func NewAssignClient(cc grpc.ClientConnInterface) AssignClient {
 
 func (c *assignClient) AssignTenant(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*Result, error) {
 	out := new(Result)
-	err := c.cc.Invoke(ctx, "/rpc.Assign/AssignTenant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/supervisor.Assign/AssignTenant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (c *assignClient) AssignTenant(ctx context.Context, in *AssignRequest, opts
 
 func (c *assignClient) UnassignTenant(ctx context.Context, in *UnassignRequest, opts ...grpc.CallOption) (*Result, error) {
 	out := new(Result)
-	err := c.cc.Invoke(ctx, "/rpc.Assign/UnassignTenant", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/supervisor.Assign/UnassignTenant", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +94,7 @@ func _Assign_AssignTenant_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rpc.Assign/AssignTenant",
+		FullMethod: "/supervisor.Assign/AssignTenant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AssignServer).AssignTenant(ctx, req.(*AssignRequest))
@@ -112,7 +112,7 @@ func _Assign_UnassignTenant_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/rpc.Assign/UnassignTenant",
+		FullMethod: "/supervisor.Assign/UnassignTenant",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AssignServer).UnassignTenant(ctx, req.(*UnassignRequest))
@@ -124,7 +124,7 @@ func _Assign_UnassignTenant_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Assign_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "rpc.Assign",
+	ServiceName: "supervisor.Assign",
 	HandlerType: (*AssignServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -137,5 +137,5 @@ var Assign_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "rpc/rpc.proto",
+	Metadata: "supervisor_proto/supervisor.proto",
 }
