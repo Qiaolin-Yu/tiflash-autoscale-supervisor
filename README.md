@@ -1,1 +1,1 @@
-## TiFlash Auto-scaling Demo
+## TiFlash Auto-scaling Supervisor Demo
