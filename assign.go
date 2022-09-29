@@ -54,7 +54,7 @@ func UnassignTiFlash(in *pb.UnassignRequest) (*pb.Result, error) {
 func TiFlashMaintainer() {
 	for true {
 		in := <-ch
-		configFile := fmt.Sprintf("tiflash-%s.toml", in.GetTenantID())
+		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		f, err := os.Create(configFile)
 		if err != nil {
 			log.Fatalf("create config file failed: %v", err)
@@ -67,7 +67,7 @@ func TiFlashMaintainer() {
 		}
 
 		for assignTenantID.Load().(string) == in.GetTenantID() {
-			cmd := exec.Command("./tiflash", "server", "--config-file", configFile)
+			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()
 			pid.Store(int32(cmd.Process.Pid))
 			if err != nil {

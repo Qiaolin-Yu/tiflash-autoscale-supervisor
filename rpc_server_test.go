@@ -34,7 +34,7 @@ import (
 var (
 	addr             = "localhost:7000"
 	tenantID         = "demo123821"
-	tenantConfigFile = "tiflash.toml"
+	tenantConfigFile = "conf/tiflash.toml"
 )
 
 func TestAssignTenant(t *testing.T) {

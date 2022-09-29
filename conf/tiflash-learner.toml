@@ -1,0 +1,34 @@
+# WARNING: This file is auto-generated. Do not edit! All your modification will be overwritten!
+# You can use 'tiup cluster edit-config' and 'tiup cluster reload' to update the configuration
+# All configuration items you want to change can be added to:
+# server_configs:
+#   tiflash-learner:
+#     aa.b1.c3: value
+#     aa.b2.c4: value
+log-file = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/log/tiflash_tikv.log"
+
+[flash]
+[flash.proxy]
+engine-label = "tiflash_mpp"
+
+[raftstore]
+apply-pool-size = 4
+store-pool-size = 4
+
+[rocksdb]
+wal-dir = ""
+
+[security]
+ca-path = ""
+cert-path = ""
+key-path = ""
+
+[server]
+addr = "0.0.0.0:20173"
+advertise-addr = "172.16.4.4:20173"
+advertise-status-addr = "172.16.4.4:20295"
+engine-addr = "172.16.4.4:3933"
+status-addr = "0.0.0.0:20295"
+
+[storage]
+data-dir = "/home/xhy/gjt_data/tidb-data-gjt-1/tiflash-9003/flash"

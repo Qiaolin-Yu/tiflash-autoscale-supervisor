@@ -1,4 +1,4 @@
 .idea
-*.toml
 tiflash
+tiflash-tenant-*.toml
 *.info

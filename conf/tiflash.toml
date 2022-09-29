@@ -1,0 +1,45 @@
+# WARNING: This file is auto-generated. Do not edit! All your modification will be overwritten!
+# You can use 'tiup cluster edit-config' and 'tiup cluster reload' to update the configuration
+# All configuration items you want to change can be added to:
+# server_configs:
+#   tiflash:
+#     aa.b1.c3: value
+#     aa.b2.c4: value
+default_profile = "default"
+display_name = "TiFlash"
+http_port = 8126
+listen_host = "0.0.0.0"
+mark_cache_size = 5368709120
+path = "/home/xhy/gjt_data/tidb-data-gjt-1/tiflash-9003"
+tcp_port = 9003
+tmp_path = "/home/xhy/gjt_data/tidb-data-gjt-1/tiflash-9003/tmp"
+
+[flash]
+service_addr = "172.16.4.4:3933"
+tidb_status_addr = "172.16.4.4:10087"
+[flash.flash_cluster]
+cluster_manager_path = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/bin/tiflash/flash_cluster_manager"
+log = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/log/tiflash_cluster_manager.log"
+master_ttl = 60
+refresh_interval = 20
+update_rule_interval = 5
+[flash.proxy]
+config = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/conf/tiflash-learner.toml"
+engine-label = "tiflash_mpp"
+
+[logger]
+count = 20
+errorlog = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/log/tiflash_error.log"
+level = "debug"
+log = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/log/tiflash.log"
+size = "1000M"
+
+[profiles]
+[profiles.default]
+max_memory_usage = 0
+
+[raft]
+pd_addr = "172.16.4.7:2351"
+
+[status]
+metrics_port = 8237

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supervisor
+  labels:
+    name: supervisor
+spec:
+  selector:
+    matchLabels:
+      name: supervisor
+  template:
+    metadata:
+      labels:
+        name: supervisor
+    spec:
+      containers:
+        - name: supervisor
+          image: supervisor-img
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 7000
