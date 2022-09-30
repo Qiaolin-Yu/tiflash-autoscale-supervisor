@@ -5,7 +5,7 @@
 #   tiflash-learner:
 #     aa.b1.c3: value
 #     aa.b2.c4: value
-log-file = "/home/xhy/gjt_data/tidb-deploy-gjt-1/tiflash-9003/log/tiflash_tikv.log"
+log-file = "/tiflash/log/tiflash_tikv.log"
 
 [flash]
 [flash.proxy]
@@ -31,4 +31,4 @@ engine-addr = "172.16.4.4:3933"
 status-addr = "0.0.0.0:20295"
 
 [storage]
-data-dir = "/home/xhy/gjt_data/tidb-data-gjt-1/tiflash-9003/flash"
+data-dir = "/tiflash/data/flash"
