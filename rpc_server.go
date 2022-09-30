@@ -23,6 +23,7 @@ import (
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
 	pb "tiflash-auto-scaling/supervisor_proto"
@@ -37,11 +38,15 @@ type server struct {
 }
 
 func (s *server) AssignTenant(ctx context.Context, in *pb.AssignRequest) (*pb.Result, error) {
-	return AssignTiFlash(in)
+	return AssignTenantService(in)
 }
 
 func (s *server) UnassignTenant(ctx context.Context, in *pb.UnassignRequest) (*pb.Result, error) {
-	return UnassignTiFlash(in)
+	return UnassignTenantService(in)
+}
+
+func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*pb.GetTenantResponse, error) {
+	return GetCurrentTenantService()
 }
 
 func main() {

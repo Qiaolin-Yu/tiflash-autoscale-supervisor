@@ -21,6 +21,7 @@ package main
 import (
 	"context"
 	"flag"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"os"
 	"testing"
@@ -65,6 +66,24 @@ func TestAssignTenant(t *testing.T) {
 		log.Printf("assign succeeded")
 	}
 
+}
+
+func TestGetCurrentTenant(t *testing.T) {
+	flag.Parse()
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+	c := pb.NewAssignClient(conn)
+
+	// Contact the server and print out its response.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	r, err := c.GetCurrentTenant(ctx, &emptypb.Empty{})
+	log.Printf("current tenant: %v", r.TenantID)
 }
 
 func TestUnassignTenant(t *testing.T) {

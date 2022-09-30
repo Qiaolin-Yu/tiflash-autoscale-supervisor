@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -24,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type AssignClient interface {
 	AssignTenant(ctx context.Context, in *AssignRequest, opts ...grpc.CallOption) (*Result, error)
 	UnassignTenant(ctx context.Context, in *UnassignRequest, opts ...grpc.CallOption) (*Result, error)
+	GetCurrentTenant(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTenantResponse, error)
 }
 
 type assignClient struct {
@@ -52,12 +54,22 @@ func (c *assignClient) UnassignTenant(ctx context.Context, in *UnassignRequest, 
 	return out, nil
 }
 
+func (c *assignClient) GetCurrentTenant(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetTenantResponse, error) {
+	out := new(GetTenantResponse)
+	err := c.cc.Invoke(ctx, "/supervisor.Assign/GetCurrentTenant", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AssignServer is the server API for Assign service.
 // All implementations must embed UnimplementedAssignServer
 // for forward compatibility
 type AssignServer interface {
 	AssignTenant(context.Context, *AssignRequest) (*Result, error)
 	UnassignTenant(context.Context, *UnassignRequest) (*Result, error)
+	GetCurrentTenant(context.Context, *emptypb.Empty) (*GetTenantResponse, error)
 	mustEmbedUnimplementedAssignServer()
 }
 
@@ -70,6 +82,9 @@ func (UnimplementedAssignServer) AssignTenant(context.Context, *AssignRequest) (
 }
 func (UnimplementedAssignServer) UnassignTenant(context.Context, *UnassignRequest) (*Result, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnassignTenant not implemented")
+}
+func (UnimplementedAssignServer) GetCurrentTenant(context.Context, *emptypb.Empty) (*GetTenantResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentTenant not implemented")
 }
 func (UnimplementedAssignServer) mustEmbedUnimplementedAssignServer() {}
 
@@ -120,6 +135,24 @@ func _Assign_UnassignTenant_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Assign_GetCurrentTenant_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AssignServer).GetCurrentTenant(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/supervisor.Assign/GetCurrentTenant",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AssignServer).GetCurrentTenant(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Assign_ServiceDesc is the grpc.ServiceDesc for Assign service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +167,10 @@ var Assign_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UnassignTenant",
 			Handler:    _Assign_UnassignTenant_Handler,
+		},
+		{
+			MethodName: "GetCurrentTenant",
+			Handler:    _Assign_GetCurrentTenant_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

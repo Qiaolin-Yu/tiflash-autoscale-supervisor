@@ -19,6 +19,7 @@ option java_multiple_files = true;
 option java_package = "io.grpc.examples.supervisor";
 option java_outer_classname = "SupervisorProto";
 
+import "google/protobuf/empty.proto";
 package supervisor;
 
 
@@ -36,7 +37,12 @@ message UnassignRequest {
   string assertTenantID = 1;
 }
 
+message GetTenantResponse {
+  string tenantID = 1;
+}
+
 service Assign{
   rpc AssignTenant (AssignRequest) returns (Result) {}
   rpc UnassignTenant (UnassignRequest) returns (Result) {}
+  rpc GetCurrentTenant (google.protobuf.Empty) returns (GetTenantResponse){}
 }

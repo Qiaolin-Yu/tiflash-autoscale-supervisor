@@ -15,7 +15,7 @@ var pid atomic.Int32
 var mu sync.Mutex
 var ch = make(chan *pb.AssignRequest)
 
-func AssignTiFlash(in *pb.AssignRequest) (*pb.Result, error) {
+func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
 	if assignTenantID.Load() == nil {
 		mu.Lock()
@@ -31,13 +31,13 @@ func AssignTiFlash(in *pb.AssignRequest) (*pb.Result, error) {
 	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant"}, nil
 }
 
-func UnassignTiFlash(in *pb.UnassignRequest) (*pb.Result, error) {
+func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 	log.Printf("received unassign request by: %v", in.GetAssertTenantID())
 	if in.AssertTenantID == assignTenantID.Load() {
 		mu.Lock()
 		defer mu.Unlock()
 		if in.AssertTenantID == assignTenantID.Load() && pid.Load() != 0 {
-			assignTenantID.Store("")
+			assignTenantID.Store(nil)
 			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
 			err := cmd.Run()
 			pid.Store(0)
@@ -49,6 +49,15 @@ func UnassignTiFlash(in *pb.UnassignRequest) (*pb.Result, error) {
 	}
 	return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant"}, nil
 
+}
+
+func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
+	mu.Lock()
+	defer mu.Unlock()
+	if assignTenantID.Load() == nil {
+		return &pb.GetTenantResponse{TenantID: ""}, nil
+	}
+	return &pb.GetTenantResponse{TenantID: assignTenantID.Load().(string)}, nil
 }
 
 func TiFlashMaintainer() {
