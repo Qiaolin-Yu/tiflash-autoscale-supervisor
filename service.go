@@ -17,10 +17,10 @@ var ch = make(chan *pb.AssignRequest)
 
 func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
-	if assignTenantID.Load() == nil {
+	if assignTenantID.Load() == nil || assignTenantID.Load().(string) == "" {
 		mu.Lock()
 		defer mu.Unlock()
-		if assignTenantID.Load() == nil {
+		if assignTenantID.Load() == nil || assignTenantID.Load().(string) == "" {
 			assignTenantID.Store(in.GetTenantID())
 			ch <- in
 			return &pb.Result{HasErr: false, ErrInfo: ""}, nil
@@ -37,7 +37,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 		mu.Lock()
 		defer mu.Unlock()
 		if in.AssertTenantID == assignTenantID.Load() && pid.Load() != 0 {
-			assignTenantID.Store(nil)
+			assignTenantID.Store("")
 			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
 			err := cmd.Run()
 			pid.Store(0)
@@ -75,7 +75,7 @@ func TiFlashMaintainer() {
 			log.Fatalf("write config file failed: %v", err)
 		}
 
-		for assignTenantID.Load().(string) == in.GetTenantID() {
+		for in.GetTenantID() == assignTenantID.Load() {
 			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()
 			pid.Store(int32(cmd.Process.Pid))
