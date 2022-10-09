@@ -1,4 +1,7 @@
 .idea
 tiflash
-tiflash-tenant-*.toml
+conf/tiflash-tenant-*.toml
+conf/tiflash.toml
+conf/tiflash-preprocessed.toml
+conf/tiflash-learner.toml
 *.info

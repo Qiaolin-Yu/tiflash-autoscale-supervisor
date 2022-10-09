@@ -15,8 +15,8 @@ tcp_port = 9003
 tmp_path = "/tiflash/data/tmp"
 
 [flash]
-service_addr = "172.16.4.4:3933"
-tidb_status_addr = "172.16.4.4:10087"
+service_addr = "%v:3933"
+tidb_status_addr = "%v"
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
 log = "/tiflash/log/tiflash_cluster_manager.log"
@@ -39,7 +39,7 @@ size = "1000M"
 max_memory_usage = 0
 
 [raft]
-pd_addr = "172.16.4.7:2351"
+pd_addr = "%v"
 
 [status]
 metrics_port = 8237

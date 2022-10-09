@@ -35,7 +35,7 @@ import (
 var (
 	addr             = "localhost:7000"
 	tenantID         = "demo123821"
-	tenantConfigFile = "conf/tiflash.toml"
+	tenantConfigFile = "conf/tiflash-templete.toml"
 )
 
 func TestAssignTenant(t *testing.T) {
@@ -109,4 +109,12 @@ func TestUnassignTenant(t *testing.T) {
 	} else {
 		log.Printf("unassign succeeded")
 	}
+}
+
+func TestInitTiFlashConf(t *testing.T) {
+	err := InitTiFlashConf()
+	if err != nil {
+		log.Fatalf("init tiflash conf failed: %v", err)
+	}
+	RenderTiFlashConf("123.123.123.123", "125.125.125.125")
 }

@@ -14,7 +14,12 @@ spec:
         name: supervisor
     spec:
       containers:
-        - name: supervisor
+        - env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          name: supervisor
           image: supervisor-img
           imagePullPolicy: Never
 #          resources:

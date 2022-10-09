@@ -10,10 +10,12 @@ import (
 	pb "tiflash-auto-scaling/supervisor_proto"
 )
 
-var assignTenantID atomic.Value
-var pid atomic.Int32
-var mu sync.Mutex
-var ch = make(chan *pb.AssignRequest)
+var (
+	assignTenantID atomic.Value
+	pid            atomic.Int32
+	mu             sync.Mutex
+	ch             = make(chan *pb.AssignRequest)
+)
 
 func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
@@ -69,12 +71,12 @@ func TiFlashMaintainer() {
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		f, err := os.Create(configFile)
 		if err != nil {
-			log.Fatalf("create config file failed: %v", err)
+			log.Printf("create config file failed: %v", err)
 		}
 		_, err = f.WriteString(in.GetTenantConfig())
 
 		if err != nil {
-			log.Fatalf("write config file failed: %v", err)
+			log.Printf("write config file failed: %v", err)
 		}
 		f.Close()
 		for in.GetTenantID() == assignTenantID.Load() {

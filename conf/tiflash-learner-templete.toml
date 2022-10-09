@@ -25,9 +25,9 @@ key-path = ""
 
 [server]
 addr = "0.0.0.0:20173"
-advertise-addr = "172.16.4.4:20173"
-advertise-status-addr = "172.16.4.4:20295"
-engine-addr = "172.16.4.4:3933"
+advertise-addr = "%v:20173"
+advertise-status-addr = "%v:20295"
+engine-addr = "%v:3933"
 status-addr = "0.0.0.0:20295"
 
 [storage]
