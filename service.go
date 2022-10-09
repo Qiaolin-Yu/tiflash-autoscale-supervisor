@@ -23,12 +23,12 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 		if assignTenantID.Load() == nil || assignTenantID.Load().(string) == "" {
 			assignTenantID.Store(in.GetTenantID())
 			ch <- in
-			return &pb.Result{HasErr: false, ErrInfo: ""}, nil
+			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	} else if assignTenantID.Load().(string) == in.GetTenantID() {
-		return &pb.Result{HasErr: false, ErrInfo: ""}, nil
+		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 	}
-	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant"}, nil
+	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: assignTenantID.Load().(string)}, nil
 }
 
 func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
@@ -42,12 +42,15 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			err := cmd.Run()
 			pid.Store(0)
 			if err != nil {
-				return &pb.Result{HasErr: true, ErrInfo: err.Error()}, err
+				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
-			return &pb.Result{HasErr: false, ErrInfo: ""}, nil
+			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	}
-	return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant"}, nil
+	if assignTenantID.Load() == nil {
+		return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant", TenantID: ""}, nil
+	}
+	return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant", TenantID: assignTenantID.Load().(string)}, nil
 
 }
 
@@ -68,13 +71,12 @@ func TiFlashMaintainer() {
 		if err != nil {
 			log.Fatalf("create config file failed: %v", err)
 		}
-		defer f.Close()
 		_, err = f.WriteString(in.GetTenantConfig())
 
 		if err != nil {
 			log.Fatalf("write config file failed: %v", err)
 		}
-
+		f.Close()
 		for in.GetTenantID() == assignTenantID.Load() {
 			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()

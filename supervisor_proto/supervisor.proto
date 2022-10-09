@@ -26,6 +26,7 @@ package supervisor;
 message Result{
   bool hasErr = 1;
   string errInfo = 2;
+  string tenantID = 3;
 }
 
 message AssignRequest {
