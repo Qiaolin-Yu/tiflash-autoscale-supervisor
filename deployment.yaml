@@ -22,6 +22,15 @@ spec:
           name: supervisor
           image: supervisor-img
           imagePullPolicy: Never
+          ports:
+            - containerPort: 7000
+            - containerPort: 8237
+            - containerPort: 8126
+            - containerPort: 9003
+            - containerPort: 20173
+            - containerPort: 20295
+            - containerPort: 3933
+
 #          resources:
 #            limits:
 #              memory: "3072Mi"
