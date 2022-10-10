@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 	"sync"
 	"sync/atomic"
@@ -19,11 +18,16 @@ var (
 
 func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v", in.GetTenantID())
-	if assignTenantID.Load() == nil || assignTenantID.Load().(string) == "" {
+	if assignTenantID.Load().(string) == "" {
 		mu.Lock()
 		defer mu.Unlock()
-		if assignTenantID.Load() == nil || assignTenantID.Load().(string) == "" {
+		if assignTenantID.Load().(string) == "" {
 			assignTenantID.Store(in.GetTenantID())
+			configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
+			err := RenderTiFlashConf(configFile, in.GetTidbStatusAddr(), in.GetPdAddr())
+			if err != nil {
+				return &pb.Result{HasErr: true, ErrInfo: "could not render config", TenantID: assignTenantID.Load().(string)}, err
+			}
 			ch <- in
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
@@ -35,10 +39,10 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 
 func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 	log.Printf("received unassign request by: %v", in.GetAssertTenantID())
-	if in.AssertTenantID == assignTenantID.Load() {
+	if in.AssertTenantID == assignTenantID.Load().(string) {
 		mu.Lock()
 		defer mu.Unlock()
-		if in.AssertTenantID == assignTenantID.Load() && pid.Load() != 0 {
+		if in.AssertTenantID == assignTenantID.Load().(string) && pid.Load() != 0 {
 			assignTenantID.Store("")
 			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
 			err := cmd.Run()
@@ -49,9 +53,6 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	}
-	if assignTenantID.Load() == nil {
-		return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant", TenantID: ""}, nil
-	}
 	return &pb.Result{HasErr: true, ErrInfo: "TiFlash is not assigned to this tenant", TenantID: assignTenantID.Load().(string)}, nil
 
 }
@@ -59,9 +60,6 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
 	mu.Lock()
 	defer mu.Unlock()
-	if assignTenantID.Load() == nil {
-		return &pb.GetTenantResponse{TenantID: ""}, nil
-	}
 	return &pb.GetTenantResponse{TenantID: assignTenantID.Load().(string)}, nil
 }
 
@@ -69,19 +67,9 @@ func TiFlashMaintainer() {
 	for true {
 		in := <-ch
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
-		f, err := os.Create(configFile)
-		if err != nil {
-			log.Printf("create config file failed: %v", err)
-		}
-		_, err = f.WriteString(in.GetTenantConfig())
-
-		if err != nil {
-			log.Printf("write config file failed: %v", err)
-		}
-		f.Close()
-		for in.GetTenantID() == assignTenantID.Load() {
+		for in.GetTenantID() == assignTenantID.Load().(string) {
 			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
-			err = cmd.Start()
+			err := cmd.Start()
 			pid.Store(int32(cmd.Process.Pid))
 			if err != nil {
 				log.Printf("start tiflash failed: %v", err)
@@ -90,4 +78,13 @@ func TiFlashMaintainer() {
 			log.Printf("tiflash exited: %v", err)
 		}
 	}
+}
+
+func InitService() {
+	assignTenantID.Store("")
+	err := InitTiFlashConf()
+	if err != nil {
+		log.Fatalf("failed to init config: %v", err)
+	}
+	go TiFlashMaintainer()
 }

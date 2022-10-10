@@ -31,7 +31,8 @@ message Result{
 
 message AssignRequest {
   string tenantID = 1;
-  string tenantConfig = 2;
+  string tidbStatusAddr = 2;
+  string pdAddr = 3;
 }
 
 message UnassignRequest {

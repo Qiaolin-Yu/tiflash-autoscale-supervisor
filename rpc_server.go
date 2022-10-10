@@ -51,7 +51,7 @@ func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*p
 
 func main() {
 	flag.Parse()
-	go TiFlashMaintainer()
+	InitService()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)

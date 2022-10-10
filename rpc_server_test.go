@@ -23,7 +23,6 @@ import (
 	"flag"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
-	"os"
 	"testing"
 	"time"
 
@@ -40,11 +39,6 @@ var (
 
 func TestAssignTenant(t *testing.T) {
 	flag.Parse()
-	b, err := os.ReadFile(tenantConfigFile)
-	if err != nil {
-		log.Fatalf("could not read config file: %v", err)
-	}
-	tenantConfig := string(b)
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -56,7 +50,7 @@ func TestAssignTenant(t *testing.T) {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TenantConfig: tenantConfig})
+	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123", PdAddr: "125.125.125.125"})
 	if err != nil {
 		log.Fatalf("could not assign: %v", err)
 	}
@@ -116,5 +110,5 @@ func TestInitTiFlashConf(t *testing.T) {
 	if err != nil {
 		log.Fatalf("init tiflash conf failed: %v", err)
 	}
-	RenderTiFlashConf("123.123.123.123", "125.125.125.125")
+	RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123", "125.125.125.125")
 }

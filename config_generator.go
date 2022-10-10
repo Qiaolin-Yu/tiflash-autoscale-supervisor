@@ -11,10 +11,9 @@ var (
 	learnerConfigFilename             = "conf/tiflash-learner.toml"
 	tiFlashConfigTemplateFilename     = "conf/tiflash-templete.toml"
 	tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
-	tiFlashConfigFilename             = "conf/tiflash.toml"
 )
 
-func RenderTiFlashConf(tidbStatusAddr string, pdAddr string) error {
+func RenderTiFlashConf(tiFlashConfigFilename string, tidbStatusAddr string, pdAddr string) error {
 	tiFlashPreprocessedConfigFile, err := os.ReadFile(tiFlashPreprocessedConfigFilename)
 	if err != nil {
 		log.Printf("could not read tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
