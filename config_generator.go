@@ -13,7 +13,7 @@ var (
 	tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
 )
 
-func RenderTiFlashConf(tiFlashConfigFilename string, tidbStatusAddr string, pdAddr string) error {
+func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string) error {
 	tiFlashPreprocessedConfigFile, err := os.ReadFile(tiFlashPreprocessedConfigFilename)
 	if err != nil {
 		log.Printf("could not read tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
@@ -21,15 +21,15 @@ func RenderTiFlashConf(tiFlashConfigFilename string, tidbStatusAddr string, pdAd
 	}
 	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigFile)
 	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, tidbStatusAddr, pdAddr)
-	tiFlashConfigFile, err := os.Create(tiFlashConfigFilename)
+	tiFlashConfigFile, err := os.Create(targetTiFlashConfigFilename)
 	defer tiFlashConfigFile.Close()
 	if err != nil {
-		log.Printf("could not create tiflash config file %v: %v", tiFlashConfigFilename, err)
+		log.Printf("could not create tiflash config file %v: %v", targetTiFlashConfigFilename, err)
 		return err
 	}
 	_, err = tiFlashConfigFile.WriteString(tiFlashConfig)
 	if err != nil {
-		log.Printf("could not write tiflash config file %v: %v", tiFlashConfigFilename, err)
+		log.Printf("could not write tiflash config file %v: %v", targetTiFlashConfigFilename, err)
 		return err
 	}
 	return nil

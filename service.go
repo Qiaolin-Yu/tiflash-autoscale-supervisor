@@ -58,8 +58,6 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 }
 
 func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
-	mu.Lock()
-	defer mu.Unlock()
 	return &pb.GetTenantResponse{TenantID: assignTenantID.Load().(string)}, nil
 }
 

@@ -50,7 +50,7 @@ func TestAssignTenant(t *testing.T) {
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123", PdAddr: "125.125.125.125"})
+	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123", PdAddr: "179.1.1.1"})
 	if err != nil {
 		log.Fatalf("could not assign: %v", err)
 	}
@@ -110,5 +110,5 @@ func TestInitTiFlashConf(t *testing.T) {
 	if err != nil {
 		log.Fatalf("init tiflash conf failed: %v", err)
 	}
-	RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123", "125.125.125.125")
+	RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123", "179.1.1.1")
 }
