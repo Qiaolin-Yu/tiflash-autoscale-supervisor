@@ -7,15 +7,15 @@
 #     aa.b2.c4: value
 default_profile = "default"
 display_name = "TiFlash"
-http_port = 8126
+http_port = 8123
 listen_host = "0.0.0.0"
 mark_cache_size = 5368709120
 path = "/tiflash/data"
-tcp_port = 9003
+tcp_port = 9000
 tmp_path = "/tiflash/data/tmp"
 
 [flash]
-service_addr = "%v:3933"
+service_addr = "%v:3930"
 tidb_status_addr = "%v"
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
@@ -42,4 +42,4 @@ max_memory_usage = 0
 pd_addr = "%v"
 
 [status]
-metrics_port = 8237
+metrics_port = 8234
