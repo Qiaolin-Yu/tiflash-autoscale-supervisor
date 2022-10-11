@@ -22,16 +22,20 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
+	"os"
 	pb "tiflash-auto-scaling/supervisor_proto"
+
+	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var (
 	port = flag.Int("port", 7000, "The server port")
 )
+
+var PodIp string
 
 type server struct {
 	pb.UnimplementedAssignServer
@@ -50,6 +54,7 @@ func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*p
 }
 
 func main() {
+	PodIp = os.Getenv("POD_IP")
 	flag.Parse()
 	InitService()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
