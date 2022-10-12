@@ -1,5 +1,6 @@
 .idea
 tiflash
+pd-ctl
 conf/tiflash-tenant-*.toml
 conf/tiflash.toml
 conf/tiflash-preprocessed.toml

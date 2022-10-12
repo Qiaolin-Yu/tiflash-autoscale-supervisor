@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -84,11 +85,33 @@ func FindStoreIdFromJsonStr(str string) string {
 			if !ok {
 				return ""
 			} else {
-				return string(int(sid))
+				return strconv.Itoa(int(sid))
 			}
 		}
 	}
 	return ""
+}
+
+func NotifyPDForExit() error {
+	outOfPdctl, err := exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store").Output()
+	if err != nil {
+		log.Printf("[error]pd ctl get store error: %v\n", err.Error())
+		return err
+	}
+	storeID := FindStoreIdFromJsonStr(string(outOfPdctl))
+	if storeID != "" {
+		_, err = exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "delete", storeID).Output()
+		if err != nil {
+			log.Printf("[error]pd ctl get store error: %v\n", err.Error())
+			return err
+		}
+		_, err = exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "remove-tombstone").Output()
+		if err != nil {
+			log.Printf("[error]pd ctl get store error: %v\n", err.Error())
+			return err
+		}
+	}
+	return nil
 }
 
 func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
@@ -97,22 +120,9 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 		mu.Lock()
 		defer mu.Unlock()
 		if in.AssertTenantID == assignTenantID.Load().(string) && pid.Load() != 0 {
-			outOfPdctl, err := exec.Command("./bin/pd-ctl -u http://" + pdAddr + " store").Output()
+			err := NotifyPDForExit()
 			if err != nil {
-				log.Printf("[error]pd ctl get store error: %v\n", err.Error())
-			} else {
-				storeID := FindStoreIdFromJsonStr(string(outOfPdctl))
-				if storeID != "" {
-					_, err = exec.Command("./bin/pd-ctl -u http://" + pdAddr + " store delete " + storeID).Output()
-					if err != nil {
-						log.Printf("[error]pd ctl get store error: %v\n", err.Error())
-					} else {
-						_, err = exec.Command("./bin/pd-ctl -u http://" + pdAddr + " store remove-tombstone ").Output()
-						if err != nil {
-							log.Printf("[error]pd ctl get store error: %v\n", err.Error())
-						}
-					}
-				}
+				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
 			assignTenantID.Store("")
 			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
@@ -137,7 +147,11 @@ func TiFlashMaintainer() {
 		in := <-ch
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		for in.GetTenantID() == assignTenantID.Load().(string) {
-			err := os.RemoveAll("/tiflash/data")
+			err := NotifyPDForExit()
+			if err != nil {
+				log.Printf("[error]notify pd fail: %v\n", err.Error())
+			}
+			err = os.RemoveAll("/tiflash/data")
 			if err != nil {
 				log.Printf("[error]remove data fail: %v\n", err.Error())
 			}
@@ -155,6 +169,7 @@ func TiFlashMaintainer() {
 }
 
 func InitService() {
+	LocalPodIp = os.Getenv("POD_IP")
 	assignTenantID.Store("")
 	err := InitTiFlashConf()
 	if err != nil {
