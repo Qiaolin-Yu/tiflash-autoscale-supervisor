@@ -6,3 +6,4 @@ conf/tiflash.toml
 conf/tiflash-preprocessed.toml
 conf/tiflash-learner.toml
 *.info
+.DS_Store
