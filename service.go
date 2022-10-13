@@ -44,6 +44,76 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: assignTenantID.Load().(string)}, nil
 }
 
+func GetStoreIdsOfUnhealthRNs(str string) []string {
+
+	var x map[string]interface{}
+	err := json.Unmarshal([]byte(str), &x)
+	if err != nil {
+		return nil
+	}
+	arr, ok := x["stores"].([]interface{})
+	if !ok {
+		fmt.Println("#2")
+		return nil
+	}
+	retStoreIDs := make([]string, 0, 5)
+	for _, item := range arr {
+		jsonmap, ok := item.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		storeMap, ok := jsonmap["store"]
+		if !ok {
+			continue
+		}
+		mapPart, ok := storeMap.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		// fmt.Println(mapPart)
+
+		rawLabelMap, ok := mapPart["labels"]
+		if !ok {
+			continue
+		}
+		rawLabels, ok := rawLabelMap.([]interface{})
+		if !ok {
+			continue
+		}
+		for _, rawLabel := range rawLabels {
+			label, ok := rawLabel.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			labelKey, ok := label["key"]
+			if !ok {
+				continue
+			}
+			if labelKey == "engine" {
+				labelValue, ok := label["value"]
+				if !ok || labelValue != "tiflash_mpp" {
+					continue
+				} else {
+					state, ok := mapPart["state_name"]
+					if ok && state != "Up" && state != "up" && state != "UP" {
+						// record unhealthy RNs from PD
+						sid, ok := mapPart["id"].(float64)
+						if !ok {
+							continue
+						} else {
+							retStoreIDs = append(retStoreIDs, strconv.Itoa(int(sid)))
+						}
+					} else {
+						continue
+					}
+				}
+			}
+		}
+
+	}
+	return retStoreIDs
+}
+
 func FindStoreIdFromJsonStr(str string) string {
 	var x map[string]interface{}
 	err := json.Unmarshal([]byte(str), &x)
@@ -92,6 +162,45 @@ func FindStoreIdFromJsonStr(str string) string {
 	return ""
 }
 
+func RemoveStoreIDsOfUnhealthRNs() error {
+	outOfPdctl, err := exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store").Output()
+	if err != nil {
+		log.Printf("[error][RemoveStoreIDsOfUnhealthRNs]pd ctl get store error: %v\n", err.Error())
+		return err
+	}
+	sIDs := GetStoreIdsOfUnhealthRNs(string(outOfPdctl))
+	if sIDs != nil {
+		for _, storeID := range sIDs {
+			err := RemoveStoreIDFromPD(storeID)
+			if err != nil {
+				continue
+			}
+		}
+	}
+	err = RemoveTombStonesFromPD()
+
+	return err
+}
+
+func RemoveStoreIDFromPD(storeID string) error {
+	if storeID != "" {
+		_, err := exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "delete", storeID).Output()
+		if err != nil {
+			log.Printf("[error]pd ctl get store error: %v\n", err.Error())
+			return err
+		}
+	}
+	return nil
+}
+
+func RemoveTombStonesFromPD() error {
+	_, err := exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "remove-tombstone").Output()
+	if err != nil {
+		log.Printf("[error]pd ctl get store error: %v\n", err.Error())
+	}
+	return err
+}
+
 func NotifyPDForExit() error {
 	outOfPdctl, err := exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store").Output()
 	if err != nil {
@@ -100,14 +209,12 @@ func NotifyPDForExit() error {
 	}
 	storeID := FindStoreIdFromJsonStr(string(outOfPdctl))
 	if storeID != "" {
-		_, err = exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "delete", storeID).Output()
+		err := RemoveStoreIDFromPD(storeID)
 		if err != nil {
-			log.Printf("[error]pd ctl get store error: %v\n", err.Error())
 			return err
 		}
-		_, err = exec.Command("./bin/pd-ctl", "-u", "http://"+pdAddr, "store", "remove-tombstone").Output()
+		err = RemoveTombStonesFromPD()
 		if err != nil {
-			log.Printf("[error]pd ctl get store error: %v\n", err.Error())
 			return err
 		}
 	}
@@ -124,6 +231,13 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			if err != nil {
 				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
+			go func() {
+				log.Printf("[UnassignTenantService]RemoveStoreIDsOfUnhealthRNs \n")
+				err = RemoveStoreIDsOfUnhealthRNs()
+				if err != nil {
+					log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
+				}
+			}()
 			assignTenantID.Store("")
 			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
 			err = cmd.Run()
@@ -155,7 +269,11 @@ func TiFlashMaintainer() {
 			if err != nil {
 				log.Printf("[error]remove data fail: %v\n", err.Error())
 			}
-
+			log.Printf("[TiFlashMaintainer]RemoveStoreIDsOfUnhealthRNs \n")
+			err = RemoveStoreIDsOfUnhealthRNs()
+			if err != nil {
+				log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
+			}
 			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()
 			pid.Store(int32(cmd.Process.Pid))

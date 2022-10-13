@@ -21,7 +21,7 @@ spec:
                   fieldPath: status.podIP
           name: supervisor
           image: supervisor-img
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           ports:
             - containerPort: 7000
             - containerPort: 8237
