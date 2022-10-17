@@ -16,14 +16,17 @@ import (
 var (
 	assignTenantID atomic.Value
 	pid            atomic.Int32
+	reqId          atomic.Int32
 	mu             sync.Mutex
-	ch             = make(chan *pb.AssignRequest)
+	ch             = make(chan *pb.AssignRequest, 10000)
 	pdAddr         string
 )
 var LocalPodIp string
 
 func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
-	log.Printf("received assign request by: %v", in.GetTenantID())
+	curReqId := reqId.Add(1)
+	log.Printf("received assign request by: %v reqid: %v\n", in.GetTenantID(), curReqId)
+	defer log.Printf("finished assign request by: %v reqid: %v\n", in.GetTenantID(), curReqId)
 	if assignTenantID.Load().(string) == "" {
 		mu.Lock()
 		defer mu.Unlock()
@@ -222,7 +225,9 @@ func NotifyPDForExit() error {
 }
 
 func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
-	log.Printf("received unassign request by: %v", in.GetAssertTenantID())
+	curReqId := reqId.Add(1)
+	log.Printf("received unassign request by: %v reqid: %v\n", in.GetAssertTenantID(), curReqId)
+	defer log.Printf("finished unassign request by: %v reqid: %v\n", in.GetAssertTenantID(), curReqId)
 	if in.AssertTenantID == assignTenantID.Load().(string) {
 		mu.Lock()
 		defer mu.Unlock()
@@ -239,7 +244,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 				}
 			}()
 			assignTenantID.Store("")
-			cmd := exec.Command("kill", "-9", fmt.Sprintf("%v", pid.Load()))
+			cmd := exec.Command("killall", "-9", "./bin/tiflash")
 			err = cmd.Run()
 			pid.Store(0)
 			if err != nil {
@@ -258,6 +263,12 @@ func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
 
 func TiFlashMaintainer() {
 	for true {
+		if len(ch) > 1 {
+			log.Printf("[warning]size of channel > 1, size: %v\n", len(ch))
+			for len(ch) > 1 {
+				<-ch
+			}
+		}
 		in := <-ch
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		for in.GetTenantID() == assignTenantID.Load().(string) {
@@ -274,6 +285,11 @@ func TiFlashMaintainer() {
 			if err != nil {
 				log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
 			}
+			if len(ch) > 0 {
+				log.Printf("size of channel > 0, consume!\n")
+				break
+			}
+
 			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
 			err = cmd.Start()
 			pid.Store(int32(cmd.Process.Pid))

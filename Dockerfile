@@ -35,6 +35,7 @@ RUN echo $TZ > /etc/timezone && \
 RUN apt-get update && apt-get install -y \
     git \
     bash \
+    psmisc \
     curl
 RUN mkdir /tiflash
 ADD . /tiflash/
@@ -51,5 +52,5 @@ EXPOSE 7000 8237 8126 9003 20173 20295 3933
 # CMD ["/bin/sh", "-c", "ls -lh /tiflash/rpc_server"]
 # CMD ["/bin/sh", "-c", "pwd"]
 # ENTRYPOINT ["/bin/sh", "-c", "go -version"]
-ENTRYPOINT ["/bin/sh", "-c", "/tiflash/rpc_server > /var/log/tiflash_supervisor.log"]
+ENTRYPOINT ["/tiflash/run.sh"]
 # ENTRYPOINT ["/tiflash/rpc_server > /var/log/tiflash_supervisor.log"]
