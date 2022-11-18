@@ -35,7 +35,7 @@ var (
 )
 
 type server struct {
-	pb.UnimplementedAssignServer
+	// pb.UnimplementedAssignServer
 }
 
 func (s *server) AssignTenant(ctx context.Context, in *pb.AssignRequest) (*pb.Result, error) {
@@ -51,6 +51,7 @@ func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*p
 }
 
 func main() {
+	// LocalPodIp = os.Getenv("POD_IP")
 	flag.Parse()
 	InitService()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))

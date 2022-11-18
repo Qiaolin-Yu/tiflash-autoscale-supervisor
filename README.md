@@ -2,4 +2,4 @@
 ### 先下载golang 
 bash prepare_bins.sh
 
-然后把pd-ctl放到bin目录下
+然后把pd-ctl, tiflash放到bin目录下

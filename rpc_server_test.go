@@ -21,13 +21,14 @@ package main
 import (
 	"context"
 	"flag"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"testing"
 	"time"
 
+	"google.golang.org/protobuf/types/known/emptypb"
+
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
+
 	pb "tiflash-auto-scaling/supervisor_proto"
 )
 
@@ -40,7 +41,7 @@ var (
 func TestAssignTenant(t *testing.T) {
 	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -65,7 +66,7 @@ func TestAssignTenant(t *testing.T) {
 func TestGetCurrentTenant(t *testing.T) {
 	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
@@ -83,7 +84,7 @@ func TestGetCurrentTenant(t *testing.T) {
 func TestUnassignTenant(t *testing.T) {
 	flag.Parse()
 	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
