@@ -27,11 +27,13 @@ var (
 )
 var LocalPodIp string
 
-func setTenantInfo(tenantID string) {
+func setTenantInfo(tenantID string) int64 {
 	muOfTenantInfo.Lock()
 	defer muOfTenantInfo.Unlock()
 	assignTenantID.Store(tenantID)
-	startTime.Store(time.Now().Unix())
+	stime := time.Now().Unix()
+	startTime.Store(stime)
+	return stime
 }
 
 func getTenantInfo() (string, int64) {
@@ -48,7 +50,7 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 		mu.Lock()
 		defer mu.Unlock()
 		if assignTenantID.Load().(string) == "" {
-			setTenantInfo(in.GetTenantID())
+			stime := setTenantInfo(in.GetTenantID())
 			configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 			pdAddr = in.GetPdAddr()
 			err := RenderTiFlashConf(configFile, in.GetTidbStatusAddr(), in.GetPdAddr())
@@ -56,10 +58,11 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 				return &pb.Result{HasErr: true, ErrInfo: "could not render config", TenantID: assignTenantID.Load().(string)}, err
 			}
 			ch <- in
-			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
+			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string), StartTime: stime}, nil
 		}
 	} else if assignTenantID.Load().(string) == in.GetTenantID() {
-		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
+		realTID, stimeOfAssign := getTenantInfo()
+		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: realTID, StartTime: stimeOfAssign}, nil
 	}
 	return &pb.Result{HasErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: assignTenantID.Load().(string)}, nil
 }

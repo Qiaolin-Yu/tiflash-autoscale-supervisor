@@ -27,6 +27,7 @@ message Result{
   bool hasErr = 1;
   string errInfo = 2;
   string tenantID = 3;
+  int64 startTime = 4;
 }
 
 message AssignRequest {
