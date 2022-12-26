@@ -41,6 +41,7 @@ message UnassignRequest {
 
 message GetTenantResponse {
   string tenantID = 1;
+  int64 startTime = 2;
 }
 
 service Assign{
