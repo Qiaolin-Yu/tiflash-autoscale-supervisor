@@ -11,17 +11,34 @@ import (
 	"sync"
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
+	"time"
 )
 
 var (
 	assignTenantID atomic.Value
-	pid            atomic.Int32
-	reqId          atomic.Int32
-	mu             sync.Mutex
-	ch             = make(chan *pb.AssignRequest, 10000)
-	pdAddr         string
+	startTime      atomic.Int64
+	muOfTenantInfo sync.Mutex // protect startTime and assignTenantID
+
+	pid    atomic.Int32
+	reqId  atomic.Int32
+	mu     sync.Mutex
+	ch     = make(chan *pb.AssignRequest, 10000)
+	pdAddr string
 )
 var LocalPodIp string
+
+func setTenantInfo(tenantID string) {
+	muOfTenantInfo.Lock()
+	defer muOfTenantInfo.Unlock()
+	assignTenantID.Store(tenantID)
+	startTime.Store(time.Now().Unix())
+}
+
+func getTenantInfo() (string, int64) {
+	muOfTenantInfo.Lock()
+	defer muOfTenantInfo.Unlock()
+	return assignTenantID.Load().(string), startTime.Load()
+}
 
 func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 	curReqId := reqId.Add(1)
@@ -31,7 +48,7 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 		mu.Lock()
 		defer mu.Unlock()
 		if assignTenantID.Load().(string) == "" {
-			assignTenantID.Store(in.GetTenantID())
+			setTenantInfo(in.GetTenantID())
 			configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 			pdAddr = in.GetPdAddr()
 			err := RenderTiFlashConf(configFile, in.GetTidbStatusAddr(), in.GetPdAddr())
@@ -243,7 +260,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 					log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
 				}
 			}()
-			assignTenantID.Store("")
+			setTenantInfo("")
 			cmd := exec.Command("killall", "-9", "./bin/tiflash")
 			err = cmd.Run()
 			pid.Store(0)
@@ -258,7 +275,8 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 }
 
 func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
-	return &pb.GetTenantResponse{TenantID: assignTenantID.Load().(string)}, nil
+	tenantID, startTime := getTenantInfo()
+	return &pb.GetTenantResponse{TenantID: tenantID, StartTime: startTime}, nil
 }
 
 func TiFlashMaintainer() {
@@ -304,7 +322,7 @@ func TiFlashMaintainer() {
 
 func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
-	assignTenantID.Store("")
+	setTenantInfo("")
 	err := InitTiFlashConf()
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
