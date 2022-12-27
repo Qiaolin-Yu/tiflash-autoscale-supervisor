@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8stypes "k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"log"
 	"os"
 	"os/exec"
@@ -26,6 +31,8 @@ var (
 	pdAddr string
 )
 var LocalPodIp string
+var LocalPodName string
+var K8sCli *kubernetes.Clientset
 
 func setTenantInfo(tenantID string) int64 {
 	muOfTenantInfo.Lock()
@@ -58,6 +65,7 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 				return &pb.Result{HasErr: true, ErrInfo: "could not render config", TenantID: assignTenantID.Load().(string)}, err
 			}
 			ch <- in
+			patchLabel(in.GetTenantID())
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string), StartTime: stime}, nil
 		}
 	} else if assignTenantID.Load().(string) == in.GetTenantID() {
@@ -270,6 +278,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			if err != nil {
 				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
+			patchLabel("null")
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	}
@@ -323,10 +332,38 @@ func TiFlashMaintainer() {
 	}
 }
 
+func patchLabel(tenantId string) {
+	playLoadBytes := fmt.Sprintf(`
+  {
+   "metadata": {
+    "labels": {
+     "pod" : "%s",
+     "metrics_topic" : "tiflash",
+	 "pod_ip" : "%s",
+     "tidb_cluster" : "%s",
+    }
+   }
+  }
+  `, LocalPodName, LocalPodIp, tenantId)
+	_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
+	LocalPodName = os.Getenv("POD_NAME")
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+	K8sCli, err = kubernetes.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
 	setTenantInfo("")
-	err := InitTiFlashConf()
+	err = InitTiFlashConf()
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
 	}
