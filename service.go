@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8stypes "k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"log"
 	"os"
 	"os/exec"
@@ -26,6 +31,8 @@ var (
 	pdAddr string
 )
 var LocalPodIp string
+var LocalPodName string
+var K8sCli *kubernetes.Clientset
 
 func setTenantInfo(tenantID string) int64 {
 	muOfTenantInfo.Lock()
@@ -317,16 +324,45 @@ func TiFlashMaintainer() {
 			if err != nil {
 				log.Printf("start tiflash failed: %v", err)
 			}
+			patchLabel(in.GetTenantID())
 			err = cmd.Wait()
 			log.Printf("tiflash exited: %v", err)
 		}
 	}
 }
 
+func patchLabel(tenantId string) {
+	playLoadBytes := `
+  {
+   "metadata": {
+    "labels": {
+     "pod" : "` + LocalPodName + `",
+     "metrics_topic" : "tiflash",
+	 "pod_ip" : "` + LocalPodIp + `",
+     "tidb_cluster" : "` + tenantId + `",
+    }
+   }
+  }
+  `
+	_, err := K8sCli.CoreV1().Pods("default").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+	if err != nil {
+		panic(err.Error())
+	}
+}
+
 func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
+	LocalPodName = os.Getenv("POD_NAME")
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		panic(err.Error())
+	}
+	K8sCli, err = kubernetes.NewForConfig(config)
+	if err != nil {
+		panic(err.Error())
+	}
 	setTenantInfo("")
-	err := InitTiFlashConf()
+	err = InitTiFlashConf()
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
 	}
