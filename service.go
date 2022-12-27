@@ -4,10 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	k8stypes "k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 	"log"
 	"os"
 	"os/exec"
@@ -17,6 +13,11 @@ import (
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
 	"time"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	k8stypes "k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 )
 
 var (
@@ -332,7 +333,7 @@ func TiFlashMaintainer() {
 	}
 }
 
-func patchLabel(tenantId string) {
+func patchLabel(tenantId string) error {
 	playLoadBytes := fmt.Sprintf(`
   {
    "metadata": {
@@ -345,9 +346,13 @@ func patchLabel(tenantId string) {
    }
   }
   `, LocalPodName, LocalPodIp, tenantId)
-	_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
-	if err != nil {
-		panic(err.Error())
+	for i := 0; i < 2; i++ {
+		_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+		if err != nil {
+			log.Printf("label pod error: %v", err.Error())
+		} else {
+			return nil
+		}
 	}
 }
 
