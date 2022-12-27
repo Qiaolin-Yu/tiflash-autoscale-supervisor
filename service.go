@@ -65,6 +65,7 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 				return &pb.Result{HasErr: true, ErrInfo: "could not render config", TenantID: assignTenantID.Load().(string)}, err
 			}
 			ch <- in
+			patchLabel(in.GetTenantID())
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string), StartTime: stime}, nil
 		}
 	} else if assignTenantID.Load().(string) == in.GetTenantID() {
@@ -277,6 +278,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			if err != nil {
 				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
+			patchLabel("null")
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	}
@@ -324,9 +326,7 @@ func TiFlashMaintainer() {
 			if err != nil {
 				log.Printf("start tiflash failed: %v", err)
 			}
-			patchLabel(in.GetTenantID())
 			err = cmd.Wait()
-			patchLabel("null")
 			log.Printf("tiflash exited: %v", err)
 		}
 	}
@@ -345,7 +345,7 @@ func patchLabel(tenantId string) {
    }
   }
   `, LocalPodName, LocalPodIp, tenantId)
-	_, err := K8sCli.CoreV1().Pods(" tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+	_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
 	if err != nil {
 		panic(err.Error())
 	}
