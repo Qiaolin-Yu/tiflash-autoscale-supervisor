@@ -346,14 +346,16 @@ func patchLabel(tenantId string) error {
    }
   }
   `, LocalPodName, LocalPodIp, tenantId)
+	var err error
 	for i := 0; i < 2; i++ {
-		_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+		_, err = K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
 		if err != nil {
 			log.Printf("label pod error: %v", err.Error())
 		} else {
 			return nil
 		}
 	}
+	return err
 }
 
 func InitService() {
