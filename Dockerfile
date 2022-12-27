@@ -38,9 +38,15 @@ RUN apt-get update && apt-get install -y \
     psmisc \
     curl
 RUN mkdir /tiflash
-ADD . /tiflash/
+COPY bin  /tiflash/bin/
+COPY go1.19.2.linux-amd64.tar.gz /tiflash/
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf /tiflash/go1.19.2.linux-amd64.tar.gz
+COPY conf/  /tiflash/conf/
+COPY supervisor_proto/ /tiflash/supervisor_proto/
+COPY *.go go.* *.yaml *.yml *.sh /tiflash/
+RUN ls -lh /tiflash/
 WORKDIR /tiflash
-RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.19.2.linux-amd64.tar.gz
+
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 

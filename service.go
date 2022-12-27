@@ -341,7 +341,7 @@ func patchLabel(tenantId string) error {
      "pod" : "%s",
      "metrics_topic" : "tiflash",
 	 "pod_ip" : "%s",
-     "tidb_cluster" : "%s",
+     "tidb_cluster" : "%s"
     }
    }
   }
