@@ -326,25 +326,26 @@ func TiFlashMaintainer() {
 			}
 			patchLabel(in.GetTenantID())
 			err = cmd.Wait()
+			patchLabel("null")
 			log.Printf("tiflash exited: %v", err)
 		}
 	}
 }
 
 func patchLabel(tenantId string) {
-	playLoadBytes := `
+	playLoadBytes := fmt.Sprintf(`
   {
    "metadata": {
     "labels": {
-     "pod" : "` + LocalPodName + `",
+     "pod" : "%s",
      "metrics_topic" : "tiflash",
-	 "pod_ip" : "` + LocalPodIp + `",
-     "tidb_cluster" : "` + tenantId + `",
+	 "pod_ip" : "%s",
+     "tidb_cluster" : "%s",
     }
    }
   }
-  `
-	_, err := K8sCli.CoreV1().Pods("default").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
+  `, LocalPodName, LocalPodIp, tenantId)
+	_, err := K8sCli.CoreV1().Pods(" tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
 	if err != nil {
 		panic(err.Error())
 	}
