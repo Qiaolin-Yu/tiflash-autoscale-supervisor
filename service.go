@@ -25,11 +25,13 @@ var (
 	startTime      atomic.Int64
 	muOfTenantInfo sync.Mutex // protect startTime and assignTenantID
 
-	pid    atomic.Int32
-	reqId  atomic.Int32
-	mu     sync.Mutex
-	ch     = make(chan *pb.AssignRequest, 10000)
-	pdAddr string
+	pid        atomic.Int32
+	reqId      atomic.Int32
+	mu         sync.Mutex
+	assignCh   = make(chan *pb.AssignRequest, 10000)
+	patchCh    = make(chan string, 10000)
+	pdAddr     string
+	timeoutArr = []int{1, 2, 4, 8, 10}
 )
 var LocalPodIp string
 var LocalPodName string
@@ -65,8 +67,8 @@ func AssignTenantService(in *pb.AssignRequest) (*pb.Result, error) {
 			if err != nil {
 				return &pb.Result{HasErr: true, ErrInfo: "could not render config", TenantID: assignTenantID.Load().(string)}, err
 			}
-			ch <- in
-			patchLabel(in.GetTenantID())
+			assignCh <- in
+			patchCh <- in.GetTenantID()
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string), StartTime: stime}, nil
 		}
 	} else if assignTenantID.Load().(string) == in.GetTenantID() {
@@ -279,7 +281,7 @@ func UnassignTenantService(in *pb.UnassignRequest) (*pb.Result, error) {
 			if err != nil {
 				return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: assignTenantID.Load().(string)}, err
 			}
-			patchLabel("null")
+			patchCh <- "null"
 			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: assignTenantID.Load().(string)}, nil
 		}
 	}
@@ -292,15 +294,41 @@ func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
 	return &pb.GetTenantResponse{TenantID: tenantID, StartTime: startTime}, nil
 }
 
-func TiFlashMaintainer() {
+func PatchMaintainer() {
 	for true {
-		if len(ch) > 1 {
-			log.Printf("[warning]size of channel > 1, size: %v\n", len(ch))
-			for len(ch) > 1 {
-				<-ch
+		if len(patchCh) > 1 {
+			log.Printf("[warning]size of patch channel > 1, size: %v\n", len(patchCh))
+			for len(patchCh) > 1 {
+				<-patchCh
 			}
 		}
-		in := <-ch
+		in := <-patchCh
+		err := patchLabel(in)
+		if err != nil {
+			index := 0
+			for len(patchCh) == 0 {
+				time.Sleep(time.Duration(timeoutArr[index]) * time.Second)
+				err = patchLabel(in)
+				if err == nil {
+					break
+				}
+				if index < len(timeoutArr)-1 {
+					index++
+				}
+			}
+		}
+	}
+}
+
+func TiFlashMaintainer() {
+	for true {
+		if len(assignCh) > 1 {
+			log.Printf("[warning]size of assign channel > 1, size: %v\n", len(assignCh))
+			for len(assignCh) > 1 {
+				<-assignCh
+			}
+		}
+		in := <-assignCh
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		for in.GetTenantID() == assignTenantID.Load().(string) {
 			err := NotifyPDForExit()
@@ -316,8 +344,8 @@ func TiFlashMaintainer() {
 			if err != nil {
 				log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
 			}
-			if len(ch) > 0 {
-				log.Printf("size of channel > 0, consume!\n")
+			if len(assignCh) > 0 {
+				log.Printf("size of assign channel > 0, consume!\n")
 				break
 			}
 
@@ -346,15 +374,8 @@ func patchLabel(tenantId string) error {
    }
   }
   `, LocalPodName, LocalPodIp, tenantId)
-	var err error
-	for i := 0; i < 2; i++ {
-		_, err = K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
-		if err != nil {
-			log.Printf("label pod error: %v", err.Error())
-		} else {
-			return nil
-		}
-	}
+
+	_, err := K8sCli.CoreV1().Pods("tiflash-autoscale").Patch(context.TODO(), LocalPodName, k8stypes.StrategicMergePatchType, []byte(playLoadBytes), metav1.PatchOptions{})
 	return err
 }
 
@@ -375,4 +396,5 @@ func InitService() {
 		log.Fatalf("failed to init config: %v", err)
 	}
 	go TiFlashMaintainer()
+	go PatchMaintainer()
 }
