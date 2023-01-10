@@ -2,10 +2,12 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sync"
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
@@ -15,6 +17,8 @@ import (
 	k8stypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/client-go/util/homedir"
 )
 
 var (
@@ -32,7 +36,7 @@ var (
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
 )
 
-const NeedPd = false
+const NeedPd = true
 
 var LocalPodIp string
 var LocalPodName string
@@ -57,30 +61,40 @@ func getTenantInfo() (string, int64, bool) {
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	curReqId := ReqId.Add(1)
 	log.Printf("received assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
+	var errInfo string
 	defer log.Printf("finished assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
 	if AssignTenantID.Load().(string) == "" {
-		MuOfSupervisor.Lock()
-		defer MuOfSupervisor.Unlock()
-		if AssignTenantID.Load().(string) == "" {
-			stime := setTenantInfo(req.GetTenantID(), false)
-			LabelPatchCh <- req.GetTenantID()
-			configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
-			PdAddr = req.GetPdAddr()
-			err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr())
-			if err != nil {
-				//rollback
-				setTenantInfo("", false)
-				LabelPatchCh <- "null"
-				return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "could not render config", TenantID: "", StartTime: stime, IsUnassigning: false}, err
+		if MuOfSupervisor.TryLock() {
+			defer MuOfSupervisor.Unlock()
+			if AssignTenantID.Load().(string) == "" {
+				stime := setTenantInfo(req.GetTenantID(), false)
+				LabelPatchCh <- req.GetTenantID()
+				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
+				PdAddr = req.GetPdAddr()
+				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr())
+				if err != nil {
+					//rollback
+					setTenantInfo("", false)
+					LabelPatchCh <- "null"
+					return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "could not render config", TenantID: "", StartTime: stime, IsUnassigning: false}, err
+				}
+				AssignCh <- req
+				for Pid.Load() == 0 {
+					time.Sleep(10 * time.Microsecond)
+				}
+				return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string), StartTime: stime, IsUnassigning: false}, nil
 			}
-			AssignCh <- req
-			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string), StartTime: stime, IsUnassigning: false}, nil
+		} else {
+			errInfo = "TryLock failed"
 		}
 	} else if AssignTenantID.Load().(string) == req.GetTenantID() {
 		realTID, stimeOfAssign, isUnassigning := getTenantInfo()
 		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+	} else {
+		errInfo = "TiFlash has been occupied by a tenant"
 	}
 	realTID, stimeOfAssign, isUnassigning := getTenantInfo()
+	log.Printf("[error][assign]%v realTID:%v wantTID:%v\n", errInfo, realTID, req.TenantID)
 	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
 }
 
@@ -88,46 +102,53 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 	curReqId := ReqId.Add(1)
 	log.Printf("received unassign request by: %v reqid: %v\n", req.GetAssertTenantID(), curReqId)
 	defer log.Printf("finished unassign request by: %v reqid: %v\n", req.GetAssertTenantID(), curReqId)
+	var errInfo string
 	if req.AssertTenantID == AssignTenantID.Load().(string) {
-		MuOfSupervisor.Lock()
-		defer MuOfSupervisor.Unlock()
-		if req.AssertTenantID == AssignTenantID.Load().(string) && Pid.Load() != 0 {
-			// if NeedPd {
-			// 	err := PdCtlNotifyPDForExit()
-			// 	if err != nil {
-			// 		return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: AssignTenantID.Load().(string)}, err
-			// 	}
+		if MuOfSupervisor.TryLock() {
+			defer MuOfSupervisor.Unlock()
+			if req.AssertTenantID == AssignTenantID.Load().(string) && Pid.Load() != 0 {
+				if NeedPd {
+					err := PdCtlNotifyPDForExit()
+					if err != nil {
+						return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: AssignTenantID.Load().(string)}, err
+					}
 
-			// 	go func() {
-			// 		log.Printf("[UnassignTenantService]RemoveStoreIDsOfUnhealthRNs \n")
-			// 		err = PdCtlRemoveStoreIDsOfUnhealthRNs()
-			// 		if err != nil {
-			// 			log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
-			// 		}
-			// 	}()
-			// }
-			if !req.ForceShutdown {
-				setTenantInfo(req.AssertTenantID, true)
-				log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
-				time.Sleep(60 * time.Second)
-			}
+					go func() {
+						log.Printf("[UnassignTenantService]RemoveStoreIDsOfUnhealthRNs \n")
+						err = PdCtlRemoveStoreIDsOfUnhealthRNs()
+						if err != nil {
+							log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
+						}
+					}()
+				}
+				if !req.ForceShutdown {
+					setTenantInfo(req.AssertTenantID, true)
+					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
+					time.Sleep(60 * time.Second)
+				}
 
-			setTenantInfo("", false)
-			cmd := exec.Command("killall", "-9", "./bin/tiflash")
-			err := cmd.Run()
-			if err != nil {
-				log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
+				setTenantInfo("", false)
+				cmd := exec.Command("killall", "-9", "./bin/tiflash")
+				err := cmd.Run()
+				if err != nil {
+					log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
+				}
+				Pid.Store(0)
+				LabelPatchCh <- "null"
+				// if err != nil {
+				// 	return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: AssignTenantID.Load().(string)}, err
+				// }
+				return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string)}, nil
 			}
-			Pid.Store(0)
-			LabelPatchCh <- "null"
-			// if err != nil {
-			// 	return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: AssignTenantID.Load().(string)}, err
-			// }
-			return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string)}, nil
+		} else {
+			errInfo = "TryLock failed"
 		}
+	} else {
+		errInfo = "TiFlash is not assigned to this tenant"
 	}
 	realTID, stimeOfAssign, isUnassigning := getTenantInfo()
-	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: "TiFlash is not assigned to this tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+	log.Printf("[error][unassign]%v realTID:%v wantTID:%v\n", errInfo, realTID, req.AssertTenantID)
+	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: errInfo, TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
 
 }
 
@@ -173,23 +194,23 @@ func TiFlashMaintainer() {
 		in := <-AssignCh
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		for in.GetTenantID() == AssignTenantID.Load().(string) {
-			// if NeedPd {
-			// 	err := PdCtlNotifyPDForExit()
-			// 	if err != nil {
-			// 		log.Printf("[error]notify pd fail: %v\n", err.Error())
-			// 	}
-			// }
+			if NeedPd {
+				err := PdCtlNotifyPDForExit()
+				if err != nil {
+					log.Printf("[error]notify pd fail: %v\n", err.Error())
+				}
+			}
 			err := os.RemoveAll("/tiflash/data")
 			if err != nil {
 				log.Printf("[error]remove data fail: %v\n", err.Error())
 			}
-			// if NeedPd {
-			// 	log.Printf("[TiFlashMaintainer]RemoveStoreIDsOfUnhealthRNs \n")
-			// 	err = PdCtlRemoveStoreIDsOfUnhealthRNs()
-			// 	if err != nil {
-			// 		log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
-			// 	}
-			// }
+			if NeedPd {
+				log.Printf("[TiFlashMaintainer]RemoveStoreIDsOfUnhealthRNs \n")
+				err = PdCtlRemoveStoreIDsOfUnhealthRNs()
+				if err != nil {
+					log.Printf("[error]Remove StoreIDs Of Unhealth RNs fail: %v\n", err.Error())
+				}
+			}
 			if len(AssignCh) > 0 {
 				log.Printf("size of assign channel > 0, consume!\n")
 				break
@@ -225,10 +246,32 @@ func patchLabel(tenantId string) error {
 	return err
 }
 
+func outsideConfig() (*rest.Config, error) {
+	var kubeconfig *string
+	if home := homedir.HomeDir(); home != "" {
+		kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+	} else {
+		kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+	}
+	flag.Parse()
+
+	// use the current context in kubeconfig
+	return clientcmd.BuildConfigFromFlags("", *kubeconfig)
+}
+
+func getK8sConfig() (*rest.Config, error) {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return outsideConfig()
+	} else {
+		return config, err
+	}
+}
+
 func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
-	config, err := rest.InClusterConfig()
+	config, err := getK8sConfig()
 	if err != nil {
 		panic(err.Error())
 	}

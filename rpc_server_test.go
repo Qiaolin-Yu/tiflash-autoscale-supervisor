@@ -111,5 +111,8 @@ func TestInitTiFlashConf(t *testing.T) {
 	if err != nil {
 		log.Fatalf("init tiflash conf failed: %v", err)
 	}
-	RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000")
+	err = RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000")
+	if err != nil {
+		log.Fatalf("RenderTiFlashConf failed: %v", err)
+	}
 }
