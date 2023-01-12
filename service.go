@@ -95,7 +95,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	}
 	realTID, stimeOfAssign, isUnassigning := getTenantInfo()
 	log.Printf("[error][assign]%v realTID:%v wantTID:%v\n", errInfo, realTID, req.TenantID)
-	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
 }
 
 func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
