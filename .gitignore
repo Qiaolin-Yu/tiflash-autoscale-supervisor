@@ -6,3 +6,6 @@ conf/tiflash.toml
 conf/tiflash-preprocessed.toml
 conf/tiflash-learner.toml
 *.info
+tiflash_*/
+bin/*
+bin_*/
