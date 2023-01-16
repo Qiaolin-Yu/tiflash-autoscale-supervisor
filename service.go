@@ -36,7 +36,7 @@ var (
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
 )
 
-const NeedPd = true
+const NeedPd = false
 
 var LocalPodIp string
 var LocalPodName string
