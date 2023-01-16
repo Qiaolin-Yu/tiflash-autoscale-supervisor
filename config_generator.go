@@ -20,7 +20,7 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 		return err
 	}
 	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigFile)
-	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, tidbStatusAddr, pdAddr)
+	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, pdAddr)
 	tiFlashConfigFile, err := os.Create(targetTiFlashConfigFilename)
 	defer tiFlashConfigFile.Close()
 	if err != nil {

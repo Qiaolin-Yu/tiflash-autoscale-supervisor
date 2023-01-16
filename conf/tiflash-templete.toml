@@ -16,7 +16,6 @@ tmp_path = "/tiflash/data/tmp"
 
 [flash]
 service_addr = "%v:3930"
-tidb_status_addr = "%v"
 disaggregated_mode = "tiflash_storage"
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
