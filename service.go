@@ -1,18 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
 	"time"
 
+	"github.com/prometheus/common/expfmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8stypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -34,6 +41,8 @@ var (
 	LabelPatchCh              = make(chan string, 10000)
 	PdAddr                    string
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
+
+	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
 )
 
 const NeedPd = false
@@ -42,6 +51,7 @@ var S3BucketForTiFLashLog = ""
 var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
+var CheckTiFlashFreeInterval int
 var K8sCli *kubernetes.Clientset
 
 func setTenantInfo(tenantID string, isUnassigning bool) int64 {
@@ -58,6 +68,35 @@ func getTenantInfo() (string, int64, bool) {
 	MuOfTenantInfo.Lock()
 	defer MuOfTenantInfo.Unlock()
 	return AssignTenantID.Load().(string), StartTime.Load(), IsUnassigning.Load()
+}
+
+func GetTiFlashTaskNum() (int, error) {
+	resp, err := http.Get(TiFlashMetricURL)
+	if err != nil {
+		return 0, err
+	}
+	if resp.StatusCode != 200 {
+		return 0, errors.New("http status code is not 200")
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+	res := 0
+	reader := bytes.NewReader(data)
+	var parser expfmt.TextParser
+	metricFamilies, err := parser.TextToMetricFamilies(reader)
+	for _, v := range metricFamilies {
+		if strings.HasPrefix(*v.Name, "tiflash_coprocessor_handling_request_count") {
+			for _, m := range v.Metric {
+				res += int(*m.Gauge.Value)
+			}
+			break
+		}
+
+	}
+	return res, nil
 }
 
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
@@ -127,7 +166,20 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				if !req.ForceShutdown {
 					setTenantInfo(req.AssertTenantID, true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
-					time.Sleep(60 * time.Second)
+					for {
+						taskNum, err := GetTiFlashTaskNum()
+						if err != nil {
+							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
+							break
+						}
+						if taskNum == 0 {
+							log.Printf("[unassigning]tiflash has no task, shutdown\n")
+							break
+						} else {
+							log.Printf("[unassigning]tiflash has %v task, wait\n", taskNum)
+						}
+						time.Sleep(time.Duration(CheckTiFlashFreeInterval) * time.Second)
+					}
 				}
 
 				setTenantInfo("", false)
@@ -295,6 +347,12 @@ func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
+	CheckTiFlashFreeIntervalString := os.Getenv("CHECK_TIFLASH_FREE_INTERVAL")
+	if CheckTiFlashFreeIntervalString == "" {
+		CheckTiFlashFreeInterval = 60
+	} else {
+		CheckTiFlashFreeInterval, _ = strconv.Atoi(CheckTiFlashFreeIntervalString)
+	}
 	config, err := getK8sConfig()
 	if err != nil {
 		panic(err.Error())
