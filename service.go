@@ -38,6 +38,8 @@ var (
 
 const NeedPd = false
 
+var S3BucketForTiFLashLog = ""
+var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
 var K8sCli *kubernetes.Clientset
@@ -107,6 +109,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 		if MuOfSupervisor.TryLock() {
 			defer MuOfSupervisor.Unlock()
 			if req.AssertTenantID == AssignTenantID.Load().(string) && Pid.Load() != 0 {
+				TryToUploadTiFlashLogIntoS3(false)
 				if NeedPd {
 					err := PdCtlNotifyPDForExit()
 					if err != nil {
@@ -135,6 +138,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				}
 				Pid.Store(0)
 				LabelPatchCh <- "null"
+				TryToUploadTiFlashLogIntoS3(true)
 				// if err != nil {
 				// 	return &pb.Result{HasErr: true, ErrInfo: err.Error(), TenantID: AssignTenantID.Load().(string)}, err
 				// }
@@ -268,9 +272,29 @@ func getK8sConfig() (*rest.Config, error) {
 	}
 }
 
+func TryToUploadTiFlashLogIntoS3(isSync bool) {
+	if S3BucketForTiFLashLog != "" {
+		fn := func() {
+			if S3Mutex.TryLock() {
+				defer S3Mutex.Unlock()
+				_, err := exec.Command("aws", "s3", "cp", "--recursive", "/tiflash/log/", fmt.Sprintf("s3://%v/%v/", S3BucketForTiFLashLog, LocalPodName)).Output()
+				if err != nil {
+					log.Printf("[error][s3] err:%v\n", err.Error())
+				}
+			}
+		}
+		if isSync {
+			fn()
+		} else {
+			go fn()
+		}
+	}
+}
+
 func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
+	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
 	config, err := getK8sConfig()
 	if err != nil {
 		panic(err.Error())

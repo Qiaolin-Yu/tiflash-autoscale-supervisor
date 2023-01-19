@@ -36,11 +36,21 @@ RUN apt-get update && apt-get install -y \
     git \
     bash \
     psmisc \
-    curl
+    curl \
+    unzip \
+    wget
 RUN mkdir /tiflash
 COPY bin  /tiflash/bin/
-COPY go1.19.2.linux-amd64.tar.gz /tiflash/
-RUN rm -rf /usr/local/go && tar -C /usr/local -xzf /tiflash/go1.19.2.linux-amd64.tar.gz
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN cd /tiflash/ && echo $TARGETPLATFORM \
+    && if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=arm64 ; else  SIMPLE_ARCH=amd64 ; fi \
+    && wget --no-check-certificate https://go.dev/dl/go1.19.5.linux-$SIMPLE_ARCH.tar.gz \
+    && pwd && ls -lh \
+    && rm -rf /usr/local/go && tar -C /usr/local -xzf /tiflash/go1.19.5.linux-$SIMPLE_ARCH.tar.gz
+# RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
+# RUN echo $TARGETPLATFORM && go version
+# COPY go1.19.2.linux-amd64.tar.gz /tiflash/
 COPY conf/  /tiflash/conf/
 COPY supervisor_proto/ /tiflash/supervisor_proto/
 COPY *.go go.* *.yaml *.yml *.sh /tiflash/
@@ -53,6 +63,9 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/tiflash/bin:$LD_LIBRARY_PATH"
 RUN go mod tidy
 RUN go build -o rpc_server
+# awscli-exe-linux-aarch64.zip
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=aarch64 ; else  SIMPLE_ARCH=x86_64 ; fi \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-$SIMPLE_ARCH.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 # COPY --from=builder /tiflash/rpc_server /rpc_server
 EXPOSE 7000 8237 8126 9003 20173 20295 3933
 # CMD ["/bin/sh", "-c", "ls -lh /tiflash/rpc_server"]
