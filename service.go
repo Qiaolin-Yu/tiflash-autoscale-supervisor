@@ -73,7 +73,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				LabelPatchCh <- req.GetTenantID()
 				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
 				PdAddr = req.GetPdAddr()
-				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr())
+				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr(), req.GetTenantID())
 				if err != nil {
 					//rollback
 					setTenantInfo("", false)
