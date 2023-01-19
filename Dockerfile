@@ -66,7 +66,7 @@ RUN go build -o rpc_server
 # awscli-exe-linux-aarch64.zip
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=aarch64 ; else  SIMPLE_ARCH=x86_64 ; fi \
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-$SIMPLE_ARCH.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
-COPY --from=xexplorersun/tiflash:cse-3dc23cc935cfdde155df657f73dd385a27f40031 /tiflash/* /rpc_server/bin/
+COPY --from=xexplorersun/tiflash:cse-3dc23cc935cfdde155df657f73dd385a27f40031 /tiflash/* /tiflash/bin/
 RUN ls -lh /rpc_server/bin/ && /rpc_server/bin/tiflash version
 EXPOSE 7000 8237 8126 9003 20173 20295 3933
 # CMD ["/bin/sh", "-c", "ls -lh /tiflash/rpc_server"]
