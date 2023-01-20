@@ -9,7 +9,6 @@ log-file = "/tiflash/log/tiflash_tikv.log"
 
 [flash]
 [flash.proxy]
-engine-label = "tiflash_mpp"
 
 [raftstore]
 apply-pool-size = 4
