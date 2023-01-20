@@ -1,0 +1,2242 @@
+# HELP exposer_transferred_bytes_total Transferred bytes to metrics services
+# TYPE exposer_transferred_bytes_total counter
+exposer_transferred_bytes_total 1703332
+# HELP exposer_scrapes_total Number of times metrics were scraped
+# TYPE exposer_scrapes_total counter
+exposer_scrapes_total 126
+# HELP exposer_request_latencies Latencies of serving scrape requests, in microseconds
+# TYPE exposer_request_latencies summary
+exposer_request_latencies_count 126
+exposer_request_latencies_sum 265210
+exposer_request_latencies{quantile="0.5"} 2024
+exposer_request_latencies{quantile="0.9"} 2048
+exposer_request_latencies{quantile="0.99"} 2048
+# HELP tiflash_coprocessor_request_count "Total number of request"
+# TYPE tiflash_coprocessor_request_count counter
+tiflash_coprocessor_request_count{type="remote_read_sent"} 0
+tiflash_coprocessor_request_count{type="run_mpp_task"} 0
+tiflash_coprocessor_request_count{type="cancel_mpp_task"} 0
+tiflash_coprocessor_request_count{type="remote_read"} 0
+tiflash_coprocessor_request_count{type="mpp_establish_conn"} 0
+tiflash_coprocessor_request_count{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_request_count{type="batch_executing"} 0
+tiflash_coprocessor_request_count{type="batch"} 0
+tiflash_coprocessor_request_count{type="remote_read_constructed"} 0
+tiflash_coprocessor_request_count{type="cop_executing"} 0
+tiflash_coprocessor_request_count{type="cop"} 0
+# HELP tiflash_coprocessor_executor_count "Total number of each executor"
+# TYPE tiflash_coprocessor_executor_count counter
+tiflash_coprocessor_executor_count{type="window_sort"} 0
+tiflash_coprocessor_executor_count{type="projection"} 0
+tiflash_coprocessor_executor_count{type="partition_table_scan"} 0
+tiflash_coprocessor_executor_count{type="exchange_receiver"} 0
+tiflash_coprocessor_executor_count{type="exchange_sender"} 0
+tiflash_coprocessor_executor_count{type="join"} 0
+tiflash_coprocessor_executor_count{type="table_scan"} 0
+tiflash_coprocessor_executor_count{type="window"} 0
+tiflash_coprocessor_executor_count{type="limit"} 0
+tiflash_coprocessor_executor_count{type="aggregation"} 0
+tiflash_coprocessor_executor_count{type="selection"} 0
+tiflash_coprocessor_executor_count{type="top_n"} 0
+# HELP tiflash_coprocessor_request_error "Total number of request error"
+# TYPE tiflash_coprocessor_request_error counter
+tiflash_coprocessor_request_error{reason="other_error"} 0
+tiflash_coprocessor_request_error{reason="meet_lock"} 0
+tiflash_coprocessor_request_error{reason="kv_client_error"} 0
+tiflash_coprocessor_request_error{reason="region_not_found"} 0
+tiflash_coprocessor_request_error{reason="epoch_not_match"} 0
+tiflash_coprocessor_request_error{reason="internal_error"} 0
+# HELP tiflash_coprocessor_response_bytes "Total bytes of response body"
+# TYPE tiflash_coprocessor_response_bytes counter
+tiflash_coprocessor_response_bytes{type="cancel_mpp_task"} 0
+tiflash_coprocessor_response_bytes{type="mpp_tunnel"} 0
+tiflash_coprocessor_response_bytes{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_response_bytes{type="batch_cop"} 0
+tiflash_coprocessor_response_bytes{type="mpp_tunnel_local"} 0
+tiflash_coprocessor_response_bytes{type="cop"} 0
+# HELP tiflash_schema_apply_count "Total number of each kinds of apply"
+# TYPE tiflash_schema_apply_count counter
+tiflash_schema_apply_count{type="failed"} 0
+tiflash_schema_apply_count{type="full"} 1
+tiflash_schema_apply_count{type="diff"} 1
+# HELP tiflash_schema_trigger_count "Total number of each kinds of schema sync trigger"
+# TYPE tiflash_schema_trigger_count counter
+tiflash_schema_trigger_count{type="cop_read"} 0
+tiflash_schema_trigger_count{type="raft_decode"} 0
+tiflash_schema_trigger_count{type="timer"} 0
+# HELP tiflash_schema_internal_ddl_count "Total number of each kinds of internal ddl operations"
+# TYPE tiflash_schema_internal_ddl_count counter
+tiflash_schema_internal_ddl_count{type="exchange_partition"} 0
+tiflash_schema_internal_ddl_count{type="rename_column"} 0
+tiflash_schema_internal_ddl_count{type="add_column"} 0
+tiflash_schema_internal_ddl_count{type="alter_column_type"} 0
+tiflash_schema_internal_ddl_count{type="rename_table"} 0
+tiflash_schema_internal_ddl_count{type="drop_column"} 0
+tiflash_schema_internal_ddl_count{type="create_table"} 41
+tiflash_schema_internal_ddl_count{type="drop_db"} 0
+tiflash_schema_internal_ddl_count{type="drop_table"} 0
+tiflash_schema_internal_ddl_count{type="create_db"} 2
+# HELP tiflash_raft_read_index_count "Total number of raft read index"
+# TYPE tiflash_raft_read_index_count counter
+tiflash_raft_read_index_count 0
+# HELP tiflash_storage_read_tasks_count "Total number of storage engine read tasks"
+# TYPE tiflash_storage_read_tasks_count counter
+tiflash_storage_read_tasks_count 0
+# HELP tiflash_storage_command_count "Total number of storage's command, such as delete range / shutdown /startup"
+# TYPE tiflash_storage_command_count counter
+tiflash_storage_command_count{type="ingest"} 0
+tiflash_storage_command_count{type="delete_range"} 0
+# HELP tiflash_storage_subtask_count "Total number of storage's sub task"
+# TYPE tiflash_storage_subtask_count counter
+tiflash_storage_subtask_count{type="place_index_update"} 0
+tiflash_storage_subtask_count{type="seg_merge_bg_gc"} 0
+tiflash_storage_subtask_count{type="seg_split_ingest"} 0
+tiflash_storage_subtask_count{type="seg_split_bg"} 0
+tiflash_storage_subtask_count{type="delta_flush"} 0
+tiflash_storage_subtask_count{type="delta_compact"} 0
+tiflash_storage_subtask_count{type="delta_merge_fg"} 0
+tiflash_storage_subtask_count{type="seg_split_fg"} 0
+tiflash_storage_subtask_count{type="delta_merge_bg_gc"} 0
+tiflash_storage_subtask_count{type="delta_merge_manual"} 0
+tiflash_storage_subtask_count{type="delta_merge_bg"} 0
+# HELP tiflash_storage_page_gc_count "Total number of page's gc execution."
+# TYPE tiflash_storage_page_gc_count counter
+tiflash_storage_page_gc_count{type="v3_mvcc_dumped"} 0
+tiflash_storage_page_gc_count{type="v3"} 71
+tiflash_storage_page_gc_count{type="v3_bs_full_gc"} 0
+tiflash_storage_page_gc_count{type="v2_low"} 0
+tiflash_storage_page_gc_count{type="v2"} 0
+# HELP tiflash_storage_io_limiter "Storage I/O limiter metrics"
+# TYPE tiflash_storage_io_limiter counter
+tiflash_storage_io_limiter{type="bg_write_req_bytes"} 0
+tiflash_storage_io_limiter{type="fg_write_alloc_bytes"} 0
+tiflash_storage_io_limiter{type="bg_read_alloc_bytes"} 0
+tiflash_storage_io_limiter{type="bg_write_alloc_bytes"} 0
+tiflash_storage_io_limiter{type="bg_read_req_bytes"} 0
+tiflash_storage_io_limiter{type="fg_read_alloc_bytes"} 0
+tiflash_storage_io_limiter{type="fg_write_req_bytes"} 0
+tiflash_storage_io_limiter{type="fg_read_req_bytes"} 0
+# HELP tiflash_raft_process_keys "Total number of keys processed in some types of Raft commands"
+# TYPE tiflash_raft_process_keys counter
+tiflash_raft_process_keys{type="ingest_sst"} 0
+tiflash_raft_process_keys{type="apply_snapshot"} 0
+# HELP tiflash_storage_read_thread_counter "The counter of storage read thread"
+# TYPE tiflash_storage_read_thread_counter counter
+tiflash_storage_read_thread_counter{type="get_cache_copy"} 0
+tiflash_storage_read_thread_counter{type="get_cache_hit"} 0
+tiflash_storage_read_thread_counter{type="get_cache_part"} 0
+tiflash_storage_read_thread_counter{type="add_cache_stale"} 0
+tiflash_storage_read_thread_counter{type="get_cache_miss"} 0
+tiflash_storage_read_thread_counter{type="sche_no_segment"} 0
+tiflash_storage_read_thread_counter{type="sche_new_task"} 0
+tiflash_storage_read_thread_counter{type="sche_from_cache"} 0
+tiflash_storage_read_thread_counter{type="add_cache_succ"} 0
+tiflash_storage_read_thread_counter{type="sche_no_slot"} 0
+tiflash_storage_read_thread_counter{type="sche_no_pool"} 0
+# HELP tiflash_coprocessor_handling_request_count "Number of handling request"
+# TYPE tiflash_coprocessor_handling_request_count gauge
+tiflash_coprocessor_handling_request_count{type="run_mpp_task"} 0
+tiflash_coprocessor_handling_request_count{type="cancel_mpp_task"} 0
+tiflash_coprocessor_handling_request_count{type="remote_read_executing"} 0
+tiflash_coprocessor_handling_request_count{type="remote_read"} 0
+tiflash_coprocessor_handling_request_count{type="mpp_establish_conn"} 0
+tiflash_coprocessor_handling_request_count{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_handling_request_count{type="batch_executing"} 0
+tiflash_coprocessor_handling_request_count{type="batch"} 0
+tiflash_coprocessor_handling_request_count{type="cop_executing"} 0
+tiflash_coprocessor_handling_request_count{type="cop"} 0
+# HELP tiflash_schema_version "Current version of tiflash cached schema"
+# TYPE tiflash_schema_version gauge
+tiflash_schema_version 39
+# HELP tiflash_schema_applying "Whether the schema is applying or not (holding lock)"
+# TYPE tiflash_schema_applying gauge
+tiflash_schema_applying 0
+# HELP tiflash_storage_throughput_bytes "Calculate the throughput of tasks of storage in bytes"
+# TYPE tiflash_storage_throughput_bytes gauge
+tiflash_storage_throughput_bytes{type="split"} 0
+tiflash_storage_throughput_bytes{type="delta_merge"} 0
+tiflash_storage_throughput_bytes{type="merge"} 0
+tiflash_storage_throughput_bytes{type="ingest"} 0
+tiflash_storage_throughput_bytes{type="write"} 0
+# HELP tiflash_storage_throughput_rows "Calculate the throughput of tasks of storage in rows"
+# TYPE tiflash_storage_throughput_rows gauge
+tiflash_storage_throughput_rows{type="split"} 0
+tiflash_storage_throughput_rows{type="delta_merge"} 0
+tiflash_storage_throughput_rows{type="merge"} 0
+tiflash_storage_throughput_rows{type="ingest"} 0
+tiflash_storage_throughput_rows{type="write"} 0
+# HELP tiflash_server_info "Indicate the tiflash server info, and the value is the start timestamp (s)."
+# TYPE tiflash_server_info gauge
+tiflash_server_info{hash="41c08dbe20901f6cfd28ce642b39ce53f35ef48a",version="v6.5.0-dirty"} 1674186597
+# HELP tiflash_object_count "Number of objects"
+# TYPE tiflash_object_count gauge
+tiflash_object_count{type="count_of_mpptunnel"} 0
+tiflash_object_count{type="count_of_establish_calldata"} 4000
+# HELP tiflash_thread_count "Number of threads"
+# TYPE tiflash_thread_count gauge
+tiflash_thread_count{type="rpc_async_worker_total"} 400
+tiflash_thread_count{type="rpc_async_worker_active"} 0
+tiflash_thread_count{type="rpc_establish_mpp"} 0
+tiflash_thread_count{type="rpc_dispatch_mpp_max"} 0
+tiflash_thread_count{type="rpc_receiver_reactor"} 0
+tiflash_thread_count{type="rpc_receiver_read_loop"} 0
+tiflash_thread_count{type="thread_pool_active_max"} 0
+tiflash_thread_count{type="rpc_establish_mpp_max"} 0
+tiflash_thread_count{type="thread_pool_active"} 0
+tiflash_thread_count{type="total_max"} 810
+tiflash_thread_count{type="rpc_client_cq_pool"} 10
+tiflash_thread_count{type="rpc_dispatch_mpp"} 0
+tiflash_thread_count{type="total"} 810
+tiflash_thread_count{type="thread_pool_total"} 400
+tiflash_thread_count{type="thread_pool_total_max"} 400
+# HELP tiflash_task_scheduler "Min-tso task scheduler"
+# TYPE tiflash_task_scheduler gauge
+tiflash_task_scheduler{type="hard_limit_exceeded_count"} 0
+tiflash_task_scheduler{type="thread_hard_limit"} 10000
+tiflash_task_scheduler{type="thread_soft_limit"} 5000
+tiflash_task_scheduler{type="estimated_thread_usage"} 0
+tiflash_task_scheduler{type="waiting_tasks_count"} 0
+tiflash_task_scheduler{type="active_queries_count"} 0
+tiflash_task_scheduler{type="active_tasks_count"} 0
+tiflash_task_scheduler{type="waiting_queries_count"} 0
+tiflash_task_scheduler{type="min_tso"} 1.844674407370955e+19
+# HELP tiflash_storage_read_thread_gauge "The gauge of storage read thread"
+# TYPE tiflash_storage_read_thread_gauge gauge
+tiflash_storage_read_thread_gauge{type="merged_task"} 0
+# HELP tiflash_mpp_task_manager "The gauge of mpp task manager"
+# TYPE tiflash_mpp_task_manager gauge
+tiflash_mpp_task_manager{type="mpp_query_count"} 0
+# HELP tiflash_system_profile_event_Query System profile event Query
+# TYPE tiflash_system_profile_event_Query gauge
+tiflash_system_profile_event_Query 0
+# HELP tiflash_system_profile_event_FileOpen System profile event FileOpen
+# TYPE tiflash_system_profile_event_FileOpen gauge
+tiflash_system_profile_event_FileOpen 43
+# HELP tiflash_system_profile_event_FileOpenFailed System profile event FileOpenFailed
+# TYPE tiflash_system_profile_event_FileOpenFailed gauge
+tiflash_system_profile_event_FileOpenFailed 0
+# HELP tiflash_system_profile_event_ReadBufferFromFileDescriptorRead System profile event ReadBufferFromFileDescriptorRead
+# TYPE tiflash_system_profile_event_ReadBufferFromFileDescriptorRead gauge
+tiflash_system_profile_event_ReadBufferFromFileDescriptorRead 1
+# HELP tiflash_system_profile_event_ReadBufferFromFileDescriptorReadFailed System profile event ReadBufferFromFileDescriptorReadFailed
+# TYPE tiflash_system_profile_event_ReadBufferFromFileDescriptorReadFailed gauge
+tiflash_system_profile_event_ReadBufferFromFileDescriptorReadFailed 0
+# HELP tiflash_system_profile_event_ReadBufferFromFileDescriptorReadBytes System profile event ReadBufferFromFileDescriptorReadBytes
+# TYPE tiflash_system_profile_event_ReadBufferFromFileDescriptorReadBytes gauge
+tiflash_system_profile_event_ReadBufferFromFileDescriptorReadBytes 0
+# HELP tiflash_system_profile_event_WriteBufferFromFileDescriptorWrite System profile event WriteBufferFromFileDescriptorWrite
+# TYPE tiflash_system_profile_event_WriteBufferFromFileDescriptorWrite gauge
+tiflash_system_profile_event_WriteBufferFromFileDescriptorWrite 44
+# HELP tiflash_system_profile_event_WriteBufferFromFileDescriptorWriteBytes System profile event WriteBufferFromFileDescriptorWriteBytes
+# TYPE tiflash_system_profile_event_WriteBufferFromFileDescriptorWriteBytes gauge
+tiflash_system_profile_event_WriteBufferFromFileDescriptorWriteBytes 94951
+# HELP tiflash_system_profile_event_ReadBufferAIORead System profile event ReadBufferAIORead
+# TYPE tiflash_system_profile_event_ReadBufferAIORead gauge
+tiflash_system_profile_event_ReadBufferAIORead 0
+# HELP tiflash_system_profile_event_ReadBufferAIOReadBytes System profile event ReadBufferAIOReadBytes
+# TYPE tiflash_system_profile_event_ReadBufferAIOReadBytes gauge
+tiflash_system_profile_event_ReadBufferAIOReadBytes 0
+# HELP tiflash_system_profile_event_WriteBufferAIOWrite System profile event WriteBufferAIOWrite
+# TYPE tiflash_system_profile_event_WriteBufferAIOWrite gauge
+tiflash_system_profile_event_WriteBufferAIOWrite 0
+# HELP tiflash_system_profile_event_WriteBufferAIOWriteBytes System profile event WriteBufferAIOWriteBytes
+# TYPE tiflash_system_profile_event_WriteBufferAIOWriteBytes gauge
+tiflash_system_profile_event_WriteBufferAIOWriteBytes 0
+# HELP tiflash_system_profile_event_UncompressedCacheHits System profile event UncompressedCacheHits
+# TYPE tiflash_system_profile_event_UncompressedCacheHits gauge
+tiflash_system_profile_event_UncompressedCacheHits 0
+# HELP tiflash_system_profile_event_UncompressedCacheMisses System profile event UncompressedCacheMisses
+# TYPE tiflash_system_profile_event_UncompressedCacheMisses gauge
+tiflash_system_profile_event_UncompressedCacheMisses 0
+# HELP tiflash_system_profile_event_UncompressedCacheWeightLost System profile event UncompressedCacheWeightLost
+# TYPE tiflash_system_profile_event_UncompressedCacheWeightLost gauge
+tiflash_system_profile_event_UncompressedCacheWeightLost 0
+# HELP tiflash_system_profile_event_MarkCacheHits System profile event MarkCacheHits
+# TYPE tiflash_system_profile_event_MarkCacheHits gauge
+tiflash_system_profile_event_MarkCacheHits 0
+# HELP tiflash_system_profile_event_MarkCacheMisses System profile event MarkCacheMisses
+# TYPE tiflash_system_profile_event_MarkCacheMisses gauge
+tiflash_system_profile_event_MarkCacheMisses 0
+# HELP tiflash_system_profile_event_ExternalAggregationCompressedBytes System profile event ExternalAggregationCompressedBytes
+# TYPE tiflash_system_profile_event_ExternalAggregationCompressedBytes gauge
+tiflash_system_profile_event_ExternalAggregationCompressedBytes 0
+# HELP tiflash_system_profile_event_ExternalAggregationUncompressedBytes System profile event ExternalAggregationUncompressedBytes
+# TYPE tiflash_system_profile_event_ExternalAggregationUncompressedBytes gauge
+tiflash_system_profile_event_ExternalAggregationUncompressedBytes 0
+# HELP tiflash_system_profile_event_ContextLock System profile event ContextLock
+# TYPE tiflash_system_profile_event_ContextLock gauge
+tiflash_system_profile_event_ContextLock 0
+# HELP tiflash_system_profile_event_RWLockAcquiredReadLocks System profile event RWLockAcquiredReadLocks
+# TYPE tiflash_system_profile_event_RWLockAcquiredReadLocks gauge
+tiflash_system_profile_event_RWLockAcquiredReadLocks 984
+# HELP tiflash_system_profile_event_RWLockAcquiredWriteLocks System profile event RWLockAcquiredWriteLocks
+# TYPE tiflash_system_profile_event_RWLockAcquiredWriteLocks gauge
+tiflash_system_profile_event_RWLockAcquiredWriteLocks 0
+# HELP tiflash_system_profile_event_RWLockReadersWaitMilliseconds System profile event RWLockReadersWaitMilliseconds
+# TYPE tiflash_system_profile_event_RWLockReadersWaitMilliseconds gauge
+tiflash_system_profile_event_RWLockReadersWaitMilliseconds 0
+# HELP tiflash_system_profile_event_RWLockWritersWaitMilliseconds System profile event RWLockWritersWaitMilliseconds
+# TYPE tiflash_system_profile_event_RWLockWritersWaitMilliseconds gauge
+tiflash_system_profile_event_RWLockWritersWaitMilliseconds 0
+# HELP tiflash_system_profile_event_PSMWritePages System profile event PSMWritePages
+# TYPE tiflash_system_profile_event_PSMWritePages gauge
+tiflash_system_profile_event_PSMWritePages 0
+# HELP tiflash_system_profile_event_PSMWriteIOCalls System profile event PSMWriteIOCalls
+# TYPE tiflash_system_profile_event_PSMWriteIOCalls gauge
+tiflash_system_profile_event_PSMWriteIOCalls 0
+# HELP tiflash_system_profile_event_PSV3MBlobExpansion System profile event PSV3MBlobExpansion
+# TYPE tiflash_system_profile_event_PSV3MBlobExpansion gauge
+tiflash_system_profile_event_PSV3MBlobExpansion 0
+# HELP tiflash_system_profile_event_PSV3MBlobReused System profile event PSV3MBlobReused
+# TYPE tiflash_system_profile_event_PSV3MBlobReused gauge
+tiflash_system_profile_event_PSV3MBlobReused 0
+# HELP tiflash_system_profile_event_PSMWriteBytes System profile event PSMWriteBytes
+# TYPE tiflash_system_profile_event_PSMWriteBytes gauge
+tiflash_system_profile_event_PSMWriteBytes 0
+# HELP tiflash_system_profile_event_PSMBackgroundWriteBytes System profile event PSMBackgroundWriteBytes
+# TYPE tiflash_system_profile_event_PSMBackgroundWriteBytes gauge
+tiflash_system_profile_event_PSMBackgroundWriteBytes 0
+# HELP tiflash_system_profile_event_PSMReadPages System profile event PSMReadPages
+# TYPE tiflash_system_profile_event_PSMReadPages gauge
+tiflash_system_profile_event_PSMReadPages 0
+# HELP tiflash_system_profile_event_PSMBackgroundReadBytes System profile event PSMBackgroundReadBytes
+# TYPE tiflash_system_profile_event_PSMBackgroundReadBytes gauge
+tiflash_system_profile_event_PSMBackgroundReadBytes 0
+# HELP tiflash_system_profile_event_PSMReadIOCalls System profile event PSMReadIOCalls
+# TYPE tiflash_system_profile_event_PSMReadIOCalls gauge
+tiflash_system_profile_event_PSMReadIOCalls 0
+# HELP tiflash_system_profile_event_PSMReadBytes System profile event PSMReadBytes
+# TYPE tiflash_system_profile_event_PSMReadBytes gauge
+tiflash_system_profile_event_PSMReadBytes 0
+# HELP tiflash_system_profile_event_PSMWriteFailed System profile event PSMWriteFailed
+# TYPE tiflash_system_profile_event_PSMWriteFailed gauge
+tiflash_system_profile_event_PSMWriteFailed 0
+# HELP tiflash_system_profile_event_PSMReadFailed System profile event PSMReadFailed
+# TYPE tiflash_system_profile_event_PSMReadFailed gauge
+tiflash_system_profile_event_PSMReadFailed 0
+# HELP tiflash_system_profile_event_PSMVCCApplyOnCurrentBase System profile event PSMVCCApplyOnCurrentBase
+# TYPE tiflash_system_profile_event_PSMVCCApplyOnCurrentBase gauge
+tiflash_system_profile_event_PSMVCCApplyOnCurrentBase 0
+# HELP tiflash_system_profile_event_PSMVCCApplyOnCurrentDelta System profile event PSMVCCApplyOnCurrentDelta
+# TYPE tiflash_system_profile_event_PSMVCCApplyOnCurrentDelta gauge
+tiflash_system_profile_event_PSMVCCApplyOnCurrentDelta 0
+# HELP tiflash_system_profile_event_PSMVCCApplyOnNewDelta System profile event PSMVCCApplyOnNewDelta
+# TYPE tiflash_system_profile_event_PSMVCCApplyOnNewDelta gauge
+tiflash_system_profile_event_PSMVCCApplyOnNewDelta 0
+# HELP tiflash_system_profile_event_PSMVCCCompactOnDelta System profile event PSMVCCCompactOnDelta
+# TYPE tiflash_system_profile_event_PSMVCCCompactOnDelta gauge
+tiflash_system_profile_event_PSMVCCCompactOnDelta 0
+# HELP tiflash_system_profile_event_PSMVCCCompactOnDeltaRebaseRejected System profile event PSMVCCCompactOnDeltaRebaseRejected
+# TYPE tiflash_system_profile_event_PSMVCCCompactOnDeltaRebaseRejected gauge
+tiflash_system_profile_event_PSMVCCCompactOnDeltaRebaseRejected 0
+# HELP tiflash_system_profile_event_PSMVCCCompactOnBase System profile event PSMVCCCompactOnBase
+# TYPE tiflash_system_profile_event_PSMVCCCompactOnBase gauge
+tiflash_system_profile_event_PSMVCCCompactOnBase 0
+# HELP tiflash_system_profile_event_PSMVCCCompactOnBaseCommit System profile event PSMVCCCompactOnBaseCommit
+# TYPE tiflash_system_profile_event_PSMVCCCompactOnBaseCommit gauge
+tiflash_system_profile_event_PSMVCCCompactOnBaseCommit 0
+# HELP tiflash_system_profile_event_DMWriteBlock System profile event DMWriteBlock
+# TYPE tiflash_system_profile_event_DMWriteBlock gauge
+tiflash_system_profile_event_DMWriteBlock 0
+# HELP tiflash_system_profile_event_DMWriteBlockNS System profile event DMWriteBlockNS
+# TYPE tiflash_system_profile_event_DMWriteBlockNS gauge
+tiflash_system_profile_event_DMWriteBlockNS 0
+# HELP tiflash_system_profile_event_DMWriteFile System profile event DMWriteFile
+# TYPE tiflash_system_profile_event_DMWriteFile gauge
+tiflash_system_profile_event_DMWriteFile 0
+# HELP tiflash_system_profile_event_DMWriteFileNS System profile event DMWriteFileNS
+# TYPE tiflash_system_profile_event_DMWriteFileNS gauge
+tiflash_system_profile_event_DMWriteFileNS 0
+# HELP tiflash_system_profile_event_DMDeleteRange System profile event DMDeleteRange
+# TYPE tiflash_system_profile_event_DMDeleteRange gauge
+tiflash_system_profile_event_DMDeleteRange 0
+# HELP tiflash_system_profile_event_DMDeleteRangeNS System profile event DMDeleteRangeNS
+# TYPE tiflash_system_profile_event_DMDeleteRangeNS gauge
+tiflash_system_profile_event_DMDeleteRangeNS 0
+# HELP tiflash_system_profile_event_DMAppendDeltaPrepare System profile event DMAppendDeltaPrepare
+# TYPE tiflash_system_profile_event_DMAppendDeltaPrepare gauge
+tiflash_system_profile_event_DMAppendDeltaPrepare 0
+# HELP tiflash_system_profile_event_DMAppendDeltaPrepareNS System profile event DMAppendDeltaPrepareNS
+# TYPE tiflash_system_profile_event_DMAppendDeltaPrepareNS gauge
+tiflash_system_profile_event_DMAppendDeltaPrepareNS 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCommitMemory System profile event DMAppendDeltaCommitMemory
+# TYPE tiflash_system_profile_event_DMAppendDeltaCommitMemory gauge
+tiflash_system_profile_event_DMAppendDeltaCommitMemory 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCommitMemoryNS System profile event DMAppendDeltaCommitMemoryNS
+# TYPE tiflash_system_profile_event_DMAppendDeltaCommitMemoryNS gauge
+tiflash_system_profile_event_DMAppendDeltaCommitMemoryNS 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCommitDisk System profile event DMAppendDeltaCommitDisk
+# TYPE tiflash_system_profile_event_DMAppendDeltaCommitDisk gauge
+tiflash_system_profile_event_DMAppendDeltaCommitDisk 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCommitDiskNS System profile event DMAppendDeltaCommitDiskNS
+# TYPE tiflash_system_profile_event_DMAppendDeltaCommitDiskNS gauge
+tiflash_system_profile_event_DMAppendDeltaCommitDiskNS 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCleanUp System profile event DMAppendDeltaCleanUp
+# TYPE tiflash_system_profile_event_DMAppendDeltaCleanUp gauge
+tiflash_system_profile_event_DMAppendDeltaCleanUp 0
+# HELP tiflash_system_profile_event_DMAppendDeltaCleanUpNS System profile event DMAppendDeltaCleanUpNS
+# TYPE tiflash_system_profile_event_DMAppendDeltaCleanUpNS gauge
+tiflash_system_profile_event_DMAppendDeltaCleanUpNS 0
+# HELP tiflash_system_profile_event_DMPlace System profile event DMPlace
+# TYPE tiflash_system_profile_event_DMPlace gauge
+tiflash_system_profile_event_DMPlace 0
+# HELP tiflash_system_profile_event_DMPlaceNS System profile event DMPlaceNS
+# TYPE tiflash_system_profile_event_DMPlaceNS gauge
+tiflash_system_profile_event_DMPlaceNS 0
+# HELP tiflash_system_profile_event_DMPlaceUpsert System profile event DMPlaceUpsert
+# TYPE tiflash_system_profile_event_DMPlaceUpsert gauge
+tiflash_system_profile_event_DMPlaceUpsert 0
+# HELP tiflash_system_profile_event_DMPlaceUpsertNS System profile event DMPlaceUpsertNS
+# TYPE tiflash_system_profile_event_DMPlaceUpsertNS gauge
+tiflash_system_profile_event_DMPlaceUpsertNS 0
+# HELP tiflash_system_profile_event_DMPlaceDeleteRange System profile event DMPlaceDeleteRange
+# TYPE tiflash_system_profile_event_DMPlaceDeleteRange gauge
+tiflash_system_profile_event_DMPlaceDeleteRange 0
+# HELP tiflash_system_profile_event_DMPlaceDeleteRangeNS System profile event DMPlaceDeleteRangeNS
+# TYPE tiflash_system_profile_event_DMPlaceDeleteRangeNS gauge
+tiflash_system_profile_event_DMPlaceDeleteRangeNS 0
+# HELP tiflash_system_profile_event_DMDeltaMerge System profile event DMDeltaMerge
+# TYPE tiflash_system_profile_event_DMDeltaMerge gauge
+tiflash_system_profile_event_DMDeltaMerge 0
+# HELP tiflash_system_profile_event_DMDeltaMergeNS System profile event DMDeltaMergeNS
+# TYPE tiflash_system_profile_event_DMDeltaMergeNS gauge
+tiflash_system_profile_event_DMDeltaMergeNS 0
+# HELP tiflash_system_profile_event_DMSegmentSplit System profile event DMSegmentSplit
+# TYPE tiflash_system_profile_event_DMSegmentSplit gauge
+tiflash_system_profile_event_DMSegmentSplit 0
+# HELP tiflash_system_profile_event_DMSegmentSplitNS System profile event DMSegmentSplitNS
+# TYPE tiflash_system_profile_event_DMSegmentSplitNS gauge
+tiflash_system_profile_event_DMSegmentSplitNS 0
+# HELP tiflash_system_profile_event_DMSegmentGetSplitPoint System profile event DMSegmentGetSplitPoint
+# TYPE tiflash_system_profile_event_DMSegmentGetSplitPoint gauge
+tiflash_system_profile_event_DMSegmentGetSplitPoint 0
+# HELP tiflash_system_profile_event_DMSegmentGetSplitPointNS System profile event DMSegmentGetSplitPointNS
+# TYPE tiflash_system_profile_event_DMSegmentGetSplitPointNS gauge
+tiflash_system_profile_event_DMSegmentGetSplitPointNS 0
+# HELP tiflash_system_profile_event_DMSegmentMerge System profile event DMSegmentMerge
+# TYPE tiflash_system_profile_event_DMSegmentMerge gauge
+tiflash_system_profile_event_DMSegmentMerge 0
+# HELP tiflash_system_profile_event_DMSegmentMergeNS System profile event DMSegmentMergeNS
+# TYPE tiflash_system_profile_event_DMSegmentMergeNS gauge
+tiflash_system_profile_event_DMSegmentMergeNS 0
+# HELP tiflash_system_profile_event_DMFlushDeltaCache System profile event DMFlushDeltaCache
+# TYPE tiflash_system_profile_event_DMFlushDeltaCache gauge
+tiflash_system_profile_event_DMFlushDeltaCache 0
+# HELP tiflash_system_profile_event_DMFlushDeltaCacheNS System profile event DMFlushDeltaCacheNS
+# TYPE tiflash_system_profile_event_DMFlushDeltaCacheNS gauge
+tiflash_system_profile_event_DMFlushDeltaCacheNS 0
+# HELP tiflash_system_profile_event_DMCleanReadRows System profile event DMCleanReadRows
+# TYPE tiflash_system_profile_event_DMCleanReadRows gauge
+tiflash_system_profile_event_DMCleanReadRows 0
+# HELP tiflash_system_profile_event_DMSegmentIsEmptyFastPath System profile event DMSegmentIsEmptyFastPath
+# TYPE tiflash_system_profile_event_DMSegmentIsEmptyFastPath gauge
+tiflash_system_profile_event_DMSegmentIsEmptyFastPath 0
+# HELP tiflash_system_profile_event_DMSegmentIsEmptySlowPath System profile event DMSegmentIsEmptySlowPath
+# TYPE tiflash_system_profile_event_DMSegmentIsEmptySlowPath gauge
+tiflash_system_profile_event_DMSegmentIsEmptySlowPath 0
+# HELP tiflash_system_profile_event_DMSegmentIngestDataByReplace System profile event DMSegmentIngestDataByReplace
+# TYPE tiflash_system_profile_event_DMSegmentIngestDataByReplace gauge
+tiflash_system_profile_event_DMSegmentIngestDataByReplace 0
+# HELP tiflash_system_profile_event_DMSegmentIngestDataIntoDelta System profile event DMSegmentIngestDataIntoDelta
+# TYPE tiflash_system_profile_event_DMSegmentIngestDataIntoDelta gauge
+tiflash_system_profile_event_DMSegmentIngestDataIntoDelta 0
+# HELP tiflash_system_profile_event_FileFSync System profile event FileFSync
+# TYPE tiflash_system_profile_event_FileFSync gauge
+tiflash_system_profile_event_FileFSync 43
+# HELP tiflash_system_profile_event_DMFileFilterNoFilter System profile event DMFileFilterNoFilter
+# TYPE tiflash_system_profile_event_DMFileFilterNoFilter gauge
+tiflash_system_profile_event_DMFileFilterNoFilter 0
+# HELP tiflash_system_profile_event_DMFileFilterAftPKAndPackSet System profile event DMFileFilterAftPKAndPackSet
+# TYPE tiflash_system_profile_event_DMFileFilterAftPKAndPackSet gauge
+tiflash_system_profile_event_DMFileFilterAftPKAndPackSet 0
+# HELP tiflash_system_profile_event_DMFileFilterAftRoughSet System profile event DMFileFilterAftRoughSet
+# TYPE tiflash_system_profile_event_DMFileFilterAftRoughSet gauge
+tiflash_system_profile_event_DMFileFilterAftRoughSet 0
+# HELP tiflash_system_profile_event_ChecksumDigestBytes System profile event ChecksumDigestBytes
+# TYPE tiflash_system_profile_event_ChecksumDigestBytes gauge
+tiflash_system_profile_event_ChecksumDigestBytes 0
+# HELP tiflash_system_profile_event_RaftWaitIndexTimeout System profile event RaftWaitIndexTimeout
+# TYPE tiflash_system_profile_event_RaftWaitIndexTimeout gauge
+tiflash_system_profile_event_RaftWaitIndexTimeout 0
+# HELP tiflash_system_current_metric_OpenFileForRead System current metric OpenFileForRead
+# TYPE tiflash_system_current_metric_OpenFileForRead gauge
+tiflash_system_current_metric_OpenFileForRead 0
+# HELP tiflash_system_current_metric_OpenFileForWrite System current metric OpenFileForWrite
+# TYPE tiflash_system_current_metric_OpenFileForWrite gauge
+tiflash_system_current_metric_OpenFileForWrite 0
+# HELP tiflash_system_current_metric_OpenFileForReadWrite System current metric OpenFileForReadWrite
+# TYPE tiflash_system_current_metric_OpenFileForReadWrite gauge
+tiflash_system_current_metric_OpenFileForReadWrite 0
+# HELP tiflash_system_current_metric_MemoryTracking System current metric MemoryTracking
+# TYPE tiflash_system_current_metric_MemoryTracking gauge
+tiflash_system_current_metric_MemoryTracking 0
+# HELP tiflash_system_current_metric_MemoryTrackingInBackgroundProcessingPool System current metric MemoryTrackingInBackgroundProcessingPool
+# TYPE tiflash_system_current_metric_MemoryTrackingInBackgroundProcessingPool gauge
+tiflash_system_current_metric_MemoryTrackingInBackgroundProcessingPool 0
+# HELP tiflash_system_current_metric_LogicalCPUCores System current metric LogicalCPUCores
+# TYPE tiflash_system_current_metric_LogicalCPUCores gauge
+tiflash_system_current_metric_LogicalCPUCores 10
+# HELP tiflash_system_current_metric_MemoryCapacity System current metric MemoryCapacity
+# TYPE tiflash_system_current_metric_MemoryCapacity gauge
+tiflash_system_current_metric_MemoryCapacity 35184371712
+# HELP tiflash_system_current_metric_PSMVCCNumSnapshots System current metric PSMVCCNumSnapshots
+# TYPE tiflash_system_current_metric_PSMVCCNumSnapshots gauge
+tiflash_system_current_metric_PSMVCCNumSnapshots 0
+# HELP tiflash_system_current_metric_PSMVCCSnapshotsList System current metric PSMVCCSnapshotsList
+# TYPE tiflash_system_current_metric_PSMVCCSnapshotsList gauge
+tiflash_system_current_metric_PSMVCCSnapshotsList 1
+# HELP tiflash_system_current_metric_PSMVCCNumDelta System current metric PSMVCCNumDelta
+# TYPE tiflash_system_current_metric_PSMVCCNumDelta gauge
+tiflash_system_current_metric_PSMVCCNumDelta 0
+# HELP tiflash_system_current_metric_PSMVCCNumBase System current metric PSMVCCNumBase
+# TYPE tiflash_system_current_metric_PSMVCCNumBase gauge
+tiflash_system_current_metric_PSMVCCNumBase 0
+# HELP tiflash_system_current_metric_RWLockWaitingReaders System current metric RWLockWaitingReaders
+# TYPE tiflash_system_current_metric_RWLockWaitingReaders gauge
+tiflash_system_current_metric_RWLockWaitingReaders 0
+# HELP tiflash_system_current_metric_RWLockWaitingWriters System current metric RWLockWaitingWriters
+# TYPE tiflash_system_current_metric_RWLockWaitingWriters gauge
+tiflash_system_current_metric_RWLockWaitingWriters 0
+# HELP tiflash_system_current_metric_RWLockActiveReaders System current metric RWLockActiveReaders
+# TYPE tiflash_system_current_metric_RWLockActiveReaders gauge
+tiflash_system_current_metric_RWLockActiveReaders 0
+# HELP tiflash_system_current_metric_RWLockActiveWriters System current metric RWLockActiveWriters
+# TYPE tiflash_system_current_metric_RWLockActiveWriters gauge
+tiflash_system_current_metric_RWLockActiveWriters 0
+# HELP tiflash_system_current_metric_StoreSizeCapacity System current metric StoreSizeCapacity
+# TYPE tiflash_system_current_metric_StoreSizeCapacity gauge
+tiflash_system_current_metric_StoreSizeCapacity 994662584320
+# HELP tiflash_system_current_metric_StoreSizeAvailable System current metric StoreSizeAvailable
+# TYPE tiflash_system_current_metric_StoreSizeAvailable gauge
+tiflash_system_current_metric_StoreSizeAvailable 474715136000
+# HELP tiflash_system_current_metric_StoreSizeUsed System current metric StoreSizeUsed
+# TYPE tiflash_system_current_metric_StoreSizeUsed gauge
+tiflash_system_current_metric_StoreSizeUsed 1
+# HELP tiflash_system_current_metric_DT_DeltaMerge System current metric DT_DeltaMerge
+# TYPE tiflash_system_current_metric_DT_DeltaMerge gauge
+tiflash_system_current_metric_DT_DeltaMerge 0
+# HELP tiflash_system_current_metric_DT_DeltaCompact System current metric DT_DeltaCompact
+# TYPE tiflash_system_current_metric_DT_DeltaCompact gauge
+tiflash_system_current_metric_DT_DeltaCompact 0
+# HELP tiflash_system_current_metric_DT_DeltaFlush System current metric DT_DeltaFlush
+# TYPE tiflash_system_current_metric_DT_DeltaFlush gauge
+tiflash_system_current_metric_DT_DeltaFlush 0
+# HELP tiflash_system_current_metric_DT_SegmentSplit System current metric DT_SegmentSplit
+# TYPE tiflash_system_current_metric_DT_SegmentSplit gauge
+tiflash_system_current_metric_DT_SegmentSplit 0
+# HELP tiflash_system_current_metric_DT_SegmentMerge System current metric DT_SegmentMerge
+# TYPE tiflash_system_current_metric_DT_SegmentMerge gauge
+tiflash_system_current_metric_DT_SegmentMerge 0
+# HELP tiflash_system_current_metric_DT_PlaceIndexUpdate System current metric DT_PlaceIndexUpdate
+# TYPE tiflash_system_current_metric_DT_PlaceIndexUpdate gauge
+tiflash_system_current_metric_DT_PlaceIndexUpdate 0
+# HELP tiflash_system_current_metric_DT_DeltaMergeTotalBytes System current metric DT_DeltaMergeTotalBytes
+# TYPE tiflash_system_current_metric_DT_DeltaMergeTotalBytes gauge
+tiflash_system_current_metric_DT_DeltaMergeTotalBytes 0
+# HELP tiflash_system_current_metric_DT_DeltaMergeTotalRows System current metric DT_DeltaMergeTotalRows
+# TYPE tiflash_system_current_metric_DT_DeltaMergeTotalRows gauge
+tiflash_system_current_metric_DT_DeltaMergeTotalRows 0
+# HELP tiflash_system_current_metric_DT_DeltaIndexCacheSize System current metric DT_DeltaIndexCacheSize
+# TYPE tiflash_system_current_metric_DT_DeltaIndexCacheSize gauge
+tiflash_system_current_metric_DT_DeltaIndexCacheSize 0
+# HELP tiflash_system_current_metric_RaftNumSnapshotsPendingApply System current metric RaftNumSnapshotsPendingApply
+# TYPE tiflash_system_current_metric_RaftNumSnapshotsPendingApply gauge
+tiflash_system_current_metric_RaftNumSnapshotsPendingApply 0
+# HELP tiflash_system_current_metric_RateLimiterPendingWriteRequest System current metric RateLimiterPendingWriteRequest
+# TYPE tiflash_system_current_metric_RateLimiterPendingWriteRequest gauge
+tiflash_system_current_metric_RateLimiterPendingWriteRequest 0
+# HELP tiflash_system_current_metric_DT_SegmentReadTasks System current metric DT_SegmentReadTasks
+# TYPE tiflash_system_current_metric_DT_SegmentReadTasks gauge
+tiflash_system_current_metric_DT_SegmentReadTasks 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfRead System current metric DT_SnapshotOfRead
+# TYPE tiflash_system_current_metric_DT_SnapshotOfRead gauge
+tiflash_system_current_metric_DT_SnapshotOfRead 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfReadRaw System current metric DT_SnapshotOfReadRaw
+# TYPE tiflash_system_current_metric_DT_SnapshotOfReadRaw gauge
+tiflash_system_current_metric_DT_SnapshotOfReadRaw 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfSegmentSplit System current metric DT_SnapshotOfSegmentSplit
+# TYPE tiflash_system_current_metric_DT_SnapshotOfSegmentSplit gauge
+tiflash_system_current_metric_DT_SnapshotOfSegmentSplit 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfSegmentMerge System current metric DT_SnapshotOfSegmentMerge
+# TYPE tiflash_system_current_metric_DT_SnapshotOfSegmentMerge gauge
+tiflash_system_current_metric_DT_SnapshotOfSegmentMerge 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfSegmentIngest System current metric DT_SnapshotOfSegmentIngest
+# TYPE tiflash_system_current_metric_DT_SnapshotOfSegmentIngest gauge
+tiflash_system_current_metric_DT_SnapshotOfSegmentIngest 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfDeltaMerge System current metric DT_SnapshotOfDeltaMerge
+# TYPE tiflash_system_current_metric_DT_SnapshotOfDeltaMerge gauge
+tiflash_system_current_metric_DT_SnapshotOfDeltaMerge 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfDeltaCompact System current metric DT_SnapshotOfDeltaCompact
+# TYPE tiflash_system_current_metric_DT_SnapshotOfDeltaCompact gauge
+tiflash_system_current_metric_DT_SnapshotOfDeltaCompact 0
+# HELP tiflash_system_current_metric_DT_SnapshotOfPlaceIndex System current metric DT_SnapshotOfPlaceIndex
+# TYPE tiflash_system_current_metric_DT_SnapshotOfPlaceIndex gauge
+tiflash_system_current_metric_DT_SnapshotOfPlaceIndex 0
+# HELP tiflash_system_current_metric_IOLimiterPendingBgWriteReq System current metric IOLimiterPendingBgWriteReq
+# TYPE tiflash_system_current_metric_IOLimiterPendingBgWriteReq gauge
+tiflash_system_current_metric_IOLimiterPendingBgWriteReq 0
+# HELP tiflash_system_current_metric_IOLimiterPendingFgWriteReq System current metric IOLimiterPendingFgWriteReq
+# TYPE tiflash_system_current_metric_IOLimiterPendingFgWriteReq gauge
+tiflash_system_current_metric_IOLimiterPendingFgWriteReq 0
+# HELP tiflash_system_current_metric_IOLimiterPendingBgReadReq System current metric IOLimiterPendingBgReadReq
+# TYPE tiflash_system_current_metric_IOLimiterPendingBgReadReq gauge
+tiflash_system_current_metric_IOLimiterPendingBgReadReq 0
+# HELP tiflash_system_current_metric_IOLimiterPendingFgReadReq System current metric IOLimiterPendingFgReadReq
+# TYPE tiflash_system_current_metric_IOLimiterPendingFgReadReq gauge
+tiflash_system_current_metric_IOLimiterPendingFgReadReq 0
+# HELP tiflash_system_current_metric_StoragePoolV2Only System current metric StoragePoolV2Only
+# TYPE tiflash_system_current_metric_StoragePoolV2Only gauge
+tiflash_system_current_metric_StoragePoolV2Only 0
+# HELP tiflash_system_current_metric_StoragePoolV3Only System current metric StoragePoolV3Only
+# TYPE tiflash_system_current_metric_StoragePoolV3Only gauge
+tiflash_system_current_metric_StoragePoolV3Only 0
+# HELP tiflash_system_current_metric_StoragePoolMixMode System current metric StoragePoolMixMode
+# TYPE tiflash_system_current_metric_StoragePoolMixMode gauge
+tiflash_system_current_metric_StoragePoolMixMode 0
+# HELP tiflash_system_current_metric_RegionPersisterRunMode System current metric RegionPersisterRunMode
+# TYPE tiflash_system_current_metric_RegionPersisterRunMode gauge
+tiflash_system_current_metric_RegionPersisterRunMode 2
+# HELP tiflash_system_current_metric_GlobalStorageRunMode System current metric GlobalStorageRunMode
+# TYPE tiflash_system_current_metric_GlobalStorageRunMode gauge
+tiflash_system_current_metric_GlobalStorageRunMode 2
+# HELP tiflash_system_asynchronous_metric_MarkCacheFiles System asynchronous metric tiflash_system_asynchronous_metric_MarkCacheFiles
+# TYPE tiflash_system_asynchronous_metric_MarkCacheFiles gauge
+tiflash_system_asynchronous_metric_MarkCacheFiles 0
+# HELP tiflash_system_asynchronous_metric_MaxDTStableOldestSnapshotLifetime System asynchronous metric tiflash_system_asynchronous_metric_MaxDTStableOldestSnapshotLifetime
+# TYPE tiflash_system_asynchronous_metric_MaxDTStableOldestSnapshotLifetime gauge
+tiflash_system_asynchronous_metric_MaxDTStableOldestSnapshotLifetime 0
+# HELP tiflash_system_asynchronous_metric_MaxDTDeltaOldestSnapshotLifetime System asynchronous metric tiflash_system_asynchronous_metric_MaxDTDeltaOldestSnapshotLifetime
+# TYPE tiflash_system_asynchronous_metric_MaxDTDeltaOldestSnapshotLifetime gauge
+tiflash_system_asynchronous_metric_MaxDTDeltaOldestSnapshotLifetime 0
+# HELP tiflash_system_asynchronous_metric_MarkCacheBytes System asynchronous metric tiflash_system_asynchronous_metric_MarkCacheBytes
+# TYPE tiflash_system_asynchronous_metric_MarkCacheBytes gauge
+tiflash_system_asynchronous_metric_MarkCacheBytes 0
+# HELP tiflash_system_asynchronous_metric_MaxDTBackgroundTasksLength System asynchronous metric tiflash_system_asynchronous_metric_MaxDTBackgroundTasksLength
+# TYPE tiflash_system_asynchronous_metric_MaxDTBackgroundTasksLength gauge
+tiflash_system_asynchronous_metric_MaxDTBackgroundTasksLength 0
+# HELP tiflash_system_asynchronous_metric_BlobFileNums System asynchronous metric tiflash_system_asynchronous_metric_BlobFileNums
+# TYPE tiflash_system_asynchronous_metric_BlobFileNums gauge
+tiflash_system_asynchronous_metric_BlobFileNums 0
+# HELP tiflash_system_asynchronous_metric_BlobDiskBytes System asynchronous metric tiflash_system_asynchronous_metric_BlobDiskBytes
+# TYPE tiflash_system_asynchronous_metric_BlobDiskBytes gauge
+tiflash_system_asynchronous_metric_BlobDiskBytes 0
+# HELP tiflash_system_asynchronous_metric_BlobValidBytes System asynchronous metric tiflash_system_asynchronous_metric_BlobValidBytes
+# TYPE tiflash_system_asynchronous_metric_BlobValidBytes gauge
+tiflash_system_asynchronous_metric_BlobValidBytes 0
+# HELP tiflash_system_asynchronous_metric_LogNums System asynchronous metric tiflash_system_asynchronous_metric_LogNums
+# TYPE tiflash_system_asynchronous_metric_LogNums gauge
+tiflash_system_asynchronous_metric_LogNums 0
+# HELP tiflash_system_asynchronous_metric_Uptime System asynchronous metric tiflash_system_asynchronous_metric_Uptime
+# TYPE tiflash_system_asynchronous_metric_Uptime gauge
+tiflash_system_asynchronous_metric_Uptime 1473
+# HELP tiflash_system_asynchronous_metric_MaxDTMetaOldestSnapshotLifetime System asynchronous metric tiflash_system_asynchronous_metric_MaxDTMetaOldestSnapshotLifetime
+# TYPE tiflash_system_asynchronous_metric_MaxDTMetaOldestSnapshotLifetime gauge
+tiflash_system_asynchronous_metric_MaxDTMetaOldestSnapshotLifetime 0
+# HELP tiflash_system_asynchronous_metric_mmap_alive System asynchronous metric tiflash_system_asynchronous_metric_mmap_alive
+# TYPE tiflash_system_asynchronous_metric_mmap_alive gauge
+tiflash_system_asynchronous_metric_mmap_alive 0
+# HELP tiflash_system_asynchronous_metric_LogDiskBytes System asynchronous metric tiflash_system_asynchronous_metric_LogDiskBytes
+# TYPE tiflash_system_asynchronous_metric_LogDiskBytes gauge
+tiflash_system_asynchronous_metric_LogDiskBytes 0
+# HELP tiflash_system_asynchronous_metric_PagesInMem System asynchronous metric tiflash_system_asynchronous_metric_PagesInMem
+# TYPE tiflash_system_asynchronous_metric_PagesInMem gauge
+tiflash_system_asynchronous_metric_PagesInMem 0
+# HELP tiflash_coprocessor_request_duration_seconds "Bucketed histogram of request duration"
+# TYPE tiflash_coprocessor_request_duration_seconds histogram
+tiflash_coprocessor_request_duration_seconds_count{type="run_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="run_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="run_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_duration_seconds_count{type="cancel_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="cancel_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cancel_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_duration_seconds_count{type="mpp_establish_conn"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="mpp_establish_conn"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="mpp_establish_conn",le="+Inf"} 0
+tiflash_coprocessor_request_duration_seconds_count{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="dispatch_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_duration_seconds_count{type="batch"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="batch"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="batch",le="+Inf"} 0
+tiflash_coprocessor_request_duration_seconds_count{type="cop"} 0
+tiflash_coprocessor_request_duration_seconds_sum{type="cop"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.001"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.002"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.004"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.008"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.016"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.032"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.064"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.128"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.256"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="0.512"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="1.024"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="2.048"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="4.096"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="8.192"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="16.384"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="32.768"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="65.536"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="131.072"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="262.144"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="524.288"} 0
+tiflash_coprocessor_request_duration_seconds_bucket{type="cop",le="+Inf"} 0
+# HELP tiflash_coprocessor_request_memory_usage "Bucketed histogram of request memory usage"
+# TYPE tiflash_coprocessor_request_memory_usage histogram
+tiflash_coprocessor_request_memory_usage_count{type="run_mpp_task"} 0
+tiflash_coprocessor_request_memory_usage_sum{type="run_mpp_task"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="1048576"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="2097152"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="4194304"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="8388608"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="16777216"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="33554432"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="67108864"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="134217728"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="268435456"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="536870912"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="1073741824"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="2147483648"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="4294967296"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="8589934592"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="17179869184"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="34359738368"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="68719476736"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="137438953472"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="274877906944"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="549755813888"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="run_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_memory_usage_count{type="batch"} 0
+tiflash_coprocessor_request_memory_usage_sum{type="batch"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="1048576"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="2097152"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="4194304"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="8388608"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="16777216"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="33554432"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="67108864"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="134217728"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="268435456"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="536870912"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="1073741824"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="2147483648"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="4294967296"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="8589934592"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="17179869184"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="34359738368"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="68719476736"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="137438953472"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="274877906944"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="549755813888"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="batch",le="+Inf"} 0
+tiflash_coprocessor_request_memory_usage_count{type="cop"} 0
+tiflash_coprocessor_request_memory_usage_sum{type="cop"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="1048576"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="2097152"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="4194304"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="8388608"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="16777216"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="33554432"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="67108864"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="134217728"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="268435456"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="536870912"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="1073741824"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="2147483648"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="4294967296"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="8589934592"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="17179869184"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="34359738368"} 0
+tiflash_coprocessor_request_memory_usage_bucket{type="cop",le="+Inf"} 0
+# HELP tiflash_coprocessor_request_handle_seconds "Bucketed histogram of request handle duration"
+# TYPE tiflash_coprocessor_request_handle_seconds histogram
+tiflash_coprocessor_request_handle_seconds_count{type="run_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="run_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="run_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_handle_seconds_count{type="cancel_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="cancel_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cancel_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_handle_seconds_count{type="mpp_establish_conn"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="mpp_establish_conn"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="mpp_establish_conn",le="+Inf"} 0
+tiflash_coprocessor_request_handle_seconds_count{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="dispatch_mpp_task"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="dispatch_mpp_task",le="+Inf"} 0
+tiflash_coprocessor_request_handle_seconds_count{type="batch"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="batch"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="batch",le="+Inf"} 0
+tiflash_coprocessor_request_handle_seconds_count{type="cop"} 0
+tiflash_coprocessor_request_handle_seconds_sum{type="cop"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.001"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.002"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.004"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.008"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.016"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.032"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.064"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.128"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.256"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="0.512"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="1.024"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="2.048"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="4.096"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="8.192"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="16.384"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="32.768"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="65.536"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="131.072"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="262.144"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="524.288"} 0
+tiflash_coprocessor_request_handle_seconds_bucket{type="cop",le="+Inf"} 0
+# HELP tiflash_schema_apply_duration_seconds "Bucketed histogram of ddl apply duration"
+# TYPE tiflash_schema_apply_duration_seconds histogram
+tiflash_schema_apply_duration_seconds_count{req="ddl_apply_duration"} 1
+tiflash_schema_apply_duration_seconds_sum{req="ddl_apply_duration"} 0.026141
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.001"} 0
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.002"} 0
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.004"} 0
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.008"} 0
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.016"} 0
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.032"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.064"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.128"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.256"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="0.512"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="1.024"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="2.048"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="4.096"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="8.192"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="16.384"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="32.768"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="65.536"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="131.072"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="262.144"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="524.288"} 1
+tiflash_schema_apply_duration_seconds_bucket{req="ddl_apply_duration",le="+Inf"} 1
+# HELP tiflash_raft_read_index_duration_seconds "Bucketed histogram of raft read index duration"
+# TYPE tiflash_raft_read_index_duration_seconds histogram
+tiflash_raft_read_index_duration_seconds_count{type="tmt_raft_read_index_duration"} 0
+tiflash_raft_read_index_duration_seconds_sum{type="tmt_raft_read_index_duration"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.001"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.002"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.004"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.008"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.016"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.032"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.064"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.128"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.256"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="0.512"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="1.024"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="2.048"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="4.096"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="8.192"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="16.384"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="32.768"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="65.536"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="131.072"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="262.144"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="524.288"} 0
+tiflash_raft_read_index_duration_seconds_bucket{type="tmt_raft_read_index_duration",le="+Inf"} 0
+# HELP tiflash_raft_wait_index_duration_seconds "Bucketed histogram of raft wait index duration"
+# TYPE tiflash_raft_wait_index_duration_seconds histogram
+tiflash_raft_wait_index_duration_seconds_count{type="tmt_raft_wait_index_duration"} 0
+tiflash_raft_wait_index_duration_seconds_sum{type="tmt_raft_wait_index_duration"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.001"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.002"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.004"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.008"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.016"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.032"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.064"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.128"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.256"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="0.512"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="1.024"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="2.048"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="4.096"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="8.192"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="16.384"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="32.768"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="65.536"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="131.072"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="262.144"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="524.288"} 0
+tiflash_raft_wait_index_duration_seconds_bucket{type="tmt_raft_wait_index_duration",le="+Inf"} 0
+# HELP tiflash_syncing_data_freshness "The freshness of tiflash data with tikv data"
+# TYPE tiflash_syncing_data_freshness histogram
+tiflash_syncing_data_freshness_count{type="data_freshness"} 0
+tiflash_syncing_data_freshness_sum{type="data_freshness"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.001"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.002"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.004"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.008"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.016"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.032"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.064"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.128"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.256"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="0.512"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="1.024"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="2.048"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="4.096"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="8.192"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="16.384"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="32.768"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="65.536"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="131.072"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="262.144"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="524.288"} 0
+tiflash_syncing_data_freshness_bucket{type="data_freshness",le="+Inf"} 0
+# HELP tiflash_storage_subtask_duration_seconds "Bucketed histogram of storage's sub task duration"
+# TYPE tiflash_storage_subtask_duration_seconds histogram
+tiflash_storage_subtask_duration_seconds_count{type="place_index_update"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="place_index_update"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="place_index_update",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="seg_merge_bg_gc"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="seg_merge_bg_gc"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_merge_bg_gc",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="seg_split_ingest"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="seg_split_ingest"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_ingest",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="seg_split_bg"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="seg_split_bg"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_bg",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_flush"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_flush"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_flush",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_compact"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_compact"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_compact",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_merge_fg"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_merge_fg"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_fg",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="seg_split_fg"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="seg_split_fg"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="seg_split_fg",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_merge_bg_gc"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_merge_bg_gc"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg_gc",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_merge_manual"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_merge_manual"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_manual",le="+Inf"} 0
+tiflash_storage_subtask_duration_seconds_count{type="delta_merge_bg"} 0
+tiflash_storage_subtask_duration_seconds_sum{type="delta_merge_bg"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.001"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.002"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.004"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.008"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.016"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.032"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.064"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.128"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.256"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="0.512"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="1.024"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="2.048"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="4.096"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="8.192"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="16.384"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="32.768"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="65.536"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="131.072"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="262.144"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="524.288"} 0
+tiflash_storage_subtask_duration_seconds_bucket{type="delta_merge_bg",le="+Inf"} 0
+# HELP tiflash_storage_write_stall_duration_seconds "The write stall duration of storage, in seconds"
+# TYPE tiflash_storage_write_stall_duration_seconds histogram
+tiflash_storage_write_stall_duration_seconds_count{type="split"} 0
+tiflash_storage_write_stall_duration_seconds_sum{type="split"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.001"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.002"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.004"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.008"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.016"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.032"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.064"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.128"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.256"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="0.512"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="1.024"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="2.048"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="4.096"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="8.192"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="16.384"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="32.768"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="65.536"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="131.072"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="262.144"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="524.288"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="split",le="+Inf"} 0
+tiflash_storage_write_stall_duration_seconds_count{type="flush"} 0
+tiflash_storage_write_stall_duration_seconds_sum{type="flush"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.001"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.002"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.004"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.008"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.016"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.032"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.064"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.128"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.256"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="0.512"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="1.024"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="2.048"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="4.096"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="8.192"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="16.384"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="32.768"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="65.536"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="131.072"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="262.144"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="524.288"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="flush",le="+Inf"} 0
+tiflash_storage_write_stall_duration_seconds_count{type="delta_merge_by_delete_range"} 0
+tiflash_storage_write_stall_duration_seconds_sum{type="delta_merge_by_delete_range"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.001"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.002"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.004"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.008"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.016"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.032"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.064"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.128"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.256"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="0.512"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="1.024"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="2.048"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="4.096"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="8.192"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="16.384"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="32.768"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="65.536"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="131.072"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="262.144"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="524.288"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_delete_range",le="+Inf"} 0
+tiflash_storage_write_stall_duration_seconds_count{type="delta_merge_by_write"} 0
+tiflash_storage_write_stall_duration_seconds_sum{type="delta_merge_by_write"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.001"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.002"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.004"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.008"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.016"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.032"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.064"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.128"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.256"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="0.512"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="1.024"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="2.048"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="4.096"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="8.192"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="16.384"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="32.768"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="65.536"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="131.072"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="262.144"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="524.288"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="delta_merge_by_write",le="+Inf"} 0
+tiflash_storage_write_stall_duration_seconds_count{type="write"} 0
+tiflash_storage_write_stall_duration_seconds_sum{type="write"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.001"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.002"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.004"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.008"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.016"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.032"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.064"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.128"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.256"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="0.512"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="1.024"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="2.048"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="4.096"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="8.192"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="16.384"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="32.768"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="65.536"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="131.072"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="262.144"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="524.288"} 0
+tiflash_storage_write_stall_duration_seconds_bucket{type="write",le="+Inf"} 0
+# HELP tiflash_storage_page_gc_duration_seconds "Bucketed histogram of page's gc task duration"
+# TYPE tiflash_storage_page_gc_duration_seconds histogram
+tiflash_storage_page_gc_duration_seconds_count{type="clean_external"} 71
+tiflash_storage_page_gc_duration_seconds_sum{type="clean_external"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.0005"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.001"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.002"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.004"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.008"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.016"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.032"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.064"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.128"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.256"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="0.512"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="1.024"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="2.048"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="4.096"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="8.192"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="16.384"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="32.768"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="65.536"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="131.072"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="262.144"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="clean_external",le="+Inf"} 71
+tiflash_storage_page_gc_duration_seconds_count{type="fullgc_commit"} 0
+tiflash_storage_page_gc_duration_seconds_sum{type="fullgc_commit"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.0005"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.001"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.002"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.004"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.008"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.016"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.032"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.064"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.128"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.256"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="0.512"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="1.024"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="2.048"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="4.096"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="8.192"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="16.384"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="32.768"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="65.536"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="131.072"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="262.144"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_commit",le="+Inf"} 0
+tiflash_storage_page_gc_duration_seconds_count{type="compact_spacemap"} 71
+tiflash_storage_page_gc_duration_seconds_sum{type="compact_spacemap"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.0005"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.001"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.002"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.004"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.008"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.016"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.032"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.064"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.128"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.256"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="0.512"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="1.024"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="2.048"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="4.096"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="8.192"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="16.384"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="32.768"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="65.536"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="131.072"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="262.144"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_spacemap",le="+Inf"} 71
+tiflash_storage_page_gc_duration_seconds_count{type="compact_directory"} 71
+tiflash_storage_page_gc_duration_seconds_sum{type="compact_directory"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.0005"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.001"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.002"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.004"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.008"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.016"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.032"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.064"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.128"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.256"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="0.512"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="1.024"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="2.048"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="4.096"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="8.192"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="16.384"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="32.768"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="65.536"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="131.072"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="262.144"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_directory",le="+Inf"} 71
+tiflash_storage_page_gc_duration_seconds_count{type="v2_ver_compact"} 0
+tiflash_storage_page_gc_duration_seconds_sum{type="v2_ver_compact"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.0005"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.001"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.002"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.004"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.008"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.016"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.032"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.064"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.128"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.256"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="0.512"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="1.024"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="2.048"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="4.096"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="8.192"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="16.384"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="32.768"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="65.536"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="131.072"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="262.144"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_ver_compact",le="+Inf"} 0
+tiflash_storage_page_gc_duration_seconds_count{type="fullgc_rewrite"} 0
+tiflash_storage_page_gc_duration_seconds_sum{type="fullgc_rewrite"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.0005"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.001"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.002"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.004"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.008"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.016"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.032"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.064"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.128"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.256"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="0.512"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="1.024"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="2.048"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="4.096"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="8.192"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="16.384"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="32.768"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="65.536"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="131.072"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="262.144"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="fullgc_rewrite",le="+Inf"} 0
+tiflash_storage_page_gc_duration_seconds_count{type="v2_data_compact"} 0
+tiflash_storage_page_gc_duration_seconds_sum{type="v2_data_compact"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.0005"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.001"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.002"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.004"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.008"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.016"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.032"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.064"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.128"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.256"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="0.512"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="1.024"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="2.048"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="4.096"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="8.192"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="16.384"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="32.768"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="65.536"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="131.072"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="262.144"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2_data_compact",le="+Inf"} 0
+tiflash_storage_page_gc_duration_seconds_count{type="compact_wal"} 71
+tiflash_storage_page_gc_duration_seconds_sum{type="compact_wal"} 0.001
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.0005"} 70
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.001"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.002"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.004"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.008"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.016"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.032"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.064"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.128"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.256"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="0.512"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="1.024"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="2.048"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="4.096"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="8.192"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="16.384"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="32.768"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="65.536"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="131.072"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="262.144"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="compact_wal",le="+Inf"} 71
+tiflash_storage_page_gc_duration_seconds_count{type="v3"} 71
+tiflash_storage_page_gc_duration_seconds_sum{type="v3"} 0.007441999999999998
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.0005"} 70
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.001"} 70
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.002"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.004"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.008"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.016"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.032"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.064"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.128"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.256"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="0.512"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="1.024"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="2.048"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="4.096"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="8.192"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="16.384"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="32.768"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="65.536"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="131.072"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="262.144"} 71
+tiflash_storage_page_gc_duration_seconds_bucket{type="v3",le="+Inf"} 71
+tiflash_storage_page_gc_duration_seconds_count{type="v2"} 0
+tiflash_storage_page_gc_duration_seconds_sum{type="v2"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.0005"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.001"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.002"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.004"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.008"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.016"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.032"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.064"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.128"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.256"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="0.512"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="1.024"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="2.048"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="4.096"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="8.192"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="16.384"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="32.768"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="65.536"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="131.072"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="262.144"} 0
+tiflash_storage_page_gc_duration_seconds_bucket{type="v2",le="+Inf"} 0
+# HELP tiflash_storage_page_write_batch_size "The size of each write batch in bytes"
+# TYPE tiflash_storage_page_write_batch_size histogram
+tiflash_storage_page_write_batch_size_count{type="v3"} 0
+tiflash_storage_page_write_batch_size_sum{type="v3"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="4096"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="16384"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="65536"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="262144"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="1048576"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="4194304"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="16777216"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="67108864"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="268435456"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="1073741824"} 0
+tiflash_storage_page_write_batch_size_bucket{type="v3",le="+Inf"} 0
+# HELP tiflash_storage_page_write_duration_seconds "The duration of each write batch"
+# TYPE tiflash_storage_page_write_duration_seconds histogram
+tiflash_storage_page_write_duration_seconds_count{type="commit"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="commit"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="commit",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="wal"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="wal"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="wal",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="latch"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="latch"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="latch",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="search_pos"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="search_pos"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="search_pos",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="choose_stat"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="choose_stat"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="choose_stat",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="blob_write"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="blob_write"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="5e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="9.000000000000001e-05"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.000162"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.0002916"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.0005248800000000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.0009447840000000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.001700611200000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.003061100160000001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.005509980288000003"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.009917964518400005"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.01785233613312001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.03213420503961602"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.05784156907130884"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.1041148243283559"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.1874066837910406"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.3373320308238731"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="0.6071976554829717"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="1.092955779869349"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="1.967320403764828"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="3.541176726776691"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="6.374118108198044"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="11.47341259475648"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="20.65214267056166"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="37.17385680701099"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="66.91294225261979"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="120.4432960547156"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="blob_write",le="+Inf"} 0
+tiflash_storage_page_write_duration_seconds_count{type="total"} 0
+tiflash_storage_page_write_duration_seconds_sum{type="total"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0001"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0002"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0004"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0008"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0016"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0032"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0064"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0128"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0256"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.0512"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.1024"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.2048"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.4096"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="0.8192"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="1.6384"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="3.2768"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="6.5536"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="13.1072"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="26.2144"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="52.4288"} 0
+tiflash_storage_page_write_duration_seconds_bucket{type="total",le="+Inf"} 0
+# HELP tiflash_storage_logical_throughput_bytes "The logical throughput of read tasks of storage in bytes"
+# TYPE tiflash_storage_logical_throughput_bytes histogram
+tiflash_storage_logical_throughput_bytes_count{type="read"} 0
+tiflash_storage_logical_throughput_bytes_sum{type="read"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1048576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="53477376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="105906176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="158334976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="210763776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="263192576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="315621376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="368050176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="420478976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="472907776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="525336576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="577765376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="630194176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="682622976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="735051776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="787480576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="839909376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="892338176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="944766976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="997195776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1049624576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1102053376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1154482176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1206910976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1259339776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1311768576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1364197376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1416626176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1469054976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1521483776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1573912576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1626341376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1678770176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1731198976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1783627776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1836056576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1888485376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1940914176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="1993342976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2045771776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2098200576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2150629376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2203058176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2255486976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2307915776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2360344576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2412773376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2465202176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2517630976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2570059776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2622488576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2674917376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2727346176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2779774976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2832203776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2884632576"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2937061376"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="2989490176"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="3041918976"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="3094347776"} 0
+tiflash_storage_logical_throughput_bytes_bucket{type="read",le="+Inf"} 0
+# HELP tiflash_storage_rough_set_filter_rate "Bucketed histogram of rough set filter rate"
+# TYPE tiflash_storage_rough_set_filter_rate histogram
+tiflash_storage_rough_set_filter_rate_count{type="dtfile_pack"} 0
+tiflash_storage_rough_set_filter_rate_sum{type="dtfile_pack"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="0"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="20"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="40"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="60"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="80"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="100"} 0
+tiflash_storage_rough_set_filter_rate_bucket{type="dtfile_pack",le="+Inf"} 0
+# HELP tiflash_raft_command_duration_seconds "Bucketed histogram of some raft command: apply snapshot"
+# TYPE tiflash_raft_command_duration_seconds histogram
+tiflash_raft_command_duration_seconds_count{type="snapshot_flush"} 0
+tiflash_raft_command_duration_seconds_sum{type="snapshot_flush"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="0.05"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="0.1"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="0.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="0.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="0.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="1.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="3.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="6.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="12.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="25.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_flush",le="+Inf"} 0
+tiflash_raft_command_duration_seconds_count{type="snapshot_predecode_sst2dt"} 0
+tiflash_raft_command_duration_seconds_sum{type="snapshot_predecode_sst2dt"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="0.05"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="0.1"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="0.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="0.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="0.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="1.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="3.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="6.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="12.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="25.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode_sst2dt",le="+Inf"} 0
+tiflash_raft_command_duration_seconds_count{type="snapshot_predecode"} 0
+tiflash_raft_command_duration_seconds_sum{type="snapshot_predecode"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="0.05"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="0.1"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="0.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="0.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="0.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="1.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="3.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="6.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="12.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="25.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="snapshot_predecode",le="+Inf"} 0
+tiflash_raft_command_duration_seconds_count{type="ingest_sst"} 0
+tiflash_raft_command_duration_seconds_sum{type="ingest_sst"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="0.05"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="0.1"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="0.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="0.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="0.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="1.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="3.2"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="6.4"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="12.8"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="25.6"} 0
+tiflash_raft_command_duration_seconds_bucket{type="ingest_sst",le="+Inf"} 0
+# HELP tiflash_raft_apply_write_command_duration_seconds "Bucketed histogram of applying write command Raft logs"
+# TYPE tiflash_raft_apply_write_command_duration_seconds histogram
+tiflash_raft_apply_write_command_duration_seconds_count{type="flush_region"} 0
+tiflash_raft_apply_write_command_duration_seconds_sum{type="flush_region"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.0005"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.001"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.002"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.004"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.008"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.016"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.032"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.064"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.128"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.256"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="0.512"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="1.024"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="2.048"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="4.096"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="8.192"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="16.384"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="32.768"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="65.536"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="131.072"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="262.144"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="flush_region",le="+Inf"} 0
+tiflash_raft_apply_write_command_duration_seconds_count{type="admin"} 0
+tiflash_raft_apply_write_command_duration_seconds_sum{type="admin"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.0005"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.001"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.002"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.004"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.008"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.016"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.032"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.064"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.128"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.256"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="0.512"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="1.024"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="2.048"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="4.096"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="8.192"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="16.384"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="32.768"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="65.536"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="131.072"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="262.144"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="admin",le="+Inf"} 0
+tiflash_raft_apply_write_command_duration_seconds_count{type="write"} 0
+tiflash_raft_apply_write_command_duration_seconds_sum{type="write"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.0005"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.001"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.002"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.004"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.008"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.016"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.032"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.064"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.128"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.256"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="0.512"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="1.024"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="2.048"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="4.096"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="8.192"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="16.384"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="32.768"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="65.536"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="131.072"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="262.144"} 0
+tiflash_raft_apply_write_command_duration_seconds_bucket{type="write",le="+Inf"} 0
+# HELP tiflash_raft_upstream_latency "The latency that tikv sends raft log to tiflash."
+# TYPE tiflash_raft_upstream_latency histogram
+tiflash_raft_upstream_latency_count{type="write"} 0
+tiflash_raft_upstream_latency_sum{type="write"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.001"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.002"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.004"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.008"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.016"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.032"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.064"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.128"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.256"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="0.512"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="1.024"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="2.048"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="4.096"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="8.192"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="16.384"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="32.768"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="65.536"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="131.072"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="262.144"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="524.288"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="1048.576"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="2097.152"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="4194.304"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="8388.608"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="16777.216"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="33554.432"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="67108.864"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="134217.728"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="268435.456"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="536870.912"} 0
+tiflash_raft_upstream_latency_bucket{type="write",le="+Inf"} 0
+# HELP tiflash_raft_write_data_to_storage_duration_seconds "Bucketed histogram of writting region into storage layer"
+# TYPE tiflash_raft_write_data_to_storage_duration_seconds histogram
+tiflash_raft_write_data_to_storage_duration_seconds_count{type="write"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_sum{type="write"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.0005"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.001"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.002"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.004"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.008"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.016"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.032"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.064"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.128"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.256"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="0.512"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="1.024"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="2.048"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="4.096"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="8.192"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="16.384"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="32.768"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="65.536"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="131.072"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="262.144"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="write",le="+Inf"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_count{type="decode"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_sum{type="decode"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.0005"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.001"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.002"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.004"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.008"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.016"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.032"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.064"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.128"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.256"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="0.512"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="1.024"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="2.048"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="4.096"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="8.192"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="16.384"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="32.768"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="65.536"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="131.072"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="262.144"} 0
+tiflash_raft_write_data_to_storage_duration_seconds_bucket{type="decode",le="+Inf"} 0
+# HELP tiflash_task_scheduler_waiting_duration_seconds "Bucketed histogram of task waiting for scheduling duration"
+# TYPE tiflash_task_scheduler_waiting_duration_seconds histogram
+tiflash_task_scheduler_waiting_duration_seconds_count{type="task_waiting_duration"} 0
+tiflash_task_scheduler_waiting_duration_seconds_sum{type="task_waiting_duration"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.001"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.002"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.004"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.008"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.016"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.032"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.064"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.128"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.256"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="0.512"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="1.024"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="2.048"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="4.096"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="8.192"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="16.384"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="32.768"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="65.536"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="131.072"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="262.144"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="524.288"} 0
+tiflash_task_scheduler_waiting_duration_seconds_bucket{type="task_waiting_duration",le="+Inf"} 0
+# HELP tiflash_storage_read_thread_seconds "Bucketed histogram of read thread"
+# TYPE tiflash_storage_read_thread_seconds histogram
+tiflash_storage_read_thread_seconds_count{type="merged_task"} 0
+tiflash_storage_read_thread_seconds_sum{type="merged_task"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.001"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.002"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.004"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.008"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.016"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.032"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.064"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.128"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.256"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="0.512"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="1.024"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="2.048"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="4.096"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="8.192"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="16.384"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="32.768"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="65.536"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="131.072"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="262.144"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="524.288"} 0
+tiflash_storage_read_thread_seconds_bucket{type="merged_task",le="+Inf"} 0

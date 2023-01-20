@@ -83,10 +83,21 @@ func GetTiFlashTaskNum() (int, error) {
 	if err != nil {
 		return 0, err
 	}
+	res, err := GetTiFlashTaskNumByMetricsByte(data)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
+func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 	res := 0
 	reader := bytes.NewReader(data)
 	var parser expfmt.TextParser
 	metricFamilies, err := parser.TextToMetricFamilies(reader)
+	if err != nil {
+		return 0, err
+	}
 	for _, v := range metricFamilies {
 		if strings.HasPrefix(*v.Name, "tiflash_coprocessor_handling_request_count") {
 			for _, m := range v.Metric {
