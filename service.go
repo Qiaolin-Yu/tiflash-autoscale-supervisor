@@ -51,6 +51,7 @@ var S3BucketForTiFLashLog = ""
 var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
+var CheckTiFlashFreeInterval int
 var CheckTiFlashFreeTimeout int
 var K8sCli *kubernetes.Clientset
 
@@ -71,7 +72,10 @@ func getTenantInfo() (string, int64, bool) {
 }
 
 func GetTiFlashTaskNum() (int, error) {
-	resp, err := http.Get(TiFlashMetricURL)
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+	resp, err := client.Get(TiFlashMetricURL)
 	if err != nil {
 		return 0, err
 	}
@@ -177,16 +181,19 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				if !req.ForceShutdown {
 					setTenantInfo(req.AssertTenantID, true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
-					taskNum, err := GetTiFlashTaskNum()
-					if err != nil {
-						log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
-					} else {
+					startTime := time.Now()
+					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashFreeTimeout) {
+						taskNum, err := GetTiFlashTaskNum()
+						if err != nil {
+							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
+							break
+						}
 						if taskNum == 0 {
 							log.Printf("[unassigning]tiflash has no task, shutdown\n")
-						} else {
-							log.Printf("[unassigning]tiflash has %v task, wait for %v seconds\n", taskNum, CheckTiFlashFreeTimeout)
-							time.Sleep(time.Duration(CheckTiFlashFreeTimeout) * time.Second)
+							break
 						}
+						log.Printf("[unassigning]tiflash has %v task, wait for %v seconds\n", taskNum, CheckTiFlashFreeTimeout)
+						time.Sleep(time.Duration(CheckTiFlashFreeInterval) * time.Second)
 					}
 				}
 
@@ -355,12 +362,19 @@ func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
-	CheckTiFlashFreeTimeoutString := os.Getenv("CHECK_TIFLASH_FREE_INTERVAL")
+	CheckTiFlashFreeTimeoutString := os.Getenv("CHECK_TIFLASH_FREE_TIMEOUT")
 	if CheckTiFlashFreeTimeoutString == "" {
 		CheckTiFlashFreeTimeout = 60
 	} else {
 		CheckTiFlashFreeTimeout, _ = strconv.Atoi(CheckTiFlashFreeTimeoutString)
 	}
+	CheckTiFlashFreeIntervalString := os.Getenv("CHECK_TIFLASH_FREE_INTERVAL")
+	if CheckTiFlashFreeIntervalString == "" {
+		CheckTiFlashFreeInterval = 1
+	} else {
+		CheckTiFlashFreeInterval, _ = strconv.Atoi(CheckTiFlashFreeIntervalString)
+	}
+
 	config, err := getK8sConfig()
 	if err != nil {
 		panic(err.Error())
