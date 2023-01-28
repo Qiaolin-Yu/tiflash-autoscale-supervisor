@@ -368,16 +368,23 @@ func InitService() {
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
 	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
+	var err error
 	if CheckTiFlashIdleTimeoutString == "" {
 		CheckTiFlashIdleTimeout = 60
 	} else {
-		CheckTiFlashIdleTimeout, _ = strconv.Atoi(CheckTiFlashIdleTimeoutString)
+		CheckTiFlashIdleTimeout, err = strconv.Atoi(CheckTiFlashIdleTimeoutString)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 	CheckTiFlashIdleIntervalString := os.Getenv(CheckTiflashIdleIntervalEnv)
 	if CheckTiFlashIdleIntervalString == "" {
 		CheckTiFlashIdleInterval = 1
 	} else {
-		CheckTiFlashIdleInterval, _ = strconv.Atoi(CheckTiFlashIdleIntervalString)
+		CheckTiFlashIdleInterval, err = strconv.Atoi(CheckTiFlashIdleIntervalString)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
 	config, err := getK8sConfig()
