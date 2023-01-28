@@ -51,7 +51,7 @@ var S3BucketForTiFLashLog = ""
 var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
-var CheckTiFlashFreeInterval int
+var CheckTiFlashFreeTimeout int
 var K8sCli *kubernetes.Clientset
 
 func setTenantInfo(tenantID string, isUnassigning bool) int64 {
@@ -177,19 +177,16 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				if !req.ForceShutdown {
 					setTenantInfo(req.AssertTenantID, true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
-					for {
-						taskNum, err := GetTiFlashTaskNum()
-						if err != nil {
-							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
-							break
-						}
+					taskNum, err := GetTiFlashTaskNum()
+					if err != nil {
+						log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
+					} else {
 						if taskNum == 0 {
 							log.Printf("[unassigning]tiflash has no task, shutdown\n")
-							break
 						} else {
-							log.Printf("[unassigning]tiflash has %v task, wait\n", taskNum)
+							log.Printf("[unassigning]tiflash has %v task, wait for %v seconds\n", taskNum, CheckTiFlashFreeTimeout)
+							time.Sleep(time.Duration(CheckTiFlashFreeTimeout) * time.Second)
 						}
-						time.Sleep(time.Duration(CheckTiFlashFreeInterval) * time.Second)
 					}
 				}
 
@@ -358,11 +355,11 @@ func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
-	CheckTiFlashFreeIntervalString := os.Getenv("CHECK_TIFLASH_FREE_INTERVAL")
-	if CheckTiFlashFreeIntervalString == "" {
-		CheckTiFlashFreeInterval = 60
+	CheckTiFlashFreeTimeoutString := os.Getenv("CHECK_TIFLASH_FREE_INTERVAL")
+	if CheckTiFlashFreeTimeoutString == "" {
+		CheckTiFlashFreeTimeout = 60
 	} else {
-		CheckTiFlashFreeInterval, _ = strconv.Atoi(CheckTiFlashFreeIntervalString)
+		CheckTiFlashFreeTimeout, _ = strconv.Atoi(CheckTiFlashFreeTimeoutString)
 	}
 	config, err := getK8sConfig()
 	if err != nil {
