@@ -1,18 +1,25 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
 	"time"
 
+	"github.com/prometheus/common/expfmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	k8stypes "k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -34,6 +41,8 @@ var (
 	LabelPatchCh              = make(chan string, 10000)
 	PdAddr                    string
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
+
+	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
 )
 
 const NeedPd = false
@@ -42,7 +51,14 @@ var S3BucketForTiFLashLog = ""
 var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
+var CheckTiFlashIdleInterval int
+var CheckTiFlashIdleTimeout int
 var K8sCli *kubernetes.Clientset
+
+const CheckTiflashIdleTimeoutEnv = "CHECK_TIFLASH_IDLE_TIMEOUT"
+const CheckTiflashIdleIntervalEnv = "CHECK_TIFLASH_IDLE_INTERVAL"
+const TiFlashMetricTaskPrefix = "tiflash_coprocessor_handling_request_count"
+const HTTPTimeout = 5 * time.Second
 
 func setTenantInfo(tenantID string, isUnassigning bool) int64 {
 	MuOfTenantInfo.Lock()
@@ -58,6 +74,49 @@ func getTenantInfo() (string, int64, bool) {
 	MuOfTenantInfo.Lock()
 	defer MuOfTenantInfo.Unlock()
 	return AssignTenantID.Load().(string), StartTime.Load(), IsUnassigning.Load()
+}
+
+func GetTiFlashTaskNum() (int, error) {
+	client := http.Client{
+		Timeout: HTTPTimeout,
+	}
+	resp, err := client.Get(TiFlashMetricURL)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != 200 {
+		return 0, errors.New("http status code is not 200")
+	}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+	res, err := GetTiFlashTaskNumByMetricsByte(data)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
+func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
+	res := 0
+	reader := bytes.NewReader(data)
+	var parser expfmt.TextParser
+	metricFamilies, err := parser.TextToMetricFamilies(reader)
+	if err != nil {
+		return 0, err
+	}
+	for _, v := range metricFamilies {
+		if strings.HasPrefix(*v.Name, TiFlashMetricTaskPrefix) {
+			for _, m := range v.Metric {
+				res += int(*m.Gauge.Value)
+			}
+			break
+		}
+
+	}
+	return res, nil
 }
 
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
@@ -127,7 +186,20 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				if !req.ForceShutdown {
 					setTenantInfo(req.AssertTenantID, true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
-					time.Sleep(60 * time.Second)
+					startTime := time.Now()
+					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashIdleTimeout) {
+						taskNum, err := GetTiFlashTaskNum()
+						if err != nil {
+							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
+							break
+						}
+						if taskNum == 0 {
+							log.Printf("[unassigning]tiflash has no task, shutdown\n")
+							break
+						}
+						log.Printf("[unassigning]tiflash has %v task, wait for %v seconds\n", taskNum, CheckTiFlashIdleTimeout)
+						time.Sleep(time.Duration(CheckTiFlashIdleInterval) * time.Second)
+					}
 				}
 
 				setTenantInfo("", false)
@@ -295,6 +367,26 @@ func InitService() {
 	LocalPodIp = os.Getenv("POD_IP")
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
+	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
+	var err error
+	if CheckTiFlashIdleTimeoutString == "" {
+		CheckTiFlashIdleTimeout = 60
+	} else {
+		CheckTiFlashIdleTimeout, err = strconv.Atoi(CheckTiFlashIdleTimeoutString)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+	CheckTiFlashIdleIntervalString := os.Getenv(CheckTiflashIdleIntervalEnv)
+	if CheckTiFlashIdleIntervalString == "" {
+		CheckTiFlashIdleInterval = 1
+	} else {
+		CheckTiFlashIdleInterval, err = strconv.Atoi(CheckTiFlashIdleIntervalString)
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+
 	config, err := getK8sConfig()
 	if err != nil {
 		panic(err.Error())
