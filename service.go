@@ -81,10 +81,10 @@ func GetTiFlashTaskNum() (int, error) {
 		Timeout: HTTPTimeout,
 	}
 	resp, err := client.Get(TiFlashMetricURL)
-	defer resp.Body.Close()
 	if err != nil {
 		return 0, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		return 0, errors.New("http status code is not 200")
 	}
