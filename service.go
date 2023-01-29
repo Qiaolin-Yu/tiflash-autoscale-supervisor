@@ -51,8 +51,9 @@ var S3BucketForTiFLashLog = ""
 var S3Mutex sync.Mutex
 var LocalPodIp string
 var LocalPodName string
-var CheckTiFlashIdleInterval int
-var CheckTiFlashIdleTimeout int
+var CheckTiFlashIdleInitSleepSec = 10
+var CheckTiFlashIdleInterval = 1
+var CheckTiFlashIdleTimeout = 60
 var K8sCli *kubernetes.Clientset
 
 const CheckTiflashIdleTimeoutEnv = "CHECK_TIFLASH_IDLE_TIMEOUT"
@@ -187,6 +188,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					setTenantInfo(req.AssertTenantID, true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
 					startTime := time.Now()
+					time.Sleep(time.Duration(CheckTiFlashIdleInitSleepSec) * time.Second) // sleep a few seconds to prevent new mpp tasks arrive shortly after the begining of unassigning,  but  the tiflash is idle at the begining of unassigning
 					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashIdleTimeout) {
 						taskNum, err := GetTiFlashTaskNum()
 						if err != nil {
@@ -369,18 +371,14 @@ func InitService() {
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
 	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
 	var err error
-	if CheckTiFlashIdleTimeoutString == "" {
-		CheckTiFlashIdleTimeout = 60
-	} else {
+	if CheckTiFlashIdleTimeoutString != "" {
 		CheckTiFlashIdleTimeout, err = strconv.Atoi(CheckTiFlashIdleTimeoutString)
 		if err != nil {
 			panic(err.Error())
 		}
 	}
 	CheckTiFlashIdleIntervalString := os.Getenv(CheckTiflashIdleIntervalEnv)
-	if CheckTiFlashIdleIntervalString == "" {
-		CheckTiFlashIdleInterval = 1
-	} else {
+	if CheckTiFlashIdleIntervalString != "" {
 		CheckTiFlashIdleInterval, err = strconv.Atoi(CheckTiFlashIdleIntervalString)
 		if err != nil {
 			panic(err.Error())
