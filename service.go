@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -120,6 +121,24 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 	return res, nil
 }
 
+const TiFlashListenTcpPort = "9000"
+
+func isTiflahPortOpen() bool {
+	host := "localhost"
+	port := TiFlashListenTcpPort
+	timeout := 100 * time.Millisecond
+	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
+	if err != nil {
+		return false
+	}
+	if conn != nil {
+		defer conn.Close()
+		return true
+	} else {
+		return false
+	}
+}
+
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	curReqId := ReqId.Add(1)
 	log.Printf("received assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
@@ -143,6 +162,19 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				AssignCh <- req
 				for Pid.Load() == 0 {
 					time.Sleep(10 * time.Microsecond)
+				}
+				localSt := time.Now()
+				MaxWaitPortOpenTimeSec := 5.0
+				isTimeout := false
+				for !isTiflahPortOpen() {
+					time.Sleep(100 * time.Microsecond)
+					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
+						isTimeout = true
+						break
+					}
+				}
+				if isTimeout {
+					log.Printf("wait tiflash port open timeout! %vs\n", MaxWaitPortOpenTimeSec)
 				}
 				return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string), StartTime: stime, IsUnassigning: false}, nil
 			}
