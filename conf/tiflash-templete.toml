@@ -14,6 +14,9 @@ path = "/tiflash/data"
 tcp_port = 9000
 tmp_path = "/tiflash/data/tmp"
 
+[cluster]
+cluster_id = "%v"
+
 [flash]
 service_addr = "%v:3930"
 disaggregated_mode = "tiflash_compute"
@@ -43,3 +46,4 @@ pd_addr = "%v"
 
 [status]
 metrics_port = 8234
+metrics_addr = "as-pushgateway.tiflash-autoscale.svc.cluster.local:9091"

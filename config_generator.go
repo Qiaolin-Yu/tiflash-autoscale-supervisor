@@ -27,7 +27,7 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 	} else if tenantName == "fixpool-use-autoscaler-true" {
 		fixPoolConfItem = "use_autoscaler = true"
 	}
-	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, fixPoolConfItem, pdAddr)
+	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, tenantName, fixPoolConfItem, pdAddr)
 	tiFlashConfigFile, err := os.Create(targetTiFlashConfigFilename)
 	defer tiFlashConfigFile.Close()
 	if err != nil {
@@ -75,7 +75,7 @@ func InitTiFlashConf() error {
 	// 	log.Printf("could not create tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
 	// 	return err
 	// }
-	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, localIp, "%v", "%v")
+	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v")
 	tiFlashPreprocessedConfigBuffer = tiFlashConfig
 	// _, err = tiFlashConfigFile.WriteString(tiFlashConfig)
 	// if err != nil {
