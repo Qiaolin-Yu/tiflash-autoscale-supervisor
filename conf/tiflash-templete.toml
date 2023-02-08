@@ -46,4 +46,3 @@ pd_addr = "%v"
 
 [status]
 metrics_port = 8234
-metrics_addr = "as-pushgateway.tiflash-autoscale.svc.cluster.local:9091"
