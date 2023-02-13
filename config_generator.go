@@ -7,20 +7,27 @@ import (
 )
 
 var (
-	learnerConfigTemplateFilename     = "conf/tiflash-learner-templete.toml"
-	learnerConfigFilename             = "conf/tiflash-learner.toml"
-	tiFlashConfigTemplateFilename     = "conf/tiflash-templete.toml"
-	tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
+	learnerConfigTemplateFilename   = "conf/tiflash-learner-templete.toml"
+	learnerConfigFilename           = "conf/tiflash-learner.toml"
+	tiFlashConfigTemplateFilename   = "conf/tiflash-templete.toml"
+	tiFlashPreprocessedConfigBuffer = ""
+	// tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
 )
 
-func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string) error {
-	tiFlashPreprocessedConfigFile, err := os.ReadFile(tiFlashPreprocessedConfigFilename)
-	if err != nil {
-		log.Printf("could not read tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
-		return err
+func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string, tenantName string) error {
+	// tiFlashPreprocessedConfigFile := tiFlashPreprocessedConfigBuffer
+	// if err != nil {
+	// log.Printf("could not read tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
+	// return err
+	// }
+	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigBuffer)
+	fixPoolConfItem := ""
+	if tenantName == "fixpool-use-autoscaler-false" {
+		fixPoolConfItem = "use_autoscaler = false"
+	} else if tenantName == "fixpool-use-autoscaler-true" {
+		fixPoolConfItem = "use_autoscaler = true"
 	}
-	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigFile)
-	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, pdAddr)
+	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, tenantName, fixPoolConfItem, pdAddr)
 	tiFlashConfigFile, err := os.Create(targetTiFlashConfigFilename)
 	defer tiFlashConfigFile.Close()
 	if err != nil {
@@ -62,17 +69,18 @@ func InitTiFlashConf() error {
 		log.Printf("could not read tiflash-preprocessed config templete %v: %v", tiFlashConfigTemplateFilename, err)
 		return err
 	}
-	tiFlashConfigFile, err := os.Create(tiFlashPreprocessedConfigFilename)
-	defer tiFlashConfigFile.Close()
-	if err != nil {
-		log.Printf("could not create tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
-		return err
-	}
-	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, localIp, "%v")
-	_, err = tiFlashConfigFile.WriteString(tiFlashConfig)
-	if err != nil {
-		log.Printf("could not write tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
-		return err
-	}
+	// tiFlashConfigFile, err := os.Create(tiFlashPreprocessedConfigFilename)
+	// defer tiFlashConfigFile.Close()
+	// if err != nil {
+	// 	log.Printf("could not create tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
+	// 	return err
+	// }
+	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v")
+	tiFlashPreprocessedConfigBuffer = tiFlashConfig
+	// _, err = tiFlashConfigFile.WriteString(tiFlashConfig)
+	// if err != nil {
+	// log.Printf("could not write tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
+	// return err
+	// }
 	return nil
 }

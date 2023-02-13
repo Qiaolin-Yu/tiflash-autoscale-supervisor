@@ -52,7 +52,7 @@ func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*p
 
 func main() {
 	// LocalPodIp = os.Getenv("POD_IP")
-	log.Printf("ver: 1")
+	log.Printf("ver: 2")
 	flag.Parse()
 	InitService()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))

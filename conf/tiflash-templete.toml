@@ -14,9 +14,13 @@ path = "/tiflash/data"
 tcp_port = 9000
 tmp_path = "/tiflash/data/tmp"
 
+[cluster]
+cluster_id = "%v"
+
 [flash]
 service_addr = "%v:3930"
 disaggregated_mode = "tiflash_compute"
+%v
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
 log = "/tiflash/log/tiflash_cluster_manager.log"

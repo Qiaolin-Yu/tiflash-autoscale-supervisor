@@ -111,7 +111,29 @@ func TestInitTiFlashConf(t *testing.T) {
 	if err != nil {
 		log.Fatalf("init tiflash conf failed: %v", err)
 	}
-	err = RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000")
+	err = RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000", "")
+	if err != nil {
+		log.Fatalf("RenderTiFlashConf failed: %v", err)
+	}
+}
+
+func TestInitTiFlashConf2(t *testing.T) {
+	err := InitTiFlashConf()
+	if err != nil {
+		log.Fatalf("init tiflash conf failed: %v", err)
+	}
+	err = RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000", "fixpool-use-autoscaler-false")
+	if err != nil {
+		log.Fatalf("RenderTiFlashConf failed: %v", err)
+	}
+}
+
+func TestInitTiFlashConf3(t *testing.T) {
+	err := InitTiFlashConf()
+	if err != nil {
+		log.Fatalf("init tiflash conf failed: %v", err)
+	}
+	err = RenderTiFlashConf("conf/tiflash.toml", "123.123.123.123:1000", "179.1.1.1:2000", "fixpool-use-autoscaler-true")
 	if err != nil {
 		log.Fatalf("RenderTiFlashConf failed: %v", err)
 	}
