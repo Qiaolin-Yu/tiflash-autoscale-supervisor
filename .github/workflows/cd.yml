@@ -14,13 +14,13 @@ jobs:
       id-token: write
       contents: read
     environment: CICD
-    outputs:
-      image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${{ github.sha }}
     env:
       ECR_REPO: tiflash-autoscale-supervisor
       AWS_ROLE_ARN: ${{ secrets.TIFLASH_COMPUTE_ECR_AWS_ROLE }}
       AWS_REGION: us-east-2
       GITHUB_TOKEN: ${{ secrets.GIT_ACTION_BOT }}
+    outputs:
+      image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${{ github.sha }}
     steps:
       # - name: Check out Code
       #   uses: actions/checkout@v2
