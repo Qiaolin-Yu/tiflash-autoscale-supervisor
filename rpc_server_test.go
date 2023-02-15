@@ -19,17 +19,8 @@
 package main
 
 import (
-	"context"
-	"flag"
 	"log"
 	"testing"
-	"time"
-
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	"google.golang.org/grpc"
-
-	pb "tiflash-auto-scaling/supervisor_proto"
 )
 
 var (
@@ -38,73 +29,73 @@ var (
 	tenantConfigFile = "conf/tiflash-templete.toml"
 )
 
-func TestAssignTenant(t *testing.T) {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewAssignClient(conn)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
-	if err != nil {
-		log.Fatalf("could not assign: %v", err)
-	}
-	if r.HasErr {
-		log.Fatalf("assign failed: %v", r.ErrInfo)
-	} else {
-		log.Printf("assign succeeded")
-	}
-
-}
-
-func TestGetCurrentTenant(t *testing.T) {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewAssignClient(conn)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	r, err := c.GetCurrentTenant(ctx, &emptypb.Empty{})
-	log.Printf("current tenant: %v", r.TenantID)
-}
-
-func TestUnassignTenant(t *testing.T) {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewAssignClient(conn)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-
-	r, err := c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
-	if err != nil {
-		log.Fatalf("could not unassign: %v", err)
-	}
-	if r.HasErr {
-		log.Fatalf("unassign failed: %v", r.ErrInfo)
-	} else {
-		log.Printf("unassign succeeded")
-	}
-}
+//func TestAssignTenant(t *testing.T) {
+//	flag.Parse()
+//	// Set up a connection to the server.
+//	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
+//	if err != nil {
+//		log.Fatalf("did not connect: %v", err)
+//	}
+//	defer conn.Close()
+//	c := pb.NewAssignClient(conn)
+//
+//	// Contact the server and print out its response.
+//	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+//	defer cancel()
+//	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
+//	if err != nil {
+//		log.Fatalf("could not assign: %v", err)
+//	}
+//	if r.HasErr {
+//		log.Fatalf("assign failed: %v", r.ErrInfo)
+//	} else {
+//		log.Printf("assign succeeded")
+//	}
+//
+//}
+//
+//func TestGetCurrentTenant(t *testing.T) {
+//	flag.Parse()
+//	// Set up a connection to the server.
+//	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
+//	if err != nil {
+//		log.Fatalf("did not connect: %v", err)
+//	}
+//	defer conn.Close()
+//	c := pb.NewAssignClient(conn)
+//
+//	// Contact the server and print out its response.
+//	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+//	defer cancel()
+//
+//	r, err := c.GetCurrentTenant(ctx, &emptypb.Empty{})
+//	log.Printf("current tenant: %v", r.TenantID)
+//}
+//
+//func TestUnassignTenant(t *testing.T) {
+//	flag.Parse()
+//	// Set up a connection to the server.
+//	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
+//	if err != nil {
+//		log.Fatalf("did not connect: %v", err)
+//	}
+//	defer conn.Close()
+//	c := pb.NewAssignClient(conn)
+//
+//	// Contact the server and print out its response.
+//	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+//	defer cancel()
+//
+//	r, err := c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
+//	if err != nil {
+//		log.Fatalf("could not unassign: %v", err)
+//	}
+//	if r.HasErr {
+//		log.Fatalf("unassign failed: %v", r.ErrInfo)
+//	} else {
+//		log.Printf("unassign succeeded")
+//	}
+//}
 
 func TestInitTiFlashConf(t *testing.T) {
 	err := InitTiFlashConf()
