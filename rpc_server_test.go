@@ -29,7 +29,22 @@ var (
 	tenantConfigFile = "conf/tiflash-templete.toml"
 )
 
-//func TestAssignTenant(t *testing.T) {
+//func InitGrpcServer() {
+//	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
+//	if err != nil {
+//		log.Fatalf("failed to listen: %v", err)
+//	}
+//	s := grpc.NewServer()
+//	pb.RegisterAssignServer(s, &server{})
+//	log.Printf("server listening at %v", lis.Addr())
+//	if err := s.Serve(lis); err != nil {
+//		log.Fatalf("failed to serve: %v", err)
+//	}
+//	go TiFlashMaintainer()
+//}
+//
+//func TestAssignAndUnassignTenant(t *testing.T) {
+//	go InitGrpcServer()
 //	flag.Parse()
 //	// Set up a connection to the server.
 //	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
@@ -40,7 +55,7 @@ var (
 //	c := pb.NewAssignClient(conn)
 //
 //	// Contact the server and print out its response.
-//	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+//	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 //	defer cancel()
 //	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
 //	if err != nil {
@@ -53,7 +68,7 @@ var (
 //	}
 //
 //}
-//
+
 //func TestGetCurrentTenant(t *testing.T) {
 //	flag.Parse()
 //	// Set up a connection to the server.

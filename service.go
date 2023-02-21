@@ -123,7 +123,7 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 
 const TiFlashListenTcpPort = "9000"
 
-func isTiflahPortOpen() bool {
+func isTiflashPortOpen() bool {
 	host := "localhost"
 	port := TiFlashListenTcpPort
 	timeout := 100 * time.Millisecond
@@ -144,10 +144,10 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
 	var errInfo string
 	defer log.Printf("finished assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
-	if AssignTenantID.Load().(string) == "" {
+	if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
 		if MuOfSupervisor.TryLock() {
 			defer MuOfSupervisor.Unlock()
-			if AssignTenantID.Load().(string) == "" {
+			if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
 				stime := setTenantInfo(req.GetTenantID(), false)
 				LabelPatchCh <- req.GetTenantID()
 				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
@@ -159,14 +159,17 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 					LabelPatchCh <- "null"
 					return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "could not render config", TenantID: "", StartTime: stime, IsUnassigning: false}, err
 				}
+				print("start tiflash...\n")
 				AssignCh <- req
+				print("wait tiflash start...\n")
 				for Pid.Load() == 0 {
 					time.Sleep(10 * time.Microsecond)
 				}
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
+				print("wait tiflash port open...\n")
 				isTimeout := false
-				for !isTiflahPortOpen() {
+				for !isTiflashPortOpen() {
 					time.Sleep(100 * time.Microsecond)
 					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
 						isTimeout = true
