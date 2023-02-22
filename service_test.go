@@ -8,32 +8,36 @@ import (
 	"testing"
 )
 
-func TestGetTiFlashTaskNumByMetricsByte(t *testing.T) {
-	data1, err := os.ReadFile("test_data/metrics1.txt")
-	assert.NoError(t, err)
-	res, err := GetTiFlashTaskNumByMetricsByte(data1)
-	assert.NoError(t, err)
-	assert.Equal(t, res, 0)
-	data2, err := os.ReadFile("test_data/metrics2.txt")
-	assert.NoError(t, err)
-	res, err = GetTiFlashTaskNumByMetricsByte(data2)
-	assert.NoError(t, err)
-	assert.Equal(t, res, 66)
-}
-
-func TestGetTiFlashTaskNumHttp(t *testing.T) {
-	data, err := os.ReadFile("test_data/metrics2.txt")
-	assert.NoError(t, err)
+func mockMetricHttpServer(inputFile string) (*httptest.Server, error) {
+	data, err := os.ReadFile(inputFile)
+	if err != nil {
+		return nil, err
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		_, err := rw.Write(data)
 		if err != nil {
 			return
 		}
 	}))
+	return server, nil
+}
+
+func TestGetTiFlashTaskNum(t *testing.T) {
+	server, err := mockMetricHttpServer("test_data/metrics1.txt")
+	assert.NoError(t, err)
+
 	TiFlashMetricURL = server.URL
 
-	defer server.Close()
 	res, err := GetTiFlashTaskNum()
 	assert.NoError(t, err)
+	assert.Equal(t, res, 0)
+	server.Close()
+
+	server, err = mockMetricHttpServer("test_data/metrics2.txt")
+	assert.NoError(t, err)
+	TiFlashMetricURL = server.URL
+	res, err = GetTiFlashTaskNum()
+	assert.NoError(t, err)
 	assert.Equal(t, res, 66)
+	server.Close()
 }
