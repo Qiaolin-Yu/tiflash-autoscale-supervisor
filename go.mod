@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/golang/protobuf v1.5.2
+	github.com/pelletier/go-toml v1.9.5
 	github.com/prometheus/common v0.37.0
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.47.0
