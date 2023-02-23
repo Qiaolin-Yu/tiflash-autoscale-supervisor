@@ -1,27 +1,3 @@
-# FROM golang:1.19-alpine as builder
-
-# # RUN apk add --no-cache \
-# #     make \
-# #     git \
-# #     bash \
-# #     curl \
-# #     gcc \
-# #     g++
-
-# RUN mkdir /tiflash
-# WORKDIR /tiflash
-# COPY go.mod ./
-# COPY go.sum ./
-# COPY *.go ./
-# COPY supervisor_proto ./supervisor_proto
-# ENV PATH="/usr/local/go/bin:${PATH}"
-# ENV RUST_BACKTRACE=1
-# ENV TZ=Asia/Shanghai
-# ENV LD_LIBRARY_PATH="/tiflash/bin:$LD_LIBRARY_PATH"
-# RUN go mod tidy
-# RUN go build -o rpc_server
-# CMD ["/tiflash/rpc_server"]
-
 FROM ubuntu:20.04
 ENV RUST_BACKTRACE=1
 ENV DEBIAN_FRONTEND=noninteractive
@@ -48,9 +24,7 @@ RUN cd /tiflash/ && echo $TARGETPLATFORM \
     && wget --no-check-certificate https://go.dev/dl/go1.19.5.linux-$SIMPLE_ARCH.tar.gz \
     && pwd && ls -lh \
     && rm -rf /usr/local/go && tar -C /usr/local -xzf /tiflash/go1.19.5.linux-$SIMPLE_ARCH.tar.gz
-# RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
-# RUN echo $TARGETPLATFORM && go version
-# COPY go1.19.2.linux-amd64.tar.gz /tiflash/
+
 COPY conf/  /tiflash/conf/
 COPY supervisor_proto/ /tiflash/supervisor_proto/
 COPY *.go go.* *.yaml *.yml *.sh /tiflash/
@@ -61,7 +35,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=aarch64 ; else  
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-$SIMPLE_ARCH.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 # without as switch
 #COPY --from=xexplorersun/tiflash:cse-3dc23cc935cfdde155df657f73dd385a27f40031 /tiflash/* /tiflash/bin/
-COPY --from=xexplorersun/tiflash:cse-353c4ab882b3cd204d315349ad42b3af14452cdd /tiflash/* /tiflash/bin/
+COPY --from=xexplorersun/tiflash:cse-dbacaf78f311978e4f11e3702061d739ed259fd5 /tiflash/* /tiflash/bin/
 RUN ls -lh /tiflash/bin/ && /tiflash/bin/tiflash version
 
 ENV PATH="/usr/local/go/bin:${PATH}"
@@ -70,11 +44,7 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/tiflash/bin:$LD_LIBRARY_PATH"
 RUN go mod tidy
 RUN go build -o rpc_server
-# awscli-exe-linux-aarch64.zip
 
 EXPOSE 7000 8237 8126 9003 20173 20295 3933
-# CMD ["/bin/sh", "-c", "ls -lh /tiflash/rpc_server"]
-# CMD ["/bin/sh", "-c", "pwd"]
-# ENTRYPOINT ["/bin/sh", "-c", "go -version"]
+
 ENTRYPOINT ["/tiflash/run.sh"]
-# ENTRYPOINT ["/tiflash/rpc_server > /var/log/tiflash_supervisor.log"]
