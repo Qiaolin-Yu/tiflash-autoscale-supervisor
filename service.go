@@ -81,9 +81,6 @@ func getTenantInfo() (string, int64, bool) {
 }
 
 func GetTiFlashTaskNum() (int, error) {
-	if IsTestEnv {
-		return 0, nil
-	}
 	client := http.Client{
 		Timeout: HTTPTimeout,
 	}
@@ -230,6 +227,10 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					startTime := time.Now()
 					time.Sleep(time.Duration(CheckTiFlashIdleInitSleepSec) * time.Second) // sleep a few seconds to prevent new mpp tasks arrive shortly after the begining of unassigning,  but  the tiflash is idle at the begining of unassigning
 					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashIdleTimeout) {
+						if IsTestEnv {
+							log.Printf("[unassigning]tiflash has no task, shutdown\n")
+							break
+						}
 						taskNum, err := GetTiFlashTaskNum()
 						if err != nil {
 							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
