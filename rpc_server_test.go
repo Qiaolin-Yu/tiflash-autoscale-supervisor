@@ -20,23 +20,28 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
+	"strings"
 	"testing"
 	pb "tiflash-auto-scaling/supervisor_proto"
 	"time"
 )
 
 var (
-	addr     = "localhost:7000"
-	tenantID = "demo123821"
+	addr      = "localhost:7000"
+	tenantID  = "test-tenant-id"
+	tenantID2 = "test-tenant-id2"
 )
 
-func InitGrpcServer() {
+func InitRPCTestEnv() {
+	IsTestEnv = true
+	go TiFlashMaintainer()
+	TiFlashBinPath = "./test_data/infinite_loop.sh"
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -47,74 +52,51 @@ func InitGrpcServer() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
-	go TiFlashMaintainer()
 }
 
 func TestAssignAndUnassignTenant(t *testing.T) {
-	go InitGrpcServer()
-	flag.Parse()
+	go InitRPCTestEnv()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
+	assert.NoError(t, err)
 	defer conn.Close()
 	c := pb.NewAssignClient(conn)
 
 	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
-	defer cancel()
-	r, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
-	if err != nil {
-		log.Fatalf("could not assign: %v", err)
-	}
-	if r.HasErr {
-		log.Fatalf("assign failed: %v", r.ErrInfo)
-	} else {
-		log.Printf("assign succeeded")
-	}
-
-}
-
-func TestGetCurrentTenant(t *testing.T) {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewAssignClient(conn)
-
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	r, err := c.GetCurrentTenant(ctx, &emptypb.Empty{})
-	log.Printf("current tenant: %v", r.TenantID)
-}
+	// test AssignTenantService
+	assignTenantResult, err := c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
+	assert.NoError(t, err)
+	assert.False(t, assignTenantResult.HasErr)
+	assert.Equal(t, assignTenantResult.TenantID, tenantID)
+	assert.False(t, assignTenantResult.IsUnassigning)
 
-func TestUnassignTenant(t *testing.T) {
-	flag.Parse()
-	// Set up a connection to the server.
-	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-	c := pb.NewAssignClient(conn)
+	assignTenantResult, err = c.AssignTenant(ctx, &pb.AssignRequest{TenantID: tenantID2, TidbStatusAddr: "123.123.123.123:1000", PdAddr: "179.1.1.1:2000"})
+	assert.NoError(t, err)
+	assert.True(t, assignTenantResult.HasErr)
+	assert.True(t, strings.Contains(assignTenantResult.ErrInfo, "TiFlash has been occupied by a tenant"))
+	assert.Equal(t, assignTenantResult.TenantID, tenantID)
+	assert.False(t, assignTenantResult.IsUnassigning)
 
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
+	// test GetCurrentTenantService
+	getCurrentTenantResult, err := c.GetCurrentTenant(ctx, &emptypb.Empty{})
+	assert.NoError(t, err)
+	assert.False(t, getCurrentTenantResult.IsUnassigning)
+	assert.Equal(t, getCurrentTenantResult.TenantID, tenantID)
 
-	r, err := c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
-	if err != nil {
-		log.Fatalf("could not unassign: %v", err)
-	}
-	if r.HasErr {
-		log.Fatalf("unassign failed: %v", r.ErrInfo)
-	} else {
-		log.Printf("unassign succeeded")
-	}
+	// test UnassignTenantService
+	unassignTenantResult, err := c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID2})
+	assert.NoError(t, err)
+	assert.True(t, unassignTenantResult.HasErr)
+	assert.True(t, strings.Contains(unassignTenantResult.ErrInfo, "TiFlash is not assigned to this tenant"))
+	assert.Equal(t, unassignTenantResult.TenantID, tenantID)
+	assert.False(t, unassignTenantResult.IsUnassigning)
+
+	unassignTenantResult, err = c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
+	assert.NoError(t, err)
+	assert.False(t, unassignTenantResult.HasErr)
+	assert.Equal(t, unassignTenantResult.TenantID, "")
+	assert.False(t, unassignTenantResult.IsUnassigning)
 }

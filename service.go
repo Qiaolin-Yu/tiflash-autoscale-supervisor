@@ -44,6 +44,8 @@ var (
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
 
 	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
+	TiFlashBinPath   = "./bin/tiflash"
+	IsTestEnv        = false
 )
 
 const NeedPd = false
@@ -79,6 +81,9 @@ func getTenantInfo() (string, int64, bool) {
 }
 
 func GetTiFlashTaskNum() (int, error) {
+	if IsTestEnv {
+		return 0, nil
+	}
 	client := http.Client{
 		Timeout: HTTPTimeout,
 	}
@@ -124,6 +129,9 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 const TiFlashListenTcpPort = "9000"
 
 func isTiflashPortOpen() bool {
+	if IsTestEnv {
+		return true
+	}
 	host := "localhost"
 	port := TiFlashListenTcpPort
 	timeout := 100 * time.Millisecond
@@ -159,15 +167,12 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 					LabelPatchCh <- "null"
 					return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "could not render config", TenantID: "", StartTime: stime, IsUnassigning: false}, err
 				}
-				print("start tiflash...\n")
 				AssignCh <- req
-				print("wait tiflash start...\n")
 				for Pid.Load() == 0 {
 					time.Sleep(10 * time.Microsecond)
 				}
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
-				print("wait tiflash port open...\n")
 				isTimeout := false
 				for !isTiflashPortOpen() {
 					time.Sleep(100 * time.Microsecond)
@@ -240,7 +245,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				}
 
 				setTenantInfo("", false)
-				cmd := exec.Command("killall", "-9", "./bin/tiflash")
+				cmd := exec.Command("killall", "-9", TiFlashBinPath)
 				err := cmd.Run()
 				if err != nil {
 					log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
@@ -329,12 +334,12 @@ func TiFlashMaintainer() {
 				break
 			}
 
-			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
+			cmd := exec.Command(TiFlashBinPath, "server", "--config-file", configFile)
 			err = cmd.Start()
-			Pid.Store(int32(cmd.Process.Pid))
 			if err != nil {
 				log.Printf("start tiflash failed: %v", err)
 			}
+			Pid.Store(int32(cmd.Process.Pid))
 			err = cmd.Wait()
 			log.Printf("tiflash exited: %v", err)
 		}
