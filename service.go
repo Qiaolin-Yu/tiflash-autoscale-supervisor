@@ -126,9 +126,6 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 const TiFlashListenTcpPort = "9000"
 
 func isTiflashPortOpen() bool {
-	if IsTestEnv {
-		return true
-	}
 	host := "localhost"
 	port := TiFlashListenTcpPort
 	timeout := 100 * time.Millisecond
@@ -171,7 +168,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
 				isTimeout := false
-				for !isTiflashPortOpen() {
+				for !isTiflashPortOpen() && !IsTestEnv {
 					time.Sleep(100 * time.Microsecond)
 					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
 						isTimeout = true
