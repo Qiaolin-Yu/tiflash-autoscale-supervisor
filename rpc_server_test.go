@@ -47,6 +47,7 @@ func InitRPCTestEnv() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
+	defer s.Stop()
 	pb.RegisterAssignServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

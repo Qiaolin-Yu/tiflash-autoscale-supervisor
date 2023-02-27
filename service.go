@@ -225,7 +225,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					time.Sleep(time.Duration(CheckTiFlashIdleInitSleepSec) * time.Second) // sleep a few seconds to prevent new mpp tasks arrive shortly after the begining of unassigning,  but  the tiflash is idle at the begining of unassigning
 					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashIdleTimeout) {
 						if IsTestEnv {
-							log.Printf("[unassigning]tiflash has no task, shutdown\n")
+							log.Printf("[test][unassigning]tiflash has no task, shutdown\n")
 							break
 						}
 						taskNum, err := GetTiFlashTaskNum()
@@ -335,11 +335,15 @@ func TiFlashMaintainer() {
 			cmd := exec.Command(TiFlashBinPath, "server", "--config-file", configFile)
 			err = cmd.Start()
 			if err != nil {
-				log.Printf("start tiflash failed: %v", err)
+				log.Printf("[error]Start TiFlash failed: %v", err)
 			}
 			Pid.Store(int32(cmd.Process.Pid))
 			err = cmd.Wait()
-			log.Printf("tiflash exited: %v", err)
+			if err != nil {
+				log.Printf("[error]TiFlash exited with error: %v", err)
+			} else {
+				log.Printf("TiFlash exited successfully")
+			}
 		}
 	}
 }
@@ -433,7 +437,7 @@ func InitService() {
 	}
 	setTenantInfo("", false)
 	LabelPatchCh <- "null"
-	err = InitTiFlashConf()
+	err = InitTiFlashConf(LocalPodIp)
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
 	}
