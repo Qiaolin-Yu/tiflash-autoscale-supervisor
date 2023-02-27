@@ -1,4 +1,4 @@
 #!/bin/bash
 while true; do
-  sleep 1
+  sleep 0.01
 done
