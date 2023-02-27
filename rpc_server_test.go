@@ -38,25 +38,33 @@ var (
 	tenantID2 = "test-tenant-id2"
 )
 
-func InitRPCTestEnv() {
+func InitRPCTestEnv() (func(), error) {
 	IsTestEnv = true
 	go TiFlashMaintainer()
 	TiFlashBinPath = "./test_data/infinite_loop.sh"
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		return nil, err
 	}
 	s := grpc.NewServer()
-	defer s.Stop()
 	pb.RegisterAssignServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+	go func() {
+		if err := s.Serve(lis); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+	}()
+	closer := func() {
+		s.Stop()
+		log.Printf("grpc server closes")
+		return
 	}
+	return closer, nil
 }
 
 func TestAssignAndUnassignTenant(t *testing.T) {
-	go InitRPCTestEnv()
+	closer, err := InitRPCTestEnv()
+	assert.NoError(t, err)
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	assert.NoError(t, err)
@@ -100,4 +108,5 @@ func TestAssignAndUnassignTenant(t *testing.T) {
 	assert.False(t, unassignTenantResult.HasErr)
 	assert.Equal(t, unassignTenantResult.TenantID, "")
 	assert.False(t, unassignTenantResult.IsUnassigning)
+	closer()
 }
