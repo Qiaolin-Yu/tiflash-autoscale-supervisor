@@ -64,6 +64,7 @@ func InitRPCTestEnv() (func(), error) {
 
 func TestAssignAndUnassignTenant(t *testing.T) {
 	closer, err := InitRPCTestEnv()
+	defer closer()
 	assert.NoError(t, err)
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
@@ -108,5 +109,4 @@ func TestAssignAndUnassignTenant(t *testing.T) {
 	assert.False(t, unassignTenantResult.HasErr)
 	assert.Equal(t, unassignTenantResult.TenantID, "")
 	assert.False(t, unassignTenantResult.IsUnassigning)
-	closer()
 }
