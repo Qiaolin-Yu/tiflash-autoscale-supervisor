@@ -26,6 +26,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
+	"os/exec"
 	"strings"
 	"testing"
 	pb "tiflash-auto-scaling/supervisor_proto"
@@ -38,6 +39,7 @@ var (
 	tenantID2 = "test-tenant-id2"
 )
 
+// If no error is returned, the close function will not be nil.
 func InitRPCTestEnv() (func(), error) {
 	IsTestEnv = true
 	go TiFlashMaintainer()
@@ -64,8 +66,9 @@ func InitRPCTestEnv() (func(), error) {
 
 func TestAssignAndUnassignTenant(t *testing.T) {
 	closer, err := InitRPCTestEnv()
-	defer closer()
 	assert.NoError(t, err)
+	defer closer()
+	defer exec.Command("killall", "-9", TiFlashBinPath).Run()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	assert.NoError(t, err)
