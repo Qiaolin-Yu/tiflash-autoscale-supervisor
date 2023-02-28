@@ -58,6 +58,7 @@ func InitRPCTestEnv() (func(), error) {
 	}()
 	closer := func() {
 		s.Stop()
+		exec.Command("killall", "-9", TiFlashBinPath).Run()
 		log.Printf("grpc server closes")
 		return
 	}
@@ -68,7 +69,6 @@ func TestAssignAndUnassignTenant(t *testing.T) {
 	closer, err := InitRPCTestEnv()
 	assert.NoError(t, err)
 	defer closer()
-	defer exec.Command("killall", "-9", TiFlashBinPath).Run()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.FailOnNonTempDialError(true), grpc.WithBlock())
 	assert.NoError(t, err)
