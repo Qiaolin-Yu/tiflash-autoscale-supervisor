@@ -42,8 +42,7 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 	return nil
 }
 
-func InitTiFlashConf() error {
-	localIp := os.Getenv("POD_IP")
+func InitTiFlashConf(localIp string) error {
 	learnerConfigTemplateFile, err := os.ReadFile(learnerConfigTemplateFilename)
 	learnerConfigTemplate := string(learnerConfigTemplateFile)
 	if err != nil {

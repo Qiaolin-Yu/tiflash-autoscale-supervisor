@@ -44,6 +44,8 @@ var (
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
 
 	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
+	TiFlashBinPath   = "./bin/tiflash"
+	IsTestEnv        = false
 )
 
 const NeedPd = false
@@ -123,7 +125,7 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 
 const TiFlashListenTcpPort = "9000"
 
-func isTiflahPortOpen() bool {
+func isTiflashPortOpen() bool {
 	host := "localhost"
 	port := TiFlashListenTcpPort
 	timeout := 100 * time.Millisecond
@@ -144,10 +146,10 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	log.Printf("received assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
 	var errInfo string
 	defer log.Printf("finished assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
-	if AssignTenantID.Load().(string) == "" {
+	if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
 		if MuOfSupervisor.TryLock() {
 			defer MuOfSupervisor.Unlock()
-			if AssignTenantID.Load().(string) == "" {
+			if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
 				stime := setTenantInfo(req.GetTenantID(), false)
 				LabelPatchCh <- req.GetTenantID()
 				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
@@ -166,7 +168,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
 				isTimeout := false
-				for !isTiflahPortOpen() {
+				for !isTiflashPortOpen() && !IsTestEnv {
 					time.Sleep(100 * time.Microsecond)
 					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
 						isTimeout = true
@@ -222,6 +224,10 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					startTime := time.Now()
 					time.Sleep(time.Duration(CheckTiFlashIdleInitSleepSec) * time.Second) // sleep a few seconds to prevent new mpp tasks arrive shortly after the begining of unassigning,  but  the tiflash is idle at the begining of unassigning
 					for time.Now().Sub(startTime).Seconds() < float64(CheckTiFlashIdleTimeout) {
+						if IsTestEnv {
+							log.Printf("[test][unassigning]tiflash has no task, shutdown\n")
+							break
+						}
 						taskNum, err := GetTiFlashTaskNum()
 						if err != nil {
 							log.Printf("[error]GetTiFlashTaskNum fail: %v\n", err.Error())
@@ -237,7 +243,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				}
 
 				setTenantInfo("", false)
-				cmd := exec.Command("killall", "-9", "./bin/tiflash")
+				cmd := exec.Command("killall", "-9", TiFlashBinPath)
 				err := cmd.Run()
 				if err != nil {
 					log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
@@ -326,14 +332,18 @@ func TiFlashMaintainer() {
 				break
 			}
 
-			cmd := exec.Command("./bin/tiflash", "server", "--config-file", configFile)
+			cmd := exec.Command(TiFlashBinPath, "server", "--config-file", configFile)
 			err = cmd.Start()
-			Pid.Store(int32(cmd.Process.Pid))
 			if err != nil {
-				log.Printf("start tiflash failed: %v", err)
+				log.Printf("[error]Start TiFlash failed: %v", err)
 			}
+			Pid.Store(int32(cmd.Process.Pid))
 			err = cmd.Wait()
-			log.Printf("tiflash exited: %v", err)
+			if err != nil {
+				log.Printf("[error]TiFlash exited with error: %v", err)
+			} else {
+				log.Printf("TiFlash exited successfully")
+			}
 		}
 	}
 }
@@ -427,7 +437,7 @@ func InitService() {
 	}
 	setTenantInfo("", false)
 	LabelPatchCh <- "null"
-	err = InitTiFlashConf()
+	err = InitTiFlashConf(LocalPodIp)
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
 	}

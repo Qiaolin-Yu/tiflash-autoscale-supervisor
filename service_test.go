@@ -1,39 +1,58 @@
 package main
 
 import (
+	"github.com/stretchr/testify/assert"
+	"net"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 )
 
-//func TestGetTiFlashTaskNum(t *testing.T) {
-//	num, err := GetTiFlashTaskNum()
-//	if err != nil {
-//		log.Fatalf("get tiflash task num failed: %v", err)
-//	}
-//	log.Printf("tiflash task num: %d", num)
-//}
+var (
+	httpServerURL = "127.0.0.1:8234"
+)
 
-func TestGetTiFlashTaskNumByMetricsByte(t *testing.T) {
-	data1, err := os.ReadFile("test_data/metrics1.txt")
+func NewTestServerWithURL(url string, handler http.Handler) (*httptest.Server, error) {
+	ts := httptest.NewUnstartedServer(handler)
+	if url != "" {
+		l, err := net.Listen("tcp", url)
+		if err != nil {
+			return nil, err
+		}
+		ts.Listener.Close()
+		ts.Listener = l
+	}
+	ts.Start()
+	return ts, nil
+}
+
+func mockMetricHttpServer(inputFile string) (*httptest.Server, error) {
+	data, err := os.ReadFile(inputFile)
 	if err != nil {
-		t.Error(err)
+		return nil, err
 	}
-	res, err := GetTiFlashTaskNumByMetricsByte(data1)
-	if err != nil {
-		t.Error(err)
-	}
-	if res != 0 {
-		t.Error("TiFlash task num should be 0")
-	}
-	data2, err := os.ReadFile("test_data/metrics2.txt")
-	if err != nil {
-		t.Error(err)
-	}
-	res, err = GetTiFlashTaskNumByMetricsByte(data2)
-	if err != nil {
-		t.Error(err)
-	}
-	if res != 66 {
-		t.Error("TiFlash task num should be 66")
-	}
+	server, err := NewTestServerWithURL(httpServerURL, http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
+		_, err := rw.Write(data)
+		if err != nil {
+			return
+		}
+	}))
+	return server, err
+}
+
+func TestGetTiFlashTaskNum(t *testing.T) {
+	server, err := mockMetricHttpServer("test_data/metrics1.txt")
+	assert.NoError(t, err)
+	res, err := GetTiFlashTaskNum()
+	assert.NoError(t, err)
+	assert.Equal(t, res, 0)
+	server.Close()
+
+	server, err = mockMetricHttpServer("test_data/metrics2.txt")
+	assert.NoError(t, err)
+	res, err = GetTiFlashTaskNum()
+	assert.NoError(t, err)
+	assert.Equal(t, res, 66)
+	server.Close()
 }
