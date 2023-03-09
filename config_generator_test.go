@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/pelletier/go-toml"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/pelletier/go-toml"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTiFlashConfGenerator(t *testing.T) {
@@ -28,6 +29,7 @@ func TestTiFlashConfGenerator(t *testing.T) {
 	assert.Equal(t, config.Get("cluster.cluster_id").(string), "tenant-test")
 	assert.Equal(t, config.Get("raft.pd_addr").(string), "179.1.1.1:2000")
 	assert.Equal(t, config.Get("flash.use_autoscaler"), nil)
+	assert.Equal(t, config.Get("profiles.default.max_memory_usage_for_all_queries"), 0.95)
 
 	// Test2 of RenderTiFlashConf
 	err = RenderTiFlashConf("conf/tiflash.toml", "125.125.125.125:1000", "179.2.2.2:2000", "fixpool-use-autoscaler-false")

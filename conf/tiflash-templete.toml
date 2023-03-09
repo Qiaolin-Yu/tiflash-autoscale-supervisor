@@ -40,6 +40,7 @@ size = "1000M"
 [profiles]
 [profiles.default]
 max_memory_usage = 0
+max_memory_usage_for_all_queries = 0.95
 
 [raft]
 pd_addr = "%v"
