@@ -20,6 +20,7 @@ cluster_id = "%v"
 [flash]
 service_addr = "%v:3930"
 disaggregated_mode = "tiflash_compute"
+use_autoscaler = true
 %v
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
