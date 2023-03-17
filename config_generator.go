@@ -22,11 +22,11 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 	// }
 	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigBuffer)
 	fixPoolConfItem := ""
-	if tenantName == "fixpool-use-autoscaler-false" {
-		fixPoolConfItem = "use_autoscaler = false"
-	} else if tenantName == "fixpool-use-autoscaler-true" {
-		fixPoolConfItem = "use_autoscaler = true"
-	}
+	// if tenantName == "fixpool-use-autoscaler-false" {
+	// 	fixPoolConfItem = "use_autoscaler = false"
+	// } else if tenantName == "fixpool-use-autoscaler-true" {
+	// 	fixPoolConfItem = "use_autoscaler = true"
+	// }
 	tiFlashConfig := fmt.Sprintf(tiFlashPreprocessedConfig, tenantName, fixPoolConfItem, pdAddr)
 	tiFlashConfigFile, err := os.Create(targetTiFlashConfigFilename)
 	defer tiFlashConfigFile.Close()
