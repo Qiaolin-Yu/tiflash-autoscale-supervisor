@@ -60,4 +60,4 @@ metrics_port = 8234
     root = "/2488939"
   [storage.remote.cache]
     dir = "%v"
-    capacity = 107374182400
+    capacity = %v

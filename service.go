@@ -47,8 +47,9 @@ var (
 	TiFlashBinPath   = "./bin/tiflash"
 	IsTestEnv        = false
 
-	PathOfTiflashData  = "/tiflash/data"
-	PathOfTiflashCache = "/tiflash/cache"
+	PathOfTiflashData      = "/tiflash/data"
+	PathOfTiflashCache     = "/tiflash/cache"
+	CapicityOfTiflashCache = "10737418240"
 )
 
 const NeedPd = false
@@ -420,8 +421,12 @@ func InitService() {
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
 	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
 	envtiflashCachePath := os.Getenv("TIFLASH_CACHE_PATH")
+	envtiflashCacheCap := os.Getenv("TIFLASH_CACHE_CAP")
 	if envtiflashCachePath != "" {
 		PathOfTiflashCache = envtiflashCachePath
+	}
+	if envtiflashCacheCap != "" {
+		CapicityOfTiflashCache = envtiflashCacheCap
 	}
 	var err error
 	if CheckTiFlashIdleTimeoutString != "" {

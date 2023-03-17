@@ -74,7 +74,7 @@ func InitTiFlashConf(localIp string) error {
 	// 	log.Printf("could not create tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
 	// 	return err
 	// }
-	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v", PathOfTiflashData, PathOfTiflashCache)
+	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v", PathOfTiflashData, PathOfTiflashCache, CapicityOfTiflashCache)
 	tiFlashPreprocessedConfigBuffer = tiFlashConfig
 	// _, err = tiFlashConfigFile.WriteString(tiFlashConfig)
 	// if err != nil {
