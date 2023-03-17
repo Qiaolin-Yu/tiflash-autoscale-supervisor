@@ -314,7 +314,7 @@ func TiFlashMaintainer() {
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		err := os.RemoveAll(PathOfTiflashCache)
 		if err != nil {
-			log.Printf("[error]remove data fail: %v\n", err.Error())
+			log.Printf("[error]remove cache fail: %v\n", err.Error())
 		}
 		err = os.RemoveAll(PathOfTiflashData)
 		if err != nil {
@@ -419,6 +419,10 @@ func InitService() {
 	LocalPodName = os.Getenv("POD_NAME")
 	S3BucketForTiFLashLog = os.Getenv("S3_FOR_TIFLASH_LOG")
 	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
+	envtiflashCachePath := os.Getenv("TIFLASH_CACHE_PATH")
+	if envtiflashCachePath != "" {
+		PathOfTiflashCache = envtiflashCachePath
+	}
 	var err error
 	if CheckTiFlashIdleTimeoutString != "" {
 		CheckTiFlashIdleTimeout, err = strconv.Atoi(CheckTiFlashIdleTimeoutString)
