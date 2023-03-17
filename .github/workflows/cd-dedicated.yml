@@ -1,4 +1,4 @@
-name: CD(Dedicated)
+name: CD-Dedicated
 
 on:
   workflow_dispatch
