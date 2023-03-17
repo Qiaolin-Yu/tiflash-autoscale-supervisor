@@ -46,6 +46,9 @@ var (
 	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
 	TiFlashBinPath   = "./bin/tiflash"
 	IsTestEnv        = false
+
+	PathOfTiflashData  = "/tiflash/data"
+	PathOfTiflashCache = "/tiflash/cache"
 )
 
 const NeedPd = false
@@ -309,16 +312,20 @@ func TiFlashMaintainer() {
 		}
 		in := <-AssignCh
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
+		err := os.RemoveAll(PathOfTiflashCache)
+		if err != nil {
+			log.Printf("[error]remove data fail: %v\n", err.Error())
+		}
+		err = os.RemoveAll(PathOfTiflashData)
+		if err != nil {
+			log.Printf("[error]remove data fail: %v\n", err.Error())
+		}
 		for in.GetTenantID() == AssignTenantID.Load().(string) {
 			if NeedPd {
 				err := PdCtlNotifyPDForExit()
 				if err != nil {
 					log.Printf("[error]notify pd fail: %v\n", err.Error())
 				}
-			}
-			err := os.RemoveAll("/tiflash/data")
-			if err != nil {
-				log.Printf("[error]remove data fail: %v\n", err.Error())
 			}
 			if NeedPd {
 				log.Printf("[TiFlashMaintainer]RemoveStoreIDsOfUnhealthRNs \n")

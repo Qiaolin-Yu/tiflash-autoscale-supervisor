@@ -41,7 +41,7 @@ size = "1000M"
 [profiles]
 [profiles.default]
 max_memory_usage = 0
-max_memory_usage_for_all_queries = 0.95
+max_memory_usage_for_all_queries = 0.9
 task_scheduler_thread_soft_limit = 0
 task_scheduler_thread_hard_limit = 0
 
@@ -50,3 +50,14 @@ pd_addr = "%v"
 
 [status]
 metrics_port = 8234
+
+[storage]
+  [storage.main]
+    dir = ["/tiflash/data"]
+  [storage.s3]
+    bucket = "elastic-htap-test-liubo02"
+    endpoint = "https://s3.us-east-1.amazonaws.com"
+    root = "/2488939"
+  [storage.remote.cache.dir]
+    dir: "/tiflash/cache"
+    capacity: 107374182400
