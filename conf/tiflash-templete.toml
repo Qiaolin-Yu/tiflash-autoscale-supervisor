@@ -56,7 +56,7 @@ metrics_port = 8234
     dir = ["/tiflash/data"]
   [storage.s3]
     bucket = "elastic-htap-test-liubo02"
-    endpoint = "https://s3.us-east-1.amazonaws.com"
+    endpoint = "http://s3.us-east-1.amazonaws.com"
     root = "/2488939"
   [storage.remote.cache.dir]
     dir = "/tiflash/cache"
