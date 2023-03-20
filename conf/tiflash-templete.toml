@@ -41,7 +41,7 @@ size = "1000M"
 [profiles]
 [profiles.default]
 max_memory_usage = 0
-max_memory_usage_for_all_queries = 0.95
+max_memory_usage_for_all_queries = 0.9
 task_scheduler_thread_soft_limit = 0
 task_scheduler_thread_hard_limit = 0
 
