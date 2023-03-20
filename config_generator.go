@@ -7,12 +7,31 @@ import (
 )
 
 var (
-	learnerConfigTemplateFilename   = "conf/tiflash-learner-templete.toml"
-	learnerConfigFilename           = "conf/tiflash-learner.toml"
-	tiFlashConfigTemplateFilename   = "conf/tiflash-templete.toml"
+	// ConfPath                        = "conf"
 	tiFlashPreprocessedConfigBuffer = ""
+	ver2confBuffer                  = make(map[string]string)
 	// tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
 )
+
+func GetConfPath(ver string) string {
+	if ver == "s3" {
+		return "conf/s3"
+	} else {
+		return "conf"
+	}
+}
+
+func GenLearnerConfigTemplateFilename(ver string) string {
+	return GetConfPath(ver) + "/tiflash-learner-templete.toml"
+}
+
+func GenLearnerConfigFilename(ver string) string {
+	return GetConfPath(ver) + "/tiflash-learner.toml"
+}
+
+func GenTiFlashConfigTemplateFilename(ver string) string {
+	return GetConfPath(ver) + "/tiflash-templete.toml"
+}
 
 func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string, tenantName string) error {
 	// tiFlashPreprocessedConfigFile := tiFlashPreprocessedConfigBuffer
@@ -43,6 +62,13 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 }
 
 func InitTiFlashConf(localIp string) error {
+	return InitTiFlashConfWithVer(localIp, "")
+}
+
+func InitTiFlashConfWithVer(localIp string, ver string) error {
+	learnerConfigTemplateFilename := GenLearnerConfigTemplateFilename(ver)
+	learnerConfigFilename := GenLearnerConfigFilename(ver)
+	tiFlashConfigTemplateFilename := GenTiFlashConfigTemplateFilename(ver)
 	learnerConfigTemplateFile, err := os.ReadFile(learnerConfigTemplateFilename)
 	learnerConfigTemplate := string(learnerConfigTemplateFile)
 	if err != nil {

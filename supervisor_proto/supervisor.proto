@@ -36,6 +36,7 @@ message AssignRequest {
   string tenantID = 1;
   string tidbStatusAddr = 2;
   string pdAddr = 3;
+  string tiflashVer = 4;
 }
 
 message UnassignRequest {
