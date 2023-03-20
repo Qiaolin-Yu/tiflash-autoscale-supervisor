@@ -1,7 +1,7 @@
 name: CD-Custom
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
     inputs:
       extra-tag-prefix:
         required: true
