@@ -2,6 +2,9 @@ name: CD-Dedicated
 
 on:
   workflow_dispatch
+    inputs:
+      extra-tag-prefix:
+        required: true
   # push:
   #   branches: ["main"]
   # pull_request:
@@ -69,4 +72,4 @@ jobs:
           build-args: |
             GITHUB_TOKEN=${{ secrets.GIT_ACTION_BOT }}
           tags: |
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:dedicated-${{ github.sha }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${{ github.event.inputs.extra-tag-prefix }}-${{ github.sha }}
