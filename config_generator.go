@@ -30,19 +30,23 @@ func GenLearnerConfigFilename() string {
 	return GetConfPath("") + "/tiflash-learner.toml"
 }
 
+// note: it need to be protected by mutex
 func GenTiFlashConfigTemplateFilename(ver string) string {
 	return GetConfPath(ver) + "/tiflash-templete.toml"
 }
 
+// note: it need to be protected by mutex
 func SavePreprocessedConfigBuffer(ver string, tiFlashConfig string) {
 	ver2confBuffer[ver] = tiFlashConfig
 }
 
+// note: it need to be protected by mutex
 func CheckPreprocessedConfigBufferExist(ver string) bool {
 	_, ok := ver2confBuffer[ver]
 	return ok
 }
 
+// note: it need to be protected by mutex
 func LoadPreprocessedConfigBuffer(ver string) string {
 	return ver2confBuffer[ver]
 }

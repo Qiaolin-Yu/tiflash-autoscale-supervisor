@@ -44,8 +44,8 @@ var (
 	TimeoutArrOfK8sLabelPatch = []int{1, 2, 4, 8, 10}
 
 	TiFlashMetricURL = "http://127.0.0.1:8234/metrics"
-	TiFlashBinPath   = "./bin/tiflash"
-	IsTestEnv        = false
+	// TiFlashBinPath   = "./bin/tiflash"
+	IsTestEnv = false
 
 	PathOfTiflashData      = "/tiflash/data"
 	PathOfTiflashCache     = "/tiflash/cache"
@@ -147,7 +147,7 @@ func isTiflashPortOpen() bool {
 
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 	curReqId := ReqId.Add(1)
-	log.Printf("received assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
+	log.Printf("received assign request by: %v reqid: %v tiflash_ver: %v\n", req.GetTenantID(), curReqId, req.TiflashVer)
 	var errInfo string
 	defer log.Printf("finished assign request by: %v reqid: %v\n", req.GetTenantID(), curReqId)
 	if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
@@ -308,6 +308,9 @@ func K8sPodLabelPatchMaintainer() {
 }
 
 func GenBinPath(ver string) string {
+	if IsTestEnv {
+		return "./test_data/infinite_loop.sh"
+	}
 	if ver == "" {
 		return "./bin/tiflash"
 	} else {
@@ -368,6 +371,8 @@ func TiFlashMaintainer() {
 			err = cmd.Start()
 			if err != nil {
 				log.Printf("[error]Start TiFlash failed: %v", err)
+				time.Sleep(1 * time.Second)
+				continue
 			}
 			pid := strconv.Itoa(cmd.Process.Pid)
 			Pid.Store(int32(cmd.Process.Pid))
@@ -386,9 +391,9 @@ func TiFlashMaintainer() {
 				}
 			}
 			if err != nil {
-				log.Printf("[error]TiFlash exited with error: %v", err)
+				log.Printf("[error]TiFlash exited with error: %v , newAssign: %v", err, newAssign)
 			} else {
-				log.Printf("TiFlash exited successfully")
+				log.Printf("TiFlash exited successfully, newAssign: %v", newAssign)
 			}
 			if newAssign {
 				break
