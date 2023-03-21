@@ -311,10 +311,12 @@ func GenBinPath(ver string) string {
 	if IsTestEnv {
 		return "./test_data/infinite_loop.sh"
 	}
-	if ver == "" {
+	if ver == "" || ver == "s3" {
 		return "./bin/tiflash"
 	} else {
-		return "./bin/" + ver + "/tiflash"
+		return "./bin/tiflash"
+		// TODO
+		// return "./bin/" + ver + "/tiflash"
 	}
 }
 
@@ -371,8 +373,13 @@ func TiFlashMaintainer() {
 			err = cmd.Start()
 			if err != nil {
 				log.Printf("[error]Start TiFlash failed: %v", err)
-				time.Sleep(1 * time.Second)
-				continue
+				if len(AssignCh) != 0 {
+					//there is new assign, skip current round
+					break
+				} else {
+					time.Sleep(1 * time.Second)
+					continue
+				}
 			}
 			pid := strconv.Itoa(cmd.Process.Pid)
 			Pid.Store(int32(cmd.Process.Pid))

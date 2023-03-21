@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     wget
-RUN mkdir /tiflash && mkdir /tiflash/bin && mkdir /tiflash/bin/s3
+RUN mkdir /tiflash && mkdir /tiflash/bin
 COPY bin  /tiflash/bin/
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
@@ -36,7 +36,6 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=aarch64 ; else  
 # without as switch
 #COPY --from=xexplorersun/tiflash:cse-3dc23cc935cfdde155df657f73dd385a27f40031 /tiflash/* /tiflash/bin/
 COPY --from=xexplorersun/tiflash:cse-6890339f3a7824961bee4932db4ce335d58e5f28 /tiflash/* /tiflash/bin/
-COPY --from=gcr.io/pingcap-public/dbaas/tiflash:v6.7.0-230316-master-20230316-1678955453-dev /tiflash/* /tiflash/bin/s3/
 RUN ls -lh /tiflash/bin/ && /tiflash/bin/tiflash version
 
 ENV PATH="/usr/local/go/bin:${PATH}"
