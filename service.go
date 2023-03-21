@@ -323,7 +323,9 @@ func GenBinPath(ver string) string {
 func TiFlashMaintainer() {
 	var in *pb.AssignRequest
 	var buf *pb.AssignRequest
+	MaxTiFlashRunRetryCnt := 60
 	for true {
+		errCnt := 0
 		if buf != nil {
 			in = buf
 			buf = nil
@@ -377,8 +379,18 @@ func TiFlashMaintainer() {
 					//there is new assign, skip current round
 					break
 				} else {
-					time.Sleep(1 * time.Second)
-					continue
+					if errCnt < MaxTiFlashRunRetryCnt {
+						errCnt += 1
+						time.Sleep(1 * time.Second)
+						continue
+					} else {
+						log.Printf("[error] fail to run tiflash in %v times! Begin to call UnassignTenant()", MaxTiFlashRunRetryCnt)
+						UnassignTenantService(&pb.UnassignRequest{
+							AssertTenantID: AssignTenantID.Load().(string),
+							ForceShutdown:  true})
+						break
+					}
+
 				}
 			}
 			pid := strconv.Itoa(cmd.Process.Pid)
