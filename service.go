@@ -158,7 +158,10 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				LabelPatchCh <- req.GetTenantID()
 				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
 				PdAddr = req.GetPdAddr()
-				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr(), req.GetTenantID())
+				if req.GetTiflashVer() != "" {
+					InitTiFlashConf(LocalPodIp, req.GetTiflashVer())
+				}
+				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr(), req.GetTenantID(), req.GetTiflashVer())
 				if err != nil {
 					//rollback
 					setTenantInfo("", false)
@@ -247,11 +250,12 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 				}
 
 				setTenantInfo("", false)
-				cmd := exec.Command("killall", "-9", TiFlashBinPath)
-				err := cmd.Run()
-				if err != nil {
-					log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
-				}
+				AssignCh <- nil
+				// cmd := exec.Command("killall", "-9", TiFlashBinPath)
+				// err := cmd.Run()
+				// if err != nil {
+				// 	log.Printf("[error] killall tiflash failed! tenant:%v err;%v", req.AssertTenantID, err.Error())
+				// }
 				Pid.Store(0)
 				LabelPatchCh <- "null"
 				TryToUploadTiFlashLogIntoS3(true)
@@ -303,15 +307,36 @@ func K8sPodLabelPatchMaintainer() {
 	}
 }
 
+func GenBinPath(ver string) string {
+	if ver == "" {
+		return "./bin/tiflash"
+	} else {
+		return "./bin/" + ver + "/tiflash"
+	}
+}
+
 func TiFlashMaintainer() {
+	var in *pb.AssignRequest
+	var buf *pb.AssignRequest
 	for true {
-		if len(AssignCh) > 1 {
-			log.Printf("[warning]size of assign channel > 1, size: %v\n", len(AssignCh))
-			for len(AssignCh) > 1 {
-				<-AssignCh
+		if buf != nil {
+			in = buf
+			buf = nil
+			if len(AssignCh) > 0 {
+				continue
 			}
+		} else {
+			if len(AssignCh) > 1 {
+				log.Printf("[warning]size of assign channel > 1, size: %v\n", len(AssignCh))
+				for len(AssignCh) > 1 {
+					<-AssignCh
+				}
+			}
+			in = <-AssignCh
 		}
-		in := <-AssignCh
+		if in == nil { // term signal, skip
+			continue
+		}
 		configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", in.GetTenantID())
 		err := os.RemoveAll(PathOfTiflashCache)
 		if err != nil {
@@ -339,18 +364,34 @@ func TiFlashMaintainer() {
 				log.Printf("size of assign channel > 0, consume!\n")
 				break
 			}
-
-			cmd := exec.Command(TiFlashBinPath, "server", "--config-file", configFile)
+			cmd := exec.Command(GenBinPath(in.GetTiflashVer()), "server", "--config-file", configFile)
 			err = cmd.Start()
 			if err != nil {
 				log.Printf("[error]Start TiFlash failed: %v", err)
 			}
+			pid := strconv.Itoa(cmd.Process.Pid)
 			Pid.Store(int32(cmd.Process.Pid))
-			err = cmd.Wait()
+			errCh := make(chan error, 1)
+			newAssign := false
+			go func() {
+				errCh <- cmd.Wait()
+			}()
+			select {
+			case buf = <-AssignCh:
+				_, err = exec.Command("kill", "-9", pid).Output()
+				newAssign = true
+			case <-errCh:
+				if len(AssignCh) != 0 {
+					newAssign = true
+				}
+			}
 			if err != nil {
 				log.Printf("[error]TiFlash exited with error: %v", err)
 			} else {
 				log.Printf("TiFlash exited successfully")
+			}
+			if newAssign {
+				break
 			}
 		}
 	}
@@ -453,7 +494,7 @@ func InitService() {
 	}
 	setTenantInfo("", false)
 	LabelPatchCh <- "null"
-	err = InitTiFlashConf(LocalPodIp)
+	err = InitTiFlashConf(LocalPodIp, DefaultVersion)
 	if err != nil {
 		log.Fatalf("failed to init config: %v", err)
 	}
