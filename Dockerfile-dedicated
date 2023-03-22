@@ -35,7 +35,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then SIMPLE_ARCH=aarch64 ; else  
     && curl "https://awscli.amazonaws.com/awscli-exe-linux-$SIMPLE_ARCH.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
 # without as switch
 #COPY --from=xexplorersun/tiflash:cse-3dc23cc935cfdde155df657f73dd385a27f40031 /tiflash/* /tiflash/bin/
-COPY --from=gcr.io/pingcap-public/dbaas/tiflash:v6.7.0-230316-master-20230316-1678955453-dev /tiflash/* /tiflash/bin/
+COPY --from=gcr.io/pingcap-public/dbaas/tiflash:v6.7.0-230322-s3conf5-20230322-1679444433-dev /tiflash/* /tiflash/bin/
 RUN ls -lh /tiflash/bin/ && /tiflash/bin/tiflash version
 
 ENV PATH="/usr/local/go/bin:${PATH}"
