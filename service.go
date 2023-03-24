@@ -50,7 +50,18 @@ var (
 	PathOfTiflashData      = "/tiflash/data"
 	PathOfTiflashCache     = "/tiflash/cache"
 	CapicityOfTiflashCache = "10737418240"
+	RunMode                = ""
 )
+
+const (
+	RunModeServeless = iota
+	RunModeLocal
+	RunModeDedicated
+	RunModeCustom
+	RunModeTest
+)
+
+var OptionRunMode = RunModeLocal
 
 const NeedPd = false
 
@@ -487,11 +498,23 @@ func InitService() {
 	CheckTiFlashIdleTimeoutString := os.Getenv(CheckTiflashIdleTimeoutEnv)
 	envtiflashCachePath := os.Getenv("TIFLASH_CACHE_PATH")
 	envtiflashCacheCap := os.Getenv("TIFLASH_CACHE_CAP")
+	envRunMode := os.Getenv("AS_RUN_MODE_ENV")
 	if envtiflashCachePath != "" {
 		PathOfTiflashCache = envtiflashCachePath
 	}
 	if envtiflashCacheCap != "" {
 		CapicityOfTiflashCache = envtiflashCacheCap
+	}
+	if envRunMode != "" {
+		if envRunMode == "local" {
+			OptionRunMode = RunModeLocal
+		} else if envRunMode == "dedicated" {
+			OptionRunMode = RunModeDedicated
+		} else if envRunMode == "serverless" {
+			OptionRunMode = RunModeServeless
+		} else {
+			panic(fmt.Sprintf("unknown value of env AS_RUN_MODE_ENV: %v, valid options:{local, dedicated, serverless}", envRunMode))
+		}
 	}
 	var err error
 	if CheckTiFlashIdleTimeoutString != "" {
