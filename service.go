@@ -30,10 +30,11 @@ import (
 )
 
 var (
-	AssignTenantID atomic.Value
-	StartTime      atomic.Int64
-	IsUnassigning  atomic.Bool // if IsUnassigning is true, it should be false in a few seconds
-	MuOfTenantInfo sync.Mutex  // protect startTime, IsUnassigning and assignTenantID
+	AssignTenantID   atomic.Value
+	AssignTiflashVer atomic.Value
+	StartTime        atomic.Int64
+	IsUnassigning    atomic.Bool // if IsUnassigning is true, it should be false in a few seconds
+	MuOfTenantInfo   sync.Mutex  // protect startTime, IsUnassigning and assignTenantID
 
 	Pid                       atomic.Int32
 	ReqId                     atomic.Int32
@@ -79,20 +80,30 @@ const CheckTiflashIdleIntervalEnv = "CHECK_TIFLASH_IDLE_INTERVAL"
 const TiFlashMetricTaskPrefix = "tiflash_coprocessor_handling_request_count"
 const HTTPTimeout = 5 * time.Second
 
-func setTenantInfo(tenantID string, isUnassigning bool) int64 {
+func setTenantInfo(tenantID string, isUnassigning bool, ver string) int64 {
 	MuOfTenantInfo.Lock()
 	defer MuOfTenantInfo.Unlock()
 	AssignTenantID.Store(tenantID)
+	AssignTiflashVer.Store(ver)
 	stime := time.Now().Unix()
 	StartTime.Store(stime)
 	IsUnassigning.Store(isUnassigning)
 	return stime
 }
 
-func getTenantInfo() (string, int64, bool) {
+func updateTenantInfoIsUnassigning(isUnassigning bool) int64 {
 	MuOfTenantInfo.Lock()
 	defer MuOfTenantInfo.Unlock()
-	return AssignTenantID.Load().(string), StartTime.Load(), IsUnassigning.Load()
+	stime := time.Now().Unix() // TODO remove?
+	StartTime.Store(stime)     // TODO remove?
+	IsUnassigning.Store(isUnassigning)
+	return stime
+}
+
+func getTenantInfo() (string, int64, bool, string) {
+	MuOfTenantInfo.Lock()
+	defer MuOfTenantInfo.Unlock()
+	return AssignTenantID.Load().(string), StartTime.Load(), IsUnassigning.Load(), AssignTiflashVer.Load().(string)
 }
 
 func GetTiFlashTaskNum() (int, error) {
@@ -165,7 +176,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 		if MuOfSupervisor.TryLock() {
 			defer MuOfSupervisor.Unlock()
 			if AssignTenantID.Load() == nil || AssignTenantID.Load().(string) == "" {
-				stime := setTenantInfo(req.GetTenantID(), false)
+				stime := setTenantInfo(req.GetTenantID(), false, req.GetTiflashVer())
 				LabelPatchCh <- req.GetTenantID()
 				configFile := fmt.Sprintf("conf/tiflash-tenant-%s.toml", req.GetTenantID())
 				PdAddr = req.GetPdAddr()
@@ -175,7 +186,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				err := RenderTiFlashConf(configFile, req.GetTidbStatusAddr(), req.GetPdAddr(), req.GetTenantID(), req.GetTiflashVer())
 				if err != nil {
 					//rollback
-					setTenantInfo("", false)
+					setTenantInfo("", false, "")
 					LabelPatchCh <- "null"
 					return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "could not render config", TenantID: "", StartTime: stime, IsUnassigning: false}, err
 				}
@@ -202,14 +213,14 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 			errInfo = "TryLock failed"
 		}
 	} else if AssignTenantID.Load().(string) == req.GetTenantID() {
-		realTID, stimeOfAssign, isUnassigning := getTenantInfo()
-		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+		realTID, stimeOfAssign, isUnassigning, ver := getTenantInfo()
+		return &pb.Result{HasErr: false, ErrInfo: "", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning, TiflashVer: ver}, nil
 	} else {
 		errInfo = "TiFlash has been occupied by a tenant"
 	}
-	realTID, stimeOfAssign, isUnassigning := getTenantInfo()
+	realTID, stimeOfAssign, isUnassigning, ver := getTenantInfo()
 	log.Printf("[error][assign]%v realTID:%v wantTID:%v\n", errInfo, realTID, req.TenantID)
-	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: true, ErrInfo: "TiFlash has been occupied by a tenant", TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning, TiflashVer: ver}, nil
 }
 
 func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
@@ -237,7 +248,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					}()
 				}
 				if !req.ForceShutdown {
-					setTenantInfo(req.AssertTenantID, true)
+					updateTenantInfoIsUnassigning(true)
 					log.Printf("[unassigning]wait tiflash to shutdown gracefully\n")
 					startTime := time.Now()
 					time.Sleep(time.Duration(CheckTiFlashIdleInitSleepSec) * time.Second) // sleep a few seconds to prevent new mpp tasks arrive shortly after the begining of unassigning,  but  the tiflash is idle at the begining of unassigning
@@ -260,7 +271,7 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 					}
 				}
 
-				setTenantInfo("", false)
+				setTenantInfo("", false, "")
 				AssignCh <- nil
 				// cmd := exec.Command("killall", "-9", TiFlashBinPath)
 				// err := cmd.Run()
@@ -281,15 +292,15 @@ func UnassignTenantService(req *pb.UnassignRequest) (*pb.Result, error) {
 	} else {
 		errInfo = "TiFlash is not assigned to this tenant"
 	}
-	realTID, stimeOfAssign, isUnassigning := getTenantInfo()
+	realTID, stimeOfAssign, isUnassigning, ver := getTenantInfo()
 	log.Printf("[error][unassign]%v realTID:%v wantTID:%v\n", errInfo, realTID, req.AssertTenantID)
-	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: errInfo, TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning}, nil
+	return &pb.Result{HasErr: true, NeedUpdateStateIfErr: false, ErrInfo: errInfo, TenantID: realTID, StartTime: stimeOfAssign, IsUnassigning: isUnassigning, TiflashVer: ver}, nil
 
 }
 
 func GetCurrentTenantService() (*pb.GetTenantResponse, error) {
-	tenantID, startTime, isUnassigning := getTenantInfo()
-	return &pb.GetTenantResponse{TenantID: tenantID, StartTime: startTime, IsUnassigning: isUnassigning}, nil
+	tenantID, startTime, isUnassigning, ver := getTenantInfo()
+	return &pb.GetTenantResponse{TenantID: tenantID, StartTime: startTime, IsUnassigning: isUnassigning, TiflashVer: ver}, nil
 }
 
 func K8sPodLabelPatchMaintainer() {
@@ -539,7 +550,7 @@ func InitService() {
 	if err != nil {
 		panic(err.Error())
 	}
-	setTenantInfo("", false)
+	setTenantInfo("", false, "")
 	LabelPatchCh <- "null"
 	err = InitTiFlashConf(LocalPodIp, DefaultVersion)
 	if err != nil {
