@@ -21,7 +21,7 @@ cluster_id = "%v"
 service_addr = "%v:3930"
 disaggregated_mode = "tiflash_compute"
 use_autoscaler = true
-use_autoscaler_without_s3 = false
+use_autoscaler_without_s3 = true
 %v
 [flash.flash_cluster]
 cluster_manager_path = "/tiflash/bin/flash_cluster_manager"
