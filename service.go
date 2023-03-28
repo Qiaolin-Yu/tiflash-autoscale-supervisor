@@ -510,6 +510,8 @@ func InitService() {
 	envtiflashCachePath := os.Getenv("TIFLASH_CACHE_PATH")
 	envtiflashCacheCap := os.Getenv("TIFLASH_CACHE_CAP")
 	envRunMode := os.Getenv("AS_RUN_MODE_ENV")
+	envArnRole := os.Getenv("AWS_ROLE_ARN")
+	log.Printf("arnrole: %v", envArnRole)
 	if envtiflashCachePath != "" {
 		PathOfTiflashCache = envtiflashCachePath
 	}
