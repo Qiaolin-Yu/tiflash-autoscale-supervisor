@@ -7,20 +7,61 @@ import (
 )
 
 var (
-	learnerConfigTemplateFilename   = "conf/tiflash-learner-templete.toml"
-	learnerConfigFilename           = "conf/tiflash-learner.toml"
-	tiFlashConfigTemplateFilename   = "conf/tiflash-templete.toml"
+	// ConfPath                        = "conf"
 	tiFlashPreprocessedConfigBuffer = ""
+	ver2confBuffer                  = make(map[string]string)
+	DefaultVersion                  = "" // "" means default tiflash version
 	// tiFlashPreprocessedConfigFilename = "conf/tiflash-preprocessed.toml"
 )
 
-func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string, tenantName string) error {
+func GetConfPath(ver string) string {
+	if ver == "s3" {
+		return "conf/s3"
+	} else {
+		return "conf"
+	}
+}
+
+func GenLearnerConfigTemplateFilename(ver string) string {
+	return GetConfPath(ver) + "/tiflash-learner-templete.toml"
+}
+
+func GenLearnerConfigFilename() string {
+	return GetConfPath("") + "/tiflash-learner.toml"
+}
+
+// note: it need to be protected by mutex
+func GenTiFlashConfigTemplateFilename(ver string) string {
+	return GetConfPath(ver) + "/tiflash-templete.toml"
+}
+
+// note: it need to be protected by mutex
+func SavePreprocessedConfigBuffer(ver string, tiFlashConfig string) {
+	ver2confBuffer[ver] = tiFlashConfig
+}
+
+// note: it need to be protected by mutex
+func CheckPreprocessedConfigBufferExist(ver string) bool {
+	_, ok := ver2confBuffer[ver]
+	return ok
+}
+
+// note: it need to be protected by mutex
+func LoadPreprocessedConfigBuffer(ver string) string {
+	return ver2confBuffer[ver]
+}
+
+// func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string, tenantName string) error {
+// 	return RenderTiFlashConfWithVer(targetTiFlashConfigFilename, tidbStatusAddr, pdAddr, tenantName, "")
+// }
+
+func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string, pdAddr string, tenantName string, ver string) error {
 	// tiFlashPreprocessedConfigFile := tiFlashPreprocessedConfigBuffer
 	// if err != nil {
 	// log.Printf("could not read tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
 	// return err
 	// }
-	tiFlashPreprocessedConfig := string(tiFlashPreprocessedConfigBuffer)
+	tiFlashPreprocessedConfig := string(LoadPreprocessedConfigBuffer(ver))
 	fixPoolConfItem := ""
 	// if tenantName == "fixpool-use-autoscaler-false" {
 	// 	fixPoolConfItem = "use_autoscaler = false"
@@ -42,7 +83,18 @@ func RenderTiFlashConf(targetTiFlashConfigFilename string, tidbStatusAddr string
 	return nil
 }
 
-func InitTiFlashConf(localIp string) error {
+// func InitTiFlashConf(localIp string) error {
+// 	return InitTiFlashConfWithVer(localIp, "")
+// }
+
+func InitTiFlashConf(localIp string, ver string) error {
+	if CheckPreprocessedConfigBufferExist(ver) {
+		// has inited
+		return nil
+	}
+	learnerConfigTemplateFilename := GenLearnerConfigTemplateFilename(ver)
+	learnerConfigFilename := GenLearnerConfigFilename()
+	tiFlashConfigTemplateFilename := GenTiFlashConfigTemplateFilename(ver)
 	learnerConfigTemplateFile, err := os.ReadFile(learnerConfigTemplateFilename)
 	learnerConfigTemplate := string(learnerConfigTemplateFile)
 	if err != nil {
@@ -74,8 +126,9 @@ func InitTiFlashConf(localIp string) error {
 	// 	log.Printf("could not create tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)
 	// 	return err
 	// }
-	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v")
-	tiFlashPreprocessedConfigBuffer = tiFlashConfig
+	tiFlashConfig := fmt.Sprintf(tiFlashConfigTemplate, "%v", localIp, "%v", "%v", PathOfTiflashData, PathOfTiflashCache, CapicityOfTiflashCache)
+	SavePreprocessedConfigBuffer(ver, tiFlashConfig)
+	// tiFlashPreprocessedConfigBuffer = tiFlashConfig
 	// _, err = tiFlashConfigFile.WriteString(tiFlashConfig)
 	// if err != nil {
 	// log.Printf("could not write tiflash-preprocessed config file %v: %v", tiFlashPreprocessedConfigFilename, err)

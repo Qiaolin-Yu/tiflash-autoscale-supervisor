@@ -52,6 +52,8 @@ func (s *server) GetCurrentTenant(ctx context.Context, empty *emptypb.Empty) (*p
 
 func main() {
 	// LocalPodIp = os.Getenv("POD_IP")
+	AssignTiflashVer.Store("")
+	AssignTenantID.Store("")
 	log.Printf("ver: 2")
 	flag.Parse()
 	InitService()

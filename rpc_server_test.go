@@ -21,16 +21,16 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"net"
-	"os/exec"
 	"strings"
 	"testing"
 	pb "tiflash-auto-scaling/supervisor_proto"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var (
@@ -43,7 +43,7 @@ var (
 func InitRPCTestEnv() (func(), error) {
 	IsTestEnv = true
 	go TiFlashMaintainer()
-	TiFlashBinPath = "./test_data/infinite_loop.sh"
+	// TiFlashBinPath = "./test_data/infinite_loop.sh"
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		return nil, err
@@ -58,7 +58,8 @@ func InitRPCTestEnv() (func(), error) {
 	}()
 	closer := func() {
 		s.Stop()
-		exec.Command("killall", "-9", TiFlashBinPath).Run()
+		AssignCh <- nil
+		// exec.Command("killall", "-9", TiFlashBinPath).Run()
 		log.Printf("grpc server closes")
 		return
 	}
@@ -108,6 +109,7 @@ func TestAssignAndUnassignTenant(t *testing.T) {
 	assert.False(t, unassignTenantResult.IsUnassigning)
 
 	unassignTenantResult, err = c.UnassignTenant(ctx, &pb.UnassignRequest{AssertTenantID: tenantID})
+	// time.Sleep(1 * time.Second)
 	assert.NoError(t, err)
 	assert.False(t, unassignTenantResult.HasErr)
 	assert.Equal(t, unassignTenantResult.TenantID, "")

@@ -30,12 +30,14 @@ message Result{
   string tenantID = 4;
   int64 startTime = 5;
   bool isUnassigning = 6;
+  string tiflashVer = 7;
 }
 
 message AssignRequest {
   string tenantID = 1;
   string tidbStatusAddr = 2;
   string pdAddr = 3;
+  string tiflashVer = 4;
 }
 
 message UnassignRequest {
@@ -47,6 +49,7 @@ message GetTenantResponse {
   string tenantID = 1;
   int64 startTime = 2;
   bool isUnassigning = 3;
+  string tiflashVer = 4;
 }
 
 service Assign{
