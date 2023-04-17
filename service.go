@@ -152,7 +152,7 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 const TiFlashListenGrpcPort = "3930"
 
 func isTiflashPortOpen() bool {
-	host := "localhost"
+	host := LocalPodIp
 	port := TiFlashListenGrpcPort
 	timeout := 100 * time.Millisecond
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
