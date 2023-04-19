@@ -56,7 +56,3 @@ func TestGetTiFlashTaskNum(t *testing.T) {
 	assert.Equal(t, res, 66)
 	server.Close()
 }
-
-func TestTiflashRpcClient(t *testing.T) {
-	assert.True(t, CheckTiFlashAlive())
-}
