@@ -27,6 +27,7 @@ RUN cd /tiflash/ && echo $TARGETPLATFORM \
 
 COPY conf/  /tiflash/conf/
 COPY supervisor_proto/ /tiflash/supervisor_proto/
+COPY tiflashrpc/ /tiflash/tiflashrpc/
 COPY *.go go.* *.yaml *.yml *.sh /tiflash/
 RUN ls -lh /tiflash/
 WORKDIR /tiflash
