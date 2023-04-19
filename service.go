@@ -6,6 +6,10 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/pingcap/kvproto/pkg/kvrpcpb"
+	"github.com/pingcap/kvproto/pkg/mpp"
+	"github.com/pingcap/kvproto/pkg/tikvpb"
+	"google.golang.org/grpc"
 	"io"
 	"log"
 	"net"
@@ -18,6 +22,7 @@ import (
 	"sync"
 	"sync/atomic"
 	pb "tiflash-auto-scaling/supervisor_proto"
+	"tiflash-auto-scaling/tiflashrpc"
 	"time"
 
 	"github.com/prometheus/common/expfmt"
@@ -149,22 +154,47 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 	return res, nil
 }
 
-const TiFlashListenTcpPort = "9000"
+const TiFlashListenGrpcPort = "3930"
 
-func isTiflashPortOpen() bool {
-	host := "localhost"
-	port := TiFlashListenTcpPort
-	timeout := 100 * time.Millisecond
-	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
+func CheckTiFlashAlive() bool {
+	host := LocalPodIp
+	port := TiFlashListenGrpcPort
+
+	//var callOptions []grpc.CallOption
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
+	defer cancel()
+	conn, err := grpc.DialContext(
+		ctx,
+		net.JoinHostPort(host, port), grpc.WithInsecure(),
+		grpc.WithConnectParams(grpc.ConnectParams{
+			MinConnectTimeout: 100 * time.Millisecond,
+		}))
 	if err != nil {
+		log.Printf("[error]dial tiflash grpc failed: %v\n", err.Error())
 		return false
 	}
-	if conn != nil {
-		defer conn.Close()
-		return true
-	} else {
+	defer func(conn *grpc.ClientConn) {
+		err := conn.Close()
+		if err != nil {
+			log.Printf("[error]close grpc connection failed: %v\n", err.Error())
+		}
+	}(conn)
+	resp := &tiflashrpc.Response{}
+	client := tikvpb.NewTikvClient(conn)
+	req := &tiflashrpc.Request{
+		Type:    tiflashrpc.CmdMPPAlive,
+		StoreTp: tiflashrpc.TiFlash,
+		Req:     &mpp.IsAliveRequest{},
+		Context: kvrpcpb.Context{},
+	}
+	resp.Resp, err = client.IsAlive(context.Background(), req.IsMPPAlive())
+	if resp.Resp == nil || err != nil {
+		if err != nil {
+			log.Printf("[error]check tiflash alive failed: %v\n", err.Error())
+		}
 		return false
 	}
+	return resp.Resp.(*mpp.IsAliveResponse).Available
 }
 
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
@@ -197,7 +227,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
 				isTimeout := false
-				for !isTiflashPortOpen() && !IsTestEnv {
+				for !CheckTiFlashAlive() && !IsTestEnv {
 					time.Sleep(100 * time.Microsecond)
 					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
 						isTimeout = true
