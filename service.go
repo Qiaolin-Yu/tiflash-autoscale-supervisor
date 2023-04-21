@@ -170,7 +170,6 @@ func CheckTiFlashAlive() bool {
 			MinConnectTimeout: 100 * time.Millisecond,
 		}))
 	if err != nil {
-		log.Printf("[error]dial tiflash grpc failed: %v\n", err.Error())
 		return false
 	}
 	defer func(conn *grpc.ClientConn) {
@@ -189,9 +188,6 @@ func CheckTiFlashAlive() bool {
 	}
 	resp.Resp, err = client.IsAlive(context.Background(), req.IsMPPAlive())
 	if resp.Resp == nil || err != nil {
-		if err != nil {
-			log.Printf("[error]check tiflash alive failed: %v\n", err.Error())
-		}
 		return false
 	}
 	return resp.Resp.(*mpp.IsAliveResponse).Available
