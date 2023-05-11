@@ -232,7 +232,11 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 					}
 				}
 				if isTimeout {
-					log.Printf("wait tiflash port open timeout! %vs, checking err: %v\n", MaxWaitPortOpenTimeSec, err.Error())
+					if err != nil {
+						log.Printf("wait tiflash port open timeout! %vs, checking err: %v\n", MaxWaitPortOpenTimeSec, err.Error())
+					} else {
+						log.Printf("wait tiflash port open timeout! %vs\n", MaxWaitPortOpenTimeSec)
+					}
 				}
 				return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string), StartTime: stime, IsUnassigning: false}, nil
 			}
