@@ -156,7 +156,7 @@ func GetTiFlashTaskNumByMetricsByte(data []byte) (int, error) {
 
 const TiFlashListenGrpcPort = "3930"
 
-func CheckTiFlashAlive() bool {
+func CheckTiFlashAlive() (bool, error) {
 	host := LocalPodIp
 	port := TiFlashListenGrpcPort
 
@@ -170,7 +170,7 @@ func CheckTiFlashAlive() bool {
 			MinConnectTimeout: 100 * time.Millisecond,
 		}))
 	if err != nil || conn == nil {
-		return false
+		return false, err
 	}
 	defer func(conn *grpc.ClientConn) {
 		err := conn.Close()
@@ -188,9 +188,9 @@ func CheckTiFlashAlive() bool {
 	}
 	resp.Resp, err = client.IsAlive(context.Background(), req.IsMPPAlive())
 	if resp.Resp == nil || err != nil {
-		return false
+		return false, err
 	}
-	return resp.Resp.(*mpp.IsAliveResponse).Available
+	return resp.Resp.(*mpp.IsAliveResponse).Available, err
 }
 
 func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
@@ -223,7 +223,8 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				localSt := time.Now()
 				MaxWaitPortOpenTimeSec := 5.0
 				isTimeout := false
-				for !CheckTiFlashAlive() && !IsTestEnv {
+				isTiFlashAlive, err := CheckTiFlashAlive()
+				for !isTiFlashAlive && !IsTestEnv {
 					time.Sleep(100 * time.Microsecond)
 					if time.Since(localSt).Seconds() >= MaxWaitPortOpenTimeSec {
 						isTimeout = true
@@ -231,7 +232,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 					}
 				}
 				if isTimeout {
-					log.Printf("wait tiflash port open timeout! %vs\n", MaxWaitPortOpenTimeSec)
+					log.Printf("wait tiflash port open timeout! %vs, checking err: %v\n", MaxWaitPortOpenTimeSec, err.Error())
 				}
 				return &pb.Result{HasErr: false, ErrInfo: "", TenantID: AssignTenantID.Load().(string), StartTime: stime, IsUnassigning: false}, nil
 			}
