@@ -169,7 +169,7 @@ func CheckTiFlashAlive() bool {
 		grpc.WithConnectParams(grpc.ConnectParams{
 			MinConnectTimeout: 100 * time.Millisecond,
 		}))
-	if err != nil {
+	if err != nil || conn == nil {
 		return false
 	}
 	defer func(conn *grpc.ClientConn) {
