@@ -233,7 +233,7 @@ func AssignTenantService(req *pb.AssignRequest) (*pb.Result, error) {
 				}
 				if isTimeout {
 					if err != nil {
-						log.Printf("wait tiflash port open timeout! %vs, checking err: %v\n", MaxWaitPortOpenTimeSec, err.Error())
+						log.Printf("wait tiflash port open timeout! %vs, checking err: %+v\n", MaxWaitPortOpenTimeSec, err)
 					} else {
 						log.Printf("wait tiflash port open timeout! %vs\n", MaxWaitPortOpenTimeSec)
 					}
